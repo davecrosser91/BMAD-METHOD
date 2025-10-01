@@ -1,27 +1,38 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
-  "name": "bmad-method",
-  "version": "4.44.0",
-  "description": "Breakthrough Method of Agile AI-driven Development",
+  "name": "@dkreuzer/bmad-method-ai-research",
+  "version": "1.0.2",
+  "description": "BMAD Method with AI Research expansion pack - Academic paper writing, experiment design, reproducible research workflows, and scientific publication with Archon MCP integration",
   "keywords": [
+    "bmad",
+    "bmad-method",
+    "ai-research",
+    "ml-research",
+    "academic-writing",
+    "research-agents",
+    "archon-mcp",
+    "literature-search",
+    "experiment-design",
+    "reproducible-research",
+    "scientific-publication",
     "agile",
     "ai",
     "orchestrator",
     "development",
     "methodology",
-    "agents",
-    "bmad"
+    "agents"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bmadcode/BMAD-METHOD.git"
+    "url": "git+https://github.com/davidkreuzer/bmad-method-ai-research.git"
   },
   "license": "MIT",
-  "author": "Brian (BMad) Madison",
+  "author": "David Kreuzer (based on BMAD by Brian Madison)",
   "main": "tools/cli.js",
   "bin": {
     "bmad": "tools/bmad-npx-wrapper.js",
-    "bmad-method": "tools/bmad-npx-wrapper.js"
+    "bmad-method": "tools/bmad-npx-wrapper.js",
+    "bmad-research": "tools/bmad-npx-wrapper.js"
   },
   "scripts": {
     "build": "node tools/cli.js build",
@@ -38,11 +49,6 @@
     "pre-release": "npm run validate && npm run format:check && npm run lint",
     "prepare": "husky",
     "preview:release": "node tools/preview-release-notes.js",
-    "release:major": "gh workflow run \"Manual Release\" -f version_bump=major",
-    "release:minor": "gh workflow run \"Manual Release\" -f version_bump=minor",
-    "release:patch": "gh workflow run \"Manual Release\" -f version_bump=patch",
-    "release:watch": "gh run watch",
-    "setup:hooks": "chmod +x tools/setup-hooks.sh && ./tools/setup-hooks.sh",
     "validate": "node tools/cli.js validate",
     "version:all": "node tools/bump-all-versions.js",
     "version:all:major": "node tools/bump-all-versions.js major",

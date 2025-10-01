@@ -2,7 +2,16 @@
 
 ## 🚀 Publishing Steps (5 minutes)
 
+### 0. Install Dependencies (FIRST!)
+
+```bash
+cd /path/to/BMAD-METHOD
+npm install
+npm run validate  # Verify: "All configurations are valid!"
+```
+
 ### 1. Update Package Info
+
 ```bash
 # Copy template to actual package.json
 cp package.json.fork-template package.json
@@ -14,12 +23,14 @@ cp package.json.fork-template package.json
 ```
 
 ### 2. Update README
+
 ```bash
 # Add banner from README-FORK-BANNER.md to top of main README.md
 # Keep all original BMAD content below the banner
 ```
 
 ### 3. Update License
+
 ```bash
 # Edit LICENSE file to include both copyrights:
 # - Original BMAD: Copyright (c) 2024 Brian Madison
@@ -27,6 +38,7 @@ cp package.json.fork-template package.json
 ```
 
 ### 4. Set Up GitHub
+
 ```bash
 # Create new repo on GitHub: your-repo-name
 
@@ -39,6 +51,7 @@ git push -u origin main
 ```
 
 ### 5. Publish to NPM
+
 ```bash
 # Login to npm
 npm login
@@ -67,14 +80,17 @@ npm publish --access public
 Choose one style:
 
 **Descriptive:**
+
 - `@yourname/bmad-method-ai-research`
 - `@yourname/bmad-with-research-pack`
 
 **Concise:**
+
 - `@yourname/bmad-research`
 - `@yourname/bmad-academic`
 
 **Branded:**
+
 - `@yourname/bmad-science`
 - `@yourname/bmad-ml`
 
@@ -142,15 +158,18 @@ npm publish
 ## 🆘 Troubleshooting
 
 ### Package name taken?
+
 - Try adding scope: `@yourname/package-name`
 - Add suffix: `bmad-research-enhanced`
 
 ### Publish failed?
+
 - Check npm login: `npm whoami`
 - Verify access: Use scoped package with `--access public`
 - Check package.json syntax
 
 ### Build errors?
+
 - Run: `npm run lint:fix`
 - Run: `npm run format`
 - Fix any validation errors
@@ -158,6 +177,7 @@ npm publish
 ## 📊 Success Metrics
 
 Track these:
+
 - ✅ NPM weekly downloads
 - ✅ GitHub stars
 - ✅ Community issues/discussions

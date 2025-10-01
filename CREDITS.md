@@ -8,6 +8,7 @@
 **Copyright**: © 2024 BMad Code, LLC
 
 The core BMAD (Breakthrough Method of Agile AI-driven Development) framework provides the foundation for this project, including:
+
 - Agent orchestration system
 - CLI and installer tools
 - Core agents and templates
@@ -21,6 +22,7 @@ The core BMAD (Breakthrough Method of Agile AI-driven Development) framework pro
 **Copyright**: © 2024 David Kreuzer
 
 The AI Research expansion pack adds specialized functionality for academic research:
+
 - 7 research-focused agents
 - Archon MCP integration for literature search
 - Research workflows and templates
@@ -28,6 +30,7 @@ The AI Research expansion pack adds specialized functionality for academic resea
 - Reproducibility infrastructure
 
 ### Research Agents
+
 - **Research Assistant** (Dr. Jamie Liu) - Literature search specialist
 - **Research Lead** (Dr. Sarah Chen) - Strategic planning and brainstorming
 - **Research Scientist** (Dr. Alex Kumar) - Experiment design
@@ -39,6 +42,7 @@ The AI Research expansion pack adds specialized functionality for academic resea
 ## Archon MCP Integration
 
 The Research Assistant agent integrates with Archon MCP for automated literature search:
+
 - Tag-based paper organization
 - RAG-powered semantic search
 - Knowledge base integration
@@ -46,6 +50,7 @@ The Research Assistant agent integrates with Archon MCP for automated literature
 ## Community Contributions
 
 Special thanks to the BMAD community for:
+
 - Feedback and testing
 - Feature suggestions
 - Bug reports
@@ -55,6 +60,7 @@ Special thanks to the BMAD community for:
 This project uses various open-source packages. See `package.json` for the complete list.
 
 Key dependencies:
+
 - chalk, commander, inquirer - CLI interface
 - js-yaml, fs-extra - File operations
 - glob - File pattern matching

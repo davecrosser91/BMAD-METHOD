@@ -15,6 +15,7 @@
 #### Step 1: Install the Expansion Pack
 
 **Option A: If you have BMAD installed in a project:**
+
 ```bash
 cd your-project
 npx bmad-method install
@@ -22,6 +23,7 @@ npx bmad-method install
 ```
 
 **Option B: Copy manually:**
+
 ```bash
 # Copy the entire bmad-ai-research folder to your project
 cp -r /path/to/BMAD-METHOD/expansion-packs/bmad-ai-research \
@@ -45,6 +47,7 @@ The Research Assistant uses Archon MCP's knowledge base for paper searches. If A
 #### Step 3: Verify Archon MCP Access
 
 **Archon MCP should already be configured** in your IDE. The Research Assistant will automatically use Archon's RAG tools if available:
+
 - `mcp__archon__rag_get_available_sources`
 - `mcp__archon__rag_search_knowledge_base`
 - `mcp__archon__rag_search_code_examples`
@@ -56,6 +59,7 @@ The Research Assistant uses Archon MCP's knowledge base for paper searches. If A
 #### Step 4: Test the Setup
 
 **4.1: Test Basic Agents (No MCP needed)**
+
 ```bash
 # In your IDE, activate Research Lead
 @research-lead
@@ -65,14 +69,16 @@ The Research Assistant uses Archon MCP's knowledge base for paper searches. If A
 You should see the agent greet you and show available commands.
 
 **4.2: Test Research Assistant (with Archon MCP)**
+
 ```bash
 @research-assistant
 *help
 ```
 
 Research Assistant should:
+
 - Greet you
-- Show MCP-specific commands (*search, *sources, *set-tag, etc.)
+- Show MCP-specific commands (*search, *sources, \*set-tag, etc.)
 - If MCP is configured correctly, you can test:
 
 ```bash
@@ -82,6 +88,7 @@ Research Assistant should:
 This lists available sources in your Archon knowledge base.
 
 **4.3: Test Knowledge Base Search**
+
 ```bash
 @research-assistant
 *search "machine learning"
@@ -94,29 +101,34 @@ The assistant will ask for your project tag (if not provided), then search the k
 #### Step 5: Start Your Research Workflow
 
 **5.1: Begin with Brainstorming**
+
 ```bash
 @research-lead
 *brainstorm "your research topic"
 ```
 
 **5.2: Search Your Library**
+
 ```bash
 @research-assistant
 *search "relevant keywords"
 ```
 
 **5.3: Iterate**
+
 - Research Lead refines questions
 - Research Assistant searches literature
 - Repeat until converged
 
 **5.4: Create Research Proposal**
+
 ```bash
 @research-lead
 *create-proposal
 ```
 
 **5.5: Continue Through Workflow**
+
 - Design experiments
 - Implement
 - Write paper
@@ -128,20 +140,24 @@ The assistant will ask for your project tag (if not provided), then search the k
 ### MCP Not Working
 
 **Check 1: Is Archon MCP running?**
+
 - Verify Archon MCP server is running in your IDE
 - Check IDE's MCP server status/logs
 
 **Check 2: Are papers in knowledge base?**
+
 - Ensure papers have been added to Archon knowledge base
 - Check that papers are tagged appropriately
 
 **Check 3: Is IDE recognizing Archon MCP?**
+
 - Restart IDE if needed
 - Check MCP server connection status
 
 ### Research Assistant Can't Find Papers
 
 **Possible causes:**
+
 1. **Empty knowledge base** - Add papers with tags first!
 2. **No project tag provided** - The assistant will ask for one
 3. **Wrong tag used** - Verify tag matches papers in knowledge base
@@ -150,6 +166,7 @@ The assistant will ask for your project tag (if not provided), then search the k
 ### Agent Commands Not Working
 
 **Check:**
+
 1. Agent activated correctly? Use `@agent-name`
 2. Commands have `*` prefix? Use `*help` not `help`
 3. BMAD core config loaded? Should happen on activation
@@ -159,6 +176,7 @@ The assistant will ask for your project tag (if not provided), then search the k
 ## Quick Start Summary
 
 **Minimal setup (without Archon MCP):**
+
 ```bash
 # 1. Install expansion pack
 npx bmad-method install
@@ -170,6 +188,7 @@ npx bmad-method install
 ```
 
 **Full setup (with Archon MCP):**
+
 ```bash
 # 1. Install expansion pack
 npx bmad-method install
@@ -188,6 +207,7 @@ npx bmad-method install
 ## What Works Without MCP
 
 Even without Archon MCP, you can use:
+
 - ✅ Research Lead (brainstorming, proposals)
 - ✅ Research Scientist (experiment design)
 - ✅ ML Engineer (implementation)
@@ -212,6 +232,7 @@ Even without Archon MCP, you can use:
 ## Support
 
 **Issues with BMAD:**
+
 - GitHub: https://github.com/bmadcode/bmad-method/issues
 - Discord: https://discord.gg/gk8jAdXWmj
 

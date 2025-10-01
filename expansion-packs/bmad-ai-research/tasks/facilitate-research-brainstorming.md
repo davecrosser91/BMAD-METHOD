@@ -26,18 +26,21 @@ Ask 5 context questions (don't preview what happens next):
 Based on answers, identify where they are in research ideation:
 
 **Phase A: Discovery (No clear direction yet)**
+
 - Broad exploration
 - Identifying interests
 - Problem discovery
 - Use curiosity-driven techniques
 
 **Phase B: Question Formation (Rough direction, need specificity)**
+
 - Gap analysis
 - Hypothesis generation
 - Research question formulation
 - Use structured research techniques
 
 **Phase C: Iteration After Literature (Questions + literature insights)**
+
 - Refining based on gaps found
 - Positioning against related work
 - Sharpening hypotheses
@@ -117,18 +120,21 @@ This is the MOST POWERFUL mode for research:
 ### Step 5: Research-Specific Session Flow
 
 **For Discovery Phase:**
+
 1. **Broad Exploration** (20-30 min) - What's interesting? What's confusing?
 2. **Problem Identification** (15-20 min) - What needs solving?
 3. **Question Generation** (20-30 min) - Turn problems into questions
 4. **Interest Filtering** (10-15 min) - What excites you most?
 
 **For Question Formation Phase:**
+
 1. **Gap Analysis** (15-20 min) - What's missing in literature?
 2. **Hypothesis Generation** (20-30 min) - Testable claims
 3. **Novelty Brainstorm** (15-20 min) - What's new about your approach?
 4. **Feasibility Check** (10-15 min) - Can we actually do this?
 
 **For Iteration Phase:**
+
 1. **Literature Insights Review** (10-15 min) - What did you find?
 2. **Gap Prioritization** (15-20 min) - Which gaps matter?
 3. **Positioning Brainstorm** (15-20 min) - How are we different?
@@ -139,6 +145,7 @@ This is the MOST POWERFUL mode for research:
 Generate structured document with these sections:
 
 **Executive Summary**
+
 - Research area and focus
 - Brainstorming phase (discovery/formation/iteration)
 - Techniques used and duration
@@ -146,6 +153,7 @@ Generate structured document with these sections:
 - Key insights and directions identified
 
 **Brainstorming Process** (for each technique used)
+
 - Technique name and purpose
 - Research questions generated (user's own words)
 - Insights discovered
@@ -162,6 +170,7 @@ Organize questions by maturity:
 - **Questions for Literature Review** - Need to check if answered
 
 For each well-formed question include:
+
 - The question
 - Why it matters (impact)
 - What's novel (if known)
@@ -169,18 +178,21 @@ For each well-formed question include:
 - Resources needed
 
 **Literature Gaps Identified** (if iteration mode)
+
 - What's been done
 - What's missing
 - Opportunities for contribution
 - How your ideas address gaps
 
 **Novelty Assessment**
+
 - What makes your ideas different
 - Potential contributions
 - Unique angles or perspectives
 - Areas where literature is thin
 
 **Feasibility Analysis**
+
 - **Ready to Pursue** - Can start soon
 - **Requires Resources** - Needs data/compute/expertise
 - **Long-term Projects** - Multi-year efforts
@@ -189,18 +201,20 @@ For each well-formed question include:
 **Next Steps Recommendation**
 
 For Top 3 Research Directions:
+
 - Specific research question
 - Why this direction is promising
 - Immediate next steps:
-  * Literature to read (specific papers or areas)
-  * Preliminary experiments to try
-  * Collaborators to consult
-  * Resources to acquire
+  - Literature to read (specific papers or areas)
+  - Preliminary experiments to try
+  - Collaborators to consult
+  - Resources to acquire
 - Timeline estimate (weeks/months)
 
 **Literature Review Plan**
 
 If user hasn't done thorough review yet:
+
 - Search keywords to use
 - Key venues to check (recent NeurIPS, ICML, etc.)
 - Specific papers to read (if known)
@@ -208,6 +222,7 @@ If user hasn't done thorough review yet:
 - How to identify gaps
 
 **Reflection & Iteration**
+
 - What resonated in this session
 - What needs more exploration
 - Questions that emerged for deeper investigation
@@ -216,6 +231,7 @@ If user hasn't done thorough review yet:
 ## Key Principles for Research Brainstorming
 
 ### Facilitation Principles
+
 - **GUIDE, DON'T GENERATE**: Help them find their questions
 - **QUESTION THE QUESTIONS**: "Why does this matter?" "How would we test this?"
 - **PUSH FOR SPECIFICITY**: Vague → Concrete → Testable
@@ -224,6 +240,7 @@ If user hasn't done thorough review yet:
 - **CAPTURE THE JOURNEY**: Document how ideas evolved
 
 ### Research-Specific Facilitation
+
 - **Hypothesis Thinking**: Turn ideas into testable claims
 - **Impact Assessment**: Would this result matter to the field?
 - **Novelty Checking**: Is this actually new?
@@ -231,6 +248,7 @@ If user hasn't done thorough review yet:
 - **Resource Awareness**: What would this require?
 
 ### Iterative Loop Management
+
 - **Brainstorm → Literature → Refine**: This is the natural research cycle
 - **Don't Over-Refine Before Literature**: Some ideas need reality check
 - **Literature Informs, Doesn't Dictate**: Gaps guide but don't constrain creativity
@@ -239,6 +257,7 @@ If user hasn't done thorough review yet:
 ## Advanced Research Facilitation Strategies
 
 ### Dealing with "Everything's Been Done"
+
 - Look for combinations not tried
 - Look for settings not tested
 - Look for explanations not provided
@@ -246,11 +265,13 @@ If user hasn't done thorough review yet:
 - Look for applications to new domains
 
 ### From Vague to Testable
+
 - "Improve X" → "Improve X by Y% on benchmark Z"
 - "Understand Y" → "Test whether Y is caused by Z via ablation"
 - "New method" → "Method using A and B to achieve C"
 
 ### Reality Checks
+
 - **Excitement Check**: "Does this genuinely interest you?"
 - **Impact Check**: "Would people care about this result?"
 - **Feasibility Check**: "Can we actually test this?"
@@ -258,6 +279,7 @@ If user hasn't done thorough review yet:
 - **Resource Check**: "What would this require?"
 
 ### Energy Management
+
 - Research brainstorming is mentally intensive
 - Take breaks between techniques
 - Celebrate good questions
@@ -265,6 +287,7 @@ If user hasn't done thorough review yet:
 - Mix divergent and convergent thinking
 
 ### Transition Management
+
 - **To Literature Review**: "Let's validate these ideas against existing work"
 - **To Deeper Brainstorm**: "Let's explore this direction more"
 - **To Proposal Writing**: "Ready to formalize this into a research proposal?"
@@ -273,6 +296,7 @@ If user hasn't done thorough review yet:
 ## Special Notes for Research Brainstorming
 
 ### This is NOT Just Brainstorming
+
 - Scientific rigor matters throughout
 - Questions must be testable
 - Novelty must be assessed
@@ -280,6 +304,7 @@ If user hasn't done thorough review yet:
 - Impact must be evaluated
 
 ### Integration with Literature Review
+
 - Brainstorm generates questions
 - Literature reveals gaps
 - Gaps inform refinement
@@ -287,6 +312,7 @@ If user hasn't done thorough review yet:
 - **This is an iterative loop, not linear**
 
 ### Output Becomes Foundation
+
 - Research questions → Research proposal
 - Gap analysis → Related work section
 - Novelty assessment → Contribution claims
@@ -294,6 +320,7 @@ If user hasn't done thorough review yet:
 - Everything feeds forward
 
 ### Encourage Documentation
+
 - Ideas forgotten are ideas lost
 - Document wild ideas - they often become tame
 - Track evolution of questions

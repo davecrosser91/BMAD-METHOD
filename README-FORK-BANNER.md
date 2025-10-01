@@ -33,6 +33,7 @@ npx @davidkreuzer/bmad-method-ai-research install
 This fork includes everything from core BMAD PLUS:
 
 ### 🔬 AI Research Expansion Pack
+
 - **7 Specialized Research Agents**
   - 📚 Research Assistant (literature search via Archon MCP)
   - 🔬 Research Lead (brainstorming & strategy)
@@ -43,6 +44,7 @@ This fork includes everything from core BMAD PLUS:
   - 🔁 Reproducibility Engineer (validation)
 
 ### 🎯 Key Features
+
 - ✅ **Automated Literature Search** with Archon MCP
 - ✅ **Iterative Research Workflow** (brainstorm → search → refine)
 - ✅ **Academic Paper Templates** (NeurIPS, ICML, CVPR, etc.)
@@ -53,6 +55,7 @@ This fork includes everything from core BMAD PLUS:
 ### 📋 Research Workflow
 
 Complete academic research lifecycle:
+
 1. **Planning** - Brainstorm questions + literature search (automated!)
 2. **Design** - Experimental architecture + specifications
 3. **Implementation** - Code experiments with baselines
@@ -69,14 +72,14 @@ Complete academic research lifecycle:
 
 ## 🆚 Differences from Core BMAD
 
-| Core BMAD | This Fork |
-|-----------|-----------|
-| Software development focus | AI/ML research focus |
-| PRD → Features → Code | Proposal → Experiments → Paper |
-| Not included | ✅ 7 research agents included |
-| Not included | ✅ Archon MCP integration |
-| Not included | ✅ Academic templates |
-| Not included | ✅ Research workflows |
+| Core BMAD                  | This Fork                      |
+| -------------------------- | ------------------------------ |
+| Software development focus | AI/ML research focus           |
+| PRD → Features → Code      | Proposal → Experiments → Paper |
+| Not included               | ✅ 7 research agents included  |
+| Not included               | ✅ Archon MCP integration      |
+| Not included               | ✅ Academic templates          |
+| Not included               | ✅ Research workflows          |
 
 ## 💡 Example Usage
 
@@ -118,6 +121,7 @@ Complete academic research lifecycle:
 ## 🎓 Target Audience
 
 Perfect for:
+
 - 🔬 AI/ML researchers
 - 📚 PhD students
 - 👨‍🏫 Academic researchers

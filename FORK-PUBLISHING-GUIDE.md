@@ -4,6 +4,22 @@ This guide shows how to publish your own fork of BMAD-METHOD with the AI Researc
 
 ## 📋 Pre-Publishing Checklist
 
+### 0. Install Dependencies (IMPORTANT - Do This First!)
+
+```bash
+# Make sure you're in the BMAD-METHOD directory
+cd /path/to/BMAD-METHOD
+
+# Install all npm dependencies
+npm install
+
+# Verify installation works
+npm run validate
+# Should show: "All configurations are valid!"
+```
+
+**⚠️ Without this step, you'll get "Cannot find module 'commander'" errors!**
+
 ### 1. Update package.json
 
 Change these fields in `package.json`:
@@ -54,7 +70,7 @@ git push -u origin main
 
 Add a prominent banner at the top of the main README:
 
-```markdown
+````markdown
 # BMAD Method - AI Research Edition 🔬
 
 > **This is a fork of [BMAD-METHOD](https://github.com/bmadcode/BMAD-METHOD)
@@ -81,11 +97,13 @@ npx @davidkreuzer/bmad-method-ai-research install
 @research-lead
 *brainstorm "your research topic"
 ```
+````
 
 ## Credits
 
 Based on [BMAD-METHOD](https://github.com/bmadcode/BMAD-METHOD) by Brian (BMad) Madison.
 AI Research expansion pack by David Kreuzer.
+
 ```
 
 ### 4. Create LICENSE Attribution
@@ -93,6 +111,7 @@ AI Research expansion pack by David Kreuzer.
 Update LICENSE to include both licenses:
 
 ```
+
 MIT License
 
 Original BMAD-METHOD:
@@ -103,7 +122,8 @@ Copyright (c) 2024 David Kreuzer
 
 Permission is hereby granted, free of charge...
 [rest of MIT license]
-```
+
+````
 
 ### 5. Test Locally
 
@@ -114,7 +134,7 @@ node /path/to/BMAD-METHOD/tools/installer/bin/bmad.js install
 
 # Verify AI Research pack appears in menu
 # Test agent activation
-```
+````
 
 ## 🚀 Publishing to NPM
 
@@ -205,6 +225,7 @@ npm publish
 ### NPM Package Page
 
 Make sure your README highlights:
+
 - 🎯 Target audience: AI/ML researchers
 - ✨ Key features: 7 research agents, Archon MCP, workflows
 - 🚀 Quick start: Simple installation command
@@ -242,6 +263,7 @@ Make sure your README highlights:
 ## 🎯 Recommended Package Names
 
 Choose one:
+
 - `@davidkreuzer/bmad-method-ai-research` (descriptive)
 - `@davidkreuzer/bmad-research` (concise)
 - `@davidkreuzer/bmad-academic` (clear audience)
@@ -249,6 +271,7 @@ Choose one:
 ## 📊 Success Metrics
 
 Track:
+
 - NPM downloads
 - GitHub stars
 - Issues/discussions
@@ -258,6 +281,7 @@ Track:
 ## 🤝 Contributing Back
 
 If you make improvements to core BMAD:
+
 - Consider submitting PR to upstream BMAD repo
 - Share AI Research pack enhancements
 - Help other researchers

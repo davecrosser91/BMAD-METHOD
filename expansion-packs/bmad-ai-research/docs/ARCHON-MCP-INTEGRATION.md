@@ -7,6 +7,7 @@ This guide explains how to integrate the Archon MCP server with the BMAD AI Rese
 ## What is Archon MCP?
 
 **Archon MCP** is a Model Context Protocol server that provides access to a knowledge base with RAG (Retrieval-Augmented Generation) capabilities, enabling:
+
 - Semantic search across your research papers and documents
 - Tag-based filtering and organization
 - Full-text content retrieval
@@ -16,11 +17,13 @@ This guide explains how to integrate the Archon MCP server with the BMAD AI Rese
 ### ⚠️ IMPORTANT: Setup Requirement
 
 **Archon MCP** should already be running if you have it configured in your IDE. The Research Assistant agent will:
+
 - Use Archon's RAG search tools to find papers
 - Filter by project tags for organization
 - Search both knowledge base content and code examples
 
 **Prerequisites:**
+
 - Archon MCP server running and configured
 - Papers added to knowledge base with appropriate tags
 - Project tag for organizing research papers
@@ -68,6 +71,7 @@ Most modern AI IDEs (Claude Code, Cursor, Cline, etc.) support MCP server config
 **1. Archon MCP is Already Configured**
 
 If Archon MCP is running in your IDE, no additional configuration is needed. The Research Assistant will use these Archon tools:
+
 - `mcp__archon__rag_get_available_sources` - List knowledge base sources
 - `mcp__archon__rag_search_knowledge_base` - Semantic search with tag filtering
 - `mcp__archon__rag_search_code_examples` - Search for code examples
@@ -177,12 +181,14 @@ agent:
 ```
 
 **Benefits:**
+
 - Self-documenting (agent definition declares its MCP needs)
 - Portable across IDEs
 - Clear separation of concerns
 - Token-efficient (only load MCP tools when agent activates)
 
 **Implementation in BMAD:**
+
 - Update agent template to include `mcp_servers` field
 - IDE integrations read this field and configure MCP access accordingly
 - Agents without `mcp_servers` don't load any MCP tools
@@ -208,7 +214,7 @@ The IDE's MCP client would recognize the "REQUEST MCP ACCESS" instruction and lo
 
 ### New Agent: research-assistant.md
 
-```markdown
+````markdown
 <!-- Powered by BMAD™ Core -->
 
 # research-assistant
@@ -282,9 +288,9 @@ commands:
 dependencies:
   data:
     - research-kb.md
-
 # NO traditional tasks or templates - this agent works via MCP tools
 ```
+````
 
 ### Workflow Integration
 
@@ -355,12 +361,14 @@ Savings: ~10K tokens across 6 agents
 ### Scenario: Starting New Research Project
 
 **Step 1: Brainstorm with Research Lead**
+
 ```
 User: @research-lead *brainstorm "attention mechanisms"
 [Research Lead facilitates, generates 15 research questions]
 ```
 
 **Step 2: Search Existing Library**
+
 ```
 User: @research-assistant *search "attention mechanisms transformers"
 
@@ -376,6 +384,7 @@ Would you like me to extract annotations from any of these?"
 ```
 
 **Step 3: Extract Key Insights**
+
 ```
 User: Yes, extract annotations from papers 1 and 2
 
@@ -393,6 +402,7 @@ and sparse attention is a potential solution you've already identified!"
 ```
 
 **Step 4: Identify Gaps**
+
 ```
 User: @research-assistant *identify-gaps
 
@@ -416,6 +426,7 @@ Would you like search keywords to find these?"
 ```
 
 **Step 5: Iterate with Research Lead**
+
 ```
 User: @research-lead
 
@@ -562,6 +573,7 @@ echo "3. Activate @research-assistant to use Zotero search"
 ### For Agent Interactions
 
 1. **Research Lead → Research Assistant Handoff**
+
    ```
    Research Lead: "Based on our brainstorming, we need to check
    literature on: [topics]. @research-assistant can you search
@@ -569,6 +581,7 @@ echo "3. Activate @research-assistant to use Zotero search"
    ```
 
 2. **Research Assistant → Research Lead Handoff**
+
    ```
    Research Assistant: "I found 15 relevant papers. Key themes:
    [summary]. Gaps identified: [gaps]. @research-lead can you
@@ -585,6 +598,7 @@ echo "3. Activate @research-assistant to use Zotero search"
 ### MCP Server Not Loading
 
 **Check:**
+
 1. Is `zotero-mcp` installed?
    ```bash
    zotero-mcp --version
@@ -599,6 +613,7 @@ echo "3. Activate @research-assistant to use Zotero search"
 ### Agent Can't Access Zotero
 
 **Check:**
+
 1. Is agent's MCP access configured? Check `mcp-config.json`
 2. Is Research Assistant agent activated? (not another agent)
 3. Are Zotero credentials valid? Test with `zotero-mcp` CLI
@@ -606,6 +621,7 @@ echo "3. Activate @research-assistant to use Zotero search"
 ### Semantic Search Not Working
 
 **Update search database:**
+
 ```
 @research-assistant *update-search-db
 ```

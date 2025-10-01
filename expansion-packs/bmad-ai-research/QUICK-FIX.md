@@ -38,6 +38,7 @@ This lists available sources in your knowledge base.
 ```
 
 The assistant will:
+
 1. Ask for project tag (if not provided)
 2. Search knowledge base using short keyword query
 3. Present results
@@ -45,21 +46,25 @@ The assistant will:
 ## Key Commands
 
 **Set project tag (required for filtering):**
+
 ```bash
 *set-tag "your-project-tag"
 ```
 
 **List available sources:**
+
 ```bash
 *sources
 ```
 
 **Search knowledge base:**
+
 ```bash
 *search "your query"
 ```
 
 **Search code examples:**
+
 ```bash
 *search-codes "react hooks"
 ```
@@ -79,11 +84,13 @@ The assistant will:
 ## Troubleshooting
 
 **Can't find papers?**
+
 - Check that papers are in knowledge base with tags
 - Verify Archon MCP is running
 - Try using `*sources` to see available sources
 
 **MCP not responding?**
+
 - Restart your IDE
 - Check MCP server status in IDE settings
 

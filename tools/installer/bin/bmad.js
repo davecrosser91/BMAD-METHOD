@@ -262,7 +262,7 @@ async function promptInstallation() {
   choices.push({
     name: bmadOptionText,
     value: 'bmad-core',
-    checked: true,
+    checked: false, // Default to expansion-only for AI Research fork
   });
 
   // Add expansion pack options
@@ -285,7 +285,7 @@ async function promptInstallation() {
     choices.push({
       name: packOptionText,
       value: pack.id,
-      checked: false,
+      checked: pack.id === 'bmad-ai-research', // Default AI Research pack to checked
     });
   }
 

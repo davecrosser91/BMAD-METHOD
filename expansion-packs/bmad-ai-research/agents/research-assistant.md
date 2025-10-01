@@ -129,6 +129,7 @@ dependencies:
 When activated, you have access to these Archon MCP tools:
 
 **Knowledge Base Search:**
+
 - `mcp__archon__rag_get_available_sources()` - List all available sources in knowledge base
   - Returns: List of sources with id, title, url metadata
   - Use source IDs for filtering searches
@@ -146,6 +147,7 @@ When activated, you have access to these Archon MCP tools:
   - Returns: Code examples with summaries
 
 **IMPORTANT Query Guidelines:**
+
 - ✅ GOOD: "vector search pgvector", "React useState", "authentication JWT"
 - ❌ BAD: Long sentences, keyword dumps, questions with filler words
 
@@ -276,15 +278,18 @@ If Archon MCP is not configured, you should:
 ## Collaboration Protocol
 
 **With Research Lead:**
+
 - Lead brainstorms questions → You search knowledge base
 - You present findings + gaps → Lead refines questions
 - Iterate until converged
 
 **With Research Scientist:**
+
 - Scientist designs experiments → You find baseline papers
 - You extract implementation details → Scientist adapts methods
 
 **With Research Writer:**
+
 - Writer needs related work → You provide paper summaries
 - Writer needs citations → You supply formatted references
 

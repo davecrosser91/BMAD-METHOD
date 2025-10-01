@@ -5,6 +5,7 @@ Transform BMAD-METHOD into a complete AI/ML research laboratory for academic pap
 ## Quick Start
 
 **Local Development Install:**
+
 ```bash
 # Install in existing project from local BMAD repo
 cd your-project
@@ -13,6 +14,7 @@ node /path/to/BMAD-METHOD/tools/installer/bin/bmad.js install
 ```
 
 **When Published (future):**
+
 ```bash
 cd your-project
 npx bmad-method install
@@ -20,6 +22,7 @@ npx bmad-method install
 ```
 
 Then activate any research agent:
+
 ```bash
 @research-lead          # Strategic planning & brainstorming
 @research-assistant     # Literature search (uses Archon MCP)
@@ -57,11 +60,13 @@ Well-Formed Research Questions + Identified Gaps
 ```
 
 **NEW: Automated Literature Search with Archon MCP!**
+
 - Research Assistant searches your knowledge base using project tags
 - No manual literature searching - agent does it for you
 - Finds relevant papers, identifies gaps, suggests additions
 
 **Why This Matters:**
+
 - ✅ Ideas grounded in reality (not already fully solved)
 - ✅ Questions become specific and testable
 - ✅ Clear novelty and gaps identified upfront
@@ -72,19 +77,20 @@ Well-Formed Research Questions + Identified Gaps
 
 ## What Makes Research Different
 
-| Software Development | AI Research |
-|---------------------|-------------|
-| Build working product | Advance scientific knowledge |
-| PRD → Stories → Code | Proposal → Experiments → Paper |
-| Features must work | Experiments often fail (and that's okay) |
-| Deployed software | Published paper + open code |
-| QA checks functionality | Peer review checks rigor |
+| Software Development    | AI Research                              |
+| ----------------------- | ---------------------------------------- |
+| Build working product   | Advance scientific knowledge             |
+| PRD → Stories → Code    | Proposal → Experiments → Paper           |
+| Features must work      | Experiments often fail (and that's okay) |
+| Deployed software       | Published paper + open code              |
+| QA checks functionality | Peer review checks rigor                 |
 
 ## The Research Team
 
 ### 7 Specialized Research Agents
 
 **📚 Research Assistant (Dr. Jamie Liu)** - NEW!
+
 - Literature search via Archon MCP knowledge base
 - Paper discovery using project tags
 - Gap identification and synthesis
@@ -92,6 +98,7 @@ Well-Formed Research Questions + Identified Gaps
 - **Commands:** `*set-tag`, `*sources`, `*search`, `*search-codes`
 
 **🔬 Research Lead (Dr. Sarah Chen)**
+
 - Research brainstorming and strategy
 - Proposal development
 - Validation and oversight
@@ -99,6 +106,7 @@ Well-Formed Research Questions + Identified Gaps
 - **Commands:** `*brainstorm`, `*create-proposal`, `*validate-research`
 
 **🧪 Research Scientist (Dr. Alex Kumar)**
+
 - Experimental design and methodology
 - Hypothesis formulation
 - Novel algorithm design
@@ -106,6 +114,7 @@ Well-Formed Research Questions + Identified Gaps
 - **Commands:** `*create-architecture`, `*design-experiment`, `*interpret-results`
 
 **⚙️ ML Engineer (Jordan Lee)**
+
 - Experiment implementation
 - Baseline coding
 - Training pipeline optimization
@@ -113,6 +122,7 @@ Well-Formed Research Questions + Identified Gaps
 - **Commands:** `*implement-experiment`, `*execute-experiment`, `*debug-experiment`
 
 **📊 Data Analyst (Dr. Maya Patel)**
+
 - Dataset preparation
 - Statistical analysis
 - Publication-quality visualization
@@ -120,6 +130,7 @@ Well-Formed Research Questions + Identified Gaps
 - **Commands:** `*analyze-results`, `*create-figures`, `*significance-test`
 
 **✍️ Research Writer (Dr. Emma Wright)**
+
 - Paper drafting and revision
 - Scientific storytelling
 - Submission formatting
@@ -127,6 +138,7 @@ Well-Formed Research Questions + Identified Gaps
 - **Commands:** `*create-paper`, `*draft-abstract`, `*prepare-submission`
 
 **🔁 Reproducibility Engineer (Sam Rodriguez)**
+
 - Environment setup
 - Seed control and versioning
 - Code release preparation
@@ -136,6 +148,7 @@ Well-Formed Research Questions + Identified Gaps
 ## Research Workflow
 
 ### Phase 1: Planning - WITH ITERATIVE LOOP + AUTOMATED LITERATURE SEARCH
+
 ```
 Research Lead → Initial Brainstorming (10-20 questions)
             ↓
@@ -163,6 +176,7 @@ Research Lead → Validation
 **Key Improvement:** Research Assistant automates literature search using your tagged papers in Archon MCP!
 
 ### Phase 2: Experimentation (IDE Required)
+
 ```
 Research Scientist → Design Experiments
             ↓
@@ -178,6 +192,7 @@ Research Scientist → Interpret Findings
 **Outputs:** Experiment specs, code, results, trained models
 
 ### Phase 3: Writing (Web UI or IDE)
+
 ```
 Research Writer → Create Paper Outline
             ↓
@@ -193,6 +208,7 @@ Research Writer → Format for Submission
 **Outputs:** Complete research paper
 
 ### Phase 4: Publication
+
 ```
 Reproducibility Engineer → Prepare Code Release
             ↓
@@ -208,6 +224,7 @@ Submit to Conference/Journal
 ### Research-Specific Templates
 
 **Research Proposal** (`research-proposal-tmpl.yaml`)
+
 - Problem statement and motivation
 - Research questions and hypotheses
 - Proposed approach
@@ -215,6 +232,7 @@ Submit to Conference/Journal
 - Timeline and resources
 
 **Experimental Architecture** (`experimental-architecture-tmpl.yaml`)
+
 - Model architecture specifications
 - Training procedures
 - Baseline implementations
@@ -222,12 +240,14 @@ Submit to Conference/Journal
 - Reproducibility specifications
 
 **Paper Outline** (`paper-outline-tmpl.yaml`)
+
 - Complete paper structure
 - Section-by-section planning
 - Figure and table planning
 - Page budget allocation
 
 **Experiment Specification** (`experiment-spec-tmpl.yaml`)
+
 - Hypothesis to test
 - Methodology details
 - Implementation plan
@@ -235,12 +255,14 @@ Submit to Conference/Journal
 - Analysis approach
 
 **Literature Review** (`literature-review-tmpl.yaml`)
+
 - Thematic organization
 - Key papers analysis
 - Research gaps identification
 - Positioning statement
 
 **Reproducibility Checklist** (`reproducibility-checklist-tmpl.yaml`)
+
 - Code reproducibility checks
 - Environment setup validation
 - Data pipeline verification
@@ -251,6 +273,7 @@ Submit to Conference/Journal
 ### Step 1: Install Expansion Pack
 
 **Option A: From Published Package (when available):**
+
 ```bash
 cd your-project
 npx bmad-method install
@@ -276,6 +299,7 @@ cp -r /path/to/BMAD-METHOD/expansion-packs/bmad-ai-research \
 ```
 
 **Fresh research project:**
+
 ```bash
 mkdir my-research-project && cd my-research-project
 # Use one of the methods above
@@ -431,24 +455,28 @@ If you want automated literature search via the Research Assistant:
 ## Best Practices
 
 ### Reproducibility First
+
 - Set all random seeds from day one
 - Version control everything (code, configs, not models)
 - Document as you go, not retrospectively
 - Use experiment tracking (wandb, tensorboard)
 
 ### Embrace Failure
+
 - Most experiments fail - that's research
 - Failed experiments teach what doesn't work
 - Document failures to avoid repeating them
 - Pivot based on what you learn
 
 ### Statistical Rigor
+
 - Always run multiple seeds (3-5 minimum)
 - Report mean ± standard deviation
 - Perform significance testing
 - Compare fairly against strong baselines
 
 ### Honest Science
+
 - Report what you find, not what you hoped
 - Acknowledge limitations explicitly
 - Give proper credit to related work
@@ -470,12 +498,15 @@ If you want automated literature search via the Research Assistant:
 This pack helps you prepare papers for:
 
 **Top ML Conferences:**
+
 - NeurIPS, ICML, ICLR
 
 **Top Vision Conferences:**
+
 - CVPR, ICCV, ECCV
 
 **Top NLP Conferences:**
+
 - ACL, EMNLP, NAACL
 
 **And many others** (specialized venues for robotics, data mining, etc.)
@@ -483,6 +514,7 @@ This pack helps you prepare papers for:
 ## What's Included
 
 ### 📁 Directory Structure
+
 ```
 bmad-ai-research/
 ├── agents/                 # 7 specialized research agents (NEW: Research Assistant)
@@ -520,14 +552,14 @@ bmad-ai-research/
 
 ## Differences from Core BMAD
 
-| Core BMAD | AI Research Pack |
-|-----------|------------------|
-| PRD | Research Proposal |
-| Architecture | Experimental Architecture |
-| User Stories | Experiment Specifications |
-| Dev implements features | ML Engineer implements experiments |
+| Core BMAD               | AI Research Pack                                |
+| ----------------------- | ----------------------------------------------- |
+| PRD                     | Research Proposal                               |
+| Architecture            | Experimental Architecture                       |
+| User Stories            | Experiment Specifications                       |
+| Dev implements features | ML Engineer implements experiments              |
 | QA checks functionality | Reproducibility Engineer checks reproducibility |
-| Product release | Paper publication + code release |
+| Product release         | Paper publication + code release                |
 
 ## Common Research Pitfalls Avoided
 
@@ -541,6 +573,7 @@ bmad-ai-research/
 ## Success Stories
 
 Research conducted with structured workflows like this:
+
 - Higher acceptance rates (fewer desk rejects)
 - Faster iteration (clear experiment specifications)
 - Better reproducibility (checklist-driven development)
@@ -550,6 +583,7 @@ Research conducted with structured workflows like this:
 ## Contributing
 
 Found a bug? Have suggestions? Want to add features?
+
 - Open an issue in the main BMAD repository
 - Contribute research-specific improvements
 - Share your published papers using this pack!
@@ -563,6 +597,7 @@ MIT License - Same as core BMAD-METHOD
 Built on the BMAD-METHOD™ framework by BMad Code, LLC.
 
 Designed for researchers who want to:
+
 - Conduct rigorous, reproducible research
 - Navigate the publication process systematically
 - Collaborate effectively on research projects
@@ -600,6 +635,7 @@ node /path/to/BMAD-METHOD/tools/installer/bin/bmad.js install
 ```
 
 **Questions?**
+
 - 📚 Check the [research knowledge base](data/research-kb.md)
 - 💬 Join the [BMAD Discord](https://discord.gg/gk8jAdXWmj)
 - 🐛 Report issues on [GitHub](https://github.com/bmadcode/bmad-method/issues)
@@ -608,4 +644,4 @@ node /path/to/BMAD-METHOD/tools/installer/bin/bmad.js install
 
 🔬 **Good luck with your research!** 📊📝
 
-*Built with ❤️ for researchers who want rigorous, reproducible, and publishable AI research.*
+_Built with ❤️ for researchers who want rigorous, reproducible, and publishable AI research._
