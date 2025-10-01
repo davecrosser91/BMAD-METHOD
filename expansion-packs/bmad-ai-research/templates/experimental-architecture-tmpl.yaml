@@ -1,0 +1,259 @@
+# <!-- Powered by BMAD™ Core -->
+template:
+  id: experimental-architecture-v1
+  name: Experimental Architecture Document
+  version: 1.0
+  output:
+    format: markdown
+    filename: docs/experimental-architecture.md
+    title: "{{project_name}} Experimental Architecture"
+
+workflow:
+  mode: interactive
+  elicitation: advanced-elicitation
+
+sections:
+  - id: overview
+    title: Architecture Overview
+    instruction: |
+      Review the research proposal document first. This architecture defines the technical
+      implementation of the proposed approach and experimental setup.
+    sections:
+      - id: summary
+        title: Summary
+        type: paragraphs
+        instruction: 2-3 paragraphs summarizing the experimental architecture
+      - id: changelog
+        title: Change Log
+        type: table
+        columns: [Date, Version, Description, Author]
+        instruction: Track document versions and changes
+
+  - id: model-architecture
+    title: Model Architecture
+    instruction: |
+      Detailed specification of the proposed model or algorithm.
+    elicit: true
+    sections:
+      - id: high-level-design
+        title: High-Level Design
+        type: paragraphs
+        instruction: Overall architecture description with diagrams if helpful
+      - id: components
+        title: Key Components
+        type: nested-list
+        instruction: Break down the architecture into components
+        examples:
+          - "Encoder Module"
+          - "  - Input embedding layer (dim=512)"
+          - "  - 6 transformer blocks with multi-head attention"
+          - "  - Layer normalization and residual connections"
+      - id: hyperparameters
+        title: Key Hyperparameters
+        type: table
+        columns: [Parameter, Default Value, Search Range, Justification]
+        instruction: Document important hyperparameters
+      - id: model-size
+        title: Model Size and Complexity
+        type: bullet-list
+        instruction: Number of parameters, FLOPs, memory requirements
+
+  - id: training-procedure
+    title: Training Procedure
+    instruction: |
+      Specify how the model will be trained.
+    elicit: true
+    sections:
+      - id: objective-function
+        title: Objective Function
+        type: paragraphs
+        instruction: Loss function(s) and optimization objective
+      - id: optimization
+        title: Optimization
+        type: bullet-list
+        instruction: Optimizer, learning rate schedule, training duration
+      - id: data-processing
+        title: Data Processing Pipeline
+        type: numbered-list
+        instruction: Step-by-step data preprocessing and augmentation
+      - id: training-infrastructure
+        title: Training Infrastructure
+        type: bullet-list
+        instruction: Hardware specs, distributed training strategy, estimated time
+
+  - id: baseline-implementations
+    title: Baseline Implementations
+    instruction: |
+      Specify how baseline methods will be implemented for fair comparison.
+    sections:
+      - id: baselines
+        title: Baseline Methods
+        type: nested-list
+        instruction: For each baseline, specify implementation details
+        examples:
+          - "Baseline 1: Vanilla Transformer"
+          - "  - Source: Vaswani et al. 2017 implementation"
+          - "  - Hyperparameters: Matched to our model where possible"
+          - "  - Trained for: Same number of epochs as our method"
+      - id: fair-comparison
+        title: Fair Comparison Protocol
+        type: bullet-list
+        instruction: How will we ensure fair comparisons?
+        examples:
+          - "All models use same train/val/test splits"
+          - "Same compute budget (total GPU hours)"
+          - "Hyperparameters tuned on same validation set"
+
+  - id: datasets
+    title: Datasets and Benchmarks
+    instruction: |
+      Detailed specification of all datasets used in experiments.
+    elicit: true
+    sections:
+      - id: dataset-details
+        title: Dataset Details
+        type: nested-list
+        instruction: For each dataset, provide comprehensive details
+        examples:
+          - "ImageNet-1K"
+          - "  - Size: 1.28M training images, 50K validation"
+          - "  - Classes: 1000"
+          - "  - Preprocessing: Center crop 224x224, normalize per ImageNet stats"
+          - "  - Split: Standard train/val split"
+      - id: data-splits
+        title: Data Splits
+        type: table
+        columns: [Dataset, Train Size, Val Size, Test Size, Split Strategy]
+        instruction: Document how data is split
+      - id: preprocessing
+        title: Preprocessing Pipeline
+        type: numbered-list
+        instruction: Step-by-step preprocessing for each dataset
+
+  - id: evaluation
+    title: Evaluation Protocol
+    instruction: |
+      Specify how models will be evaluated and compared.
+    elicit: true
+    sections:
+      - id: metrics
+        title: Evaluation Metrics
+        type: nested-list
+        instruction: Define each metric precisely
+        examples:
+          - "Primary Metric: Top-1 Accuracy"
+          - "  - Definition: Percentage of examples where predicted class matches ground truth"
+          - "  - Aggregation: Mean across test set"
+      - id: statistical-testing
+        title: Statistical Testing
+        type: bullet-list
+        instruction: How will statistical significance be determined?
+        examples:
+          - "Run each experiment 3 times with different seeds"
+          - "Report mean ± std dev"
+          - "Use paired t-test for significance (p < 0.05)"
+      - id: evaluation-infrastructure
+        title: Evaluation Infrastructure
+        type: bullet-list
+        instruction: Hardware, batch sizes, inference time measurement
+
+  - id: ablation-studies
+    title: Ablation Studies
+    instruction: |
+      Plan ablation experiments to validate design choices.
+    elicit: true
+    sections:
+      - id: ablation-plan
+        title: Ablation Plan
+        type: nested-list
+        instruction: For each component, specify ablation experiment
+        examples:
+          - "Ablation 1: Remove attention mechanism"
+          - "  - Baseline: Full model"
+          - "  - Variant: Replace attention with fixed positional encoding"
+          - "  - Hypothesis: Attention contributes 5-10% improvement"
+      - id: component-analysis
+        title: Component Analysis
+        type: table
+        columns: [Component, Ablation Strategy, Expected Impact]
+        instruction: Systematic analysis of each component's contribution
+
+  - id: experiment-schedule
+    title: Experiment Schedule
+    instruction: |
+      Define the order and dependencies of experiments.
+    sections:
+      - id: experiment-phases
+        title: Experiment Phases
+        type: numbered-list
+        instruction: Logical grouping and ordering of experiments
+        examples:
+          - "Phase 1: Preliminary experiments on small dataset (1 week)"
+          - "Phase 2: Full-scale training of all baselines (2 weeks)"
+          - "Phase 3: Train proposed method with hyperparameter search (2 weeks)"
+          - "Phase 4: Ablation studies (1 week)"
+          - "Phase 5: Final evaluation on all benchmarks (1 week)"
+      - id: dependencies
+        title: Experiment Dependencies
+        type: bullet-list
+        instruction: Which experiments depend on others?
+
+  - id: reproducibility
+    title: Reproducibility Specification
+    instruction: |
+      Define everything needed for reproducible research.
+    sections:
+      - id: random-seeds
+        title: Random Seeds
+        type: bullet-list
+        instruction: How will randomness be controlled?
+      - id: environment
+        title: Software Environment
+        type: bullet-list
+        instruction: Exact versions of all dependencies
+        examples:
+          - "Python 3.10.12"
+          - "PyTorch 2.1.0+cu118"
+          - "transformers 4.35.0"
+      - id: hardware-specs
+        title: Hardware Specifications
+        type: bullet-list
+        instruction: Exact hardware used for experiments
+      - id: code-structure
+        title: Code Structure
+        type: nested-list
+        instruction: Planned repository organization
+        examples:
+          - "src/"
+          - "  - models/ (model implementations)"
+          - "  - data/ (data loading and preprocessing)"
+          - "  - training/ (training loops and optimization)"
+          - "  - evaluation/ (metrics and evaluation scripts)"
+          - "experiments/ (experiment configs and scripts)"
+          - "results/ (outputs and checkpoints)"
+
+  - id: expected-results
+    title: Expected Results
+    instruction: |
+      Predictions for experimental outcomes to guide interpretation.
+    sections:
+      - id: performance-predictions
+        title: Performance Predictions
+        type: table
+        columns: [Dataset, Baseline Performance, Expected Performance, Stretch Goal]
+        instruction: Quantitative predictions for each benchmark
+      - id: qualitative-predictions
+        title: Qualitative Predictions
+        type: bullet-list
+        instruction: What qualitative behaviors do you expect to observe?
+
+  - id: risk-mitigation
+    title: Technical Risks and Mitigation
+    instruction: |
+      Identify technical risks in the experimental plan.
+    sections:
+      - id: technical-challenges
+        title: Technical Challenges
+        type: table
+        columns: [Challenge, Likelihood, Impact, Mitigation, Fallback Plan]
+        instruction: Potential technical issues and solutions

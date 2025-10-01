@@ -1,0 +1,243 @@
+# <!-- Powered by BMAD™ Core -->
+template:
+  id: research-proposal-v1
+  name: Research Proposal Document
+  version: 1.0
+  output:
+    format: markdown
+    filename: docs/research-proposal.md
+    title: "{{project_name}} Research Proposal"
+
+workflow:
+  mode: interactive
+  elicitation: advanced-elicitation
+
+sections:
+  - id: overview
+    title: Research Overview
+    instruction: |
+      Establish the research foundation. Ask user about their research idea and domain.
+      If they have preliminary literature review, incorporate it. Otherwise, note gaps to fill later.
+    sections:
+      - id: title
+        title: Research Title
+        type: text
+        instruction: Concise, descriptive title that captures the research focus
+      - id: abstract
+        title: Abstract
+        type: paragraph
+        instruction: 150-250 word summary covering problem, approach, expected contributions
+      - id: keywords
+        title: Keywords
+        type: list
+        instruction: 5-8 keywords for research classification
+      - id: changelog
+        title: Change Log
+        type: table
+        columns: [Date, Version, Description, Author]
+        instruction: Track document versions and changes
+
+  - id: motivation
+    title: Motivation and Background
+    instruction: |
+      Establish why this research matters. Include problem statement, current limitations,
+      and opportunity for advancement.
+    elicit: true
+    sections:
+      - id: problem-statement
+        title: Problem Statement
+        type: paragraphs
+        instruction: Clear articulation of the research problem (2-3 paragraphs)
+      - id: current-limitations
+        title: Current State and Limitations
+        type: paragraphs
+        instruction: What are the current approaches and their shortcomings?
+      - id: research-gap
+        title: Research Gap
+        type: paragraphs
+        instruction: What specific gap in knowledge or capability will this research address?
+
+  - id: research-questions
+    title: Research Questions and Hypotheses
+    instruction: |
+      Define the specific questions this research will answer and testable hypotheses.
+    elicit: true
+    sections:
+      - id: primary-question
+        title: Primary Research Question
+        type: text
+        instruction: The main question this research seeks to answer
+      - id: secondary-questions
+        title: Secondary Research Questions
+        type: numbered-list
+        prefix: RQ
+        instruction: Additional questions that support the primary question
+        examples:
+          - "RQ1: How does the proposed method scale with dataset size?"
+          - "RQ2: What are the key factors that influence performance?"
+      - id: hypotheses
+        title: Hypotheses
+        type: numbered-list
+        prefix: H
+        instruction: Testable hypotheses derived from research questions
+        examples:
+          - "H1: Method X will outperform baseline Y on metric Z by at least 15%"
+          - "H2: The performance improvement will be consistent across diverse datasets"
+
+  - id: proposed-approach
+    title: Proposed Approach
+    instruction: |
+      Describe the novel approach or methodology at a high level.
+      Detailed technical specification will come in the experimental architecture document.
+    elicit: true
+    sections:
+      - id: overview
+        title: Approach Overview
+        type: paragraphs
+        instruction: High-level description of the proposed method (2-3 paragraphs)
+      - id: key-innovations
+        title: Key Innovations
+        type: numbered-list
+        instruction: What makes this approach novel?
+        examples:
+          - "Novel attention mechanism that incorporates domain-specific constraints"
+          - "Hybrid training procedure combining supervised and self-supervised learning"
+      - id: technical-components
+        title: Main Technical Components
+        type: bullet-list
+        instruction: List the major technical components or modules
+      - id: expected-advantages
+        title: Expected Advantages
+        type: bullet-list
+        instruction: Why should this approach work better than existing methods?
+
+  - id: experimental-plan
+    title: Experimental Plan Overview
+    instruction: |
+      High-level experimental strategy. Detailed experiment specs will be created separately.
+    sections:
+      - id: datasets
+        title: Datasets
+        type: bullet-list
+        instruction: Which datasets will be used for evaluation?
+      - id: baselines
+        title: Baseline Methods
+        type: bullet-list
+        instruction: What existing methods will be compared against?
+      - id: evaluation-metrics
+        title: Evaluation Metrics
+        type: bullet-list
+        instruction: How will success be measured?
+      - id: ablation-studies
+        title: Planned Ablation Studies
+        type: bullet-list
+        instruction: What components will be ablated to validate their contribution?
+
+  - id: expected-contributions
+    title: Expected Contributions
+    instruction: |
+      Clearly articulate the expected scientific contributions to the field.
+    elicit: true
+    sections:
+      - id: primary-contributions
+        title: Primary Contributions
+        type: numbered-list
+        prefix: C
+        instruction: Main contributions this research will make
+        examples:
+          - "C1: A novel architecture for X that improves Y by Z%"
+          - "C2: First comprehensive empirical study of A across B domains"
+          - "C3: Open-source implementation and benchmark suite"
+      - id: impact
+        title: Expected Impact
+        type: paragraphs
+        instruction: How will this advance the field? What applications will benefit?
+
+  - id: related-work
+    title: Related Work Summary
+    instruction: |
+      Brief overview of related work. Full literature review can be separate document.
+    sections:
+      - id: key-papers
+        title: Key Related Papers
+        type: list
+        instruction: List 5-10 most relevant papers with brief descriptions
+      - id: positioning
+        title: Research Positioning
+        type: paragraphs
+        instruction: How does this work relate to and differ from existing approaches?
+
+  - id: resources
+    title: Resources and Timeline
+    instruction: |
+      Practical considerations for executing the research.
+    sections:
+      - id: computational-requirements
+        title: Computational Requirements
+        type: bullet-list
+        instruction: GPU/TPU needs, estimated compute hours, storage requirements
+      - id: data-requirements
+        title: Data Requirements
+        type: bullet-list
+        instruction: Datasets needed, data collection or preprocessing efforts
+      - id: timeline
+        title: Timeline
+        type: table
+        columns: [Phase, Description, Duration, Milestones]
+        instruction: High-level timeline for research phases
+      - id: collaborators
+        title: Collaborators and Roles
+        type: bullet-list
+        instruction: Who is involved and their responsibilities?
+
+  - id: success-criteria
+    title: Success Criteria
+    instruction: |
+      Define what constitutes successful completion of this research.
+    sections:
+      - id: minimum-viable
+        title: Minimum Viable Success
+        type: bullet-list
+        instruction: What must be achieved for this to be publishable?
+      - id: target-success
+        title: Target Success
+        type: bullet-list
+        instruction: What would constitute strong results?
+      - id: stretch-goals
+        title: Stretch Goals
+        type: bullet-list
+        instruction: What would be exceptional outcomes beyond target?
+
+  - id: risks
+    title: Risks and Mitigation
+    instruction: |
+      Identify potential challenges and how to address them.
+    sections:
+      - id: technical-risks
+        title: Technical Risks
+        type: table
+        columns: [Risk, Likelihood, Impact, Mitigation Strategy]
+        instruction: Potential technical challenges
+      - id: resource-risks
+        title: Resource Risks
+        type: table
+        columns: [Risk, Likelihood, Impact, Mitigation Strategy]
+        instruction: Resource availability or access challenges
+
+  - id: target-venues
+    title: Target Publication Venues
+    instruction: |
+      Where will this research be submitted for publication?
+    sections:
+      - id: primary-venues
+        title: Primary Target Venues
+        type: bullet-list
+        instruction: Main conferences or journals (e.g., NeurIPS, ICML, ICLR, CVPR)
+      - id: alternative-venues
+        title: Alternative Venues
+        type: bullet-list
+        instruction: Backup options if primary venues don't accept
+      - id: timeline-alignment
+        title: Submission Timeline
+        type: text
+        instruction: When are the submission deadlines?

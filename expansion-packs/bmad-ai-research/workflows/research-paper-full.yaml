@@ -1,0 +1,584 @@
+# <!-- Powered by BMAD™ Core -->
+workflow:
+  id: research-paper-full
+  name: Full Research Paper Development
+  description: >-
+    Complete workflow for AI/ML research from idea to published paper.
+    Covers literature review, proposal, experimental design, implementation,
+    analysis, and paper writing.
+  type: research
+  project_types:
+    - ml-research
+    - ai-research
+    - academic-paper
+    - conference-submission
+
+  phases:
+    planning:
+      description: Research planning and proposal development
+      location: web-ui-recommended
+      reason: Cost-effective for large context and document generation
+
+    experimentation:
+      description: Implementation and execution of experiments
+      location: ide-required
+      reason: Requires file operations, code execution, result tracking
+
+    writing:
+      description: Paper writing and revision
+      location: web-ui-or-ide
+      reason: Either environment works, IDE better for integrated workflow
+
+  sequence:
+    # PHASE 1: RESEARCH PLANNING (Web UI Recommended)
+
+    # CRITICAL: This phase uses an ITERATIVE LOOP between brainstorming and literature review
+    # The loop continues until research questions are well-formed and gaps are identified
+
+    - agent: research-lead
+      action: brainstorm_research_questions
+      creates: research-brainstorming-session-results.md
+      uses: facilitate-research-brainstorming.md
+      notes: |
+        BRAINSTORM research questions and directions:
+        - Use *brainstorm command
+        - Generate initial research questions
+        - Explore what's interesting and novel
+        - Identify areas worth investigating
+        - Output: 10-20 potential research questions
+        - SAVE OUTPUT: Copy docs/research-brainstorming-session-results.md
+
+    - agent: research-lead
+      action: initial_literature_pulse_check
+      reviews: brainstorming_results
+      notes: |
+        Quick literature pulse check (by user, not agent):
+        - Agent provides search keywords for top ideas
+        - User does quick Google Scholar/arXiv search
+        - User notes: What exists? What doesn't?
+        - Takes 30-60 minutes
+        - Brings findings back to Research Lead
+
+    - iterative_loop: brainstorm_literature_refinement
+      repeats: until_converged (typically 2-4 iterations)
+      agents: [research-lead]
+      notes: |
+        ITERATIVE REFINEMENT LOOP:
+
+        1. Research Lead: Analyze literature findings
+           - What gaps did user find?
+           - What's already been done?
+           - What opportunities emerged?
+
+        2. Research Lead: Refine research questions (*refine-questions)
+           - Sharpen based on gaps
+           - Pivot away from saturated areas
+           - Focus on novelty opportunities
+           - Update brainstorming document
+
+        3. User: Deeper literature check
+           - Read key papers from refined directions
+           - Identify specific gaps
+           - Understand positioning
+           - Takes 2-4 hours
+
+        4. Research Lead: Further refinement
+           - Based on deeper literature understanding
+           - Formulate specific, testable hypotheses
+           - Assess feasibility and impact
+
+        CONVERGENCE CRITERIA:
+        - Research questions are specific and testable
+        - Gaps in literature clearly identified
+        - Novelty is defensible
+        - Feasibility is reasonable
+        - Impact is significant
+
+        OUTPUT: Refined research-brainstorming-session-results.md with well-formed questions
+
+    - agent: research-lead
+      creates: literature-review.md
+      requires: refined_research_questions
+      uses: literature-search.md + literature-review-tmpl.yaml
+      notes: |
+        Comprehensive literature review (now that direction is clear):
+        - Systematic search based on refined questions
+        - Organize by themes (not chronologically)
+        - Document gaps that your research addresses
+        - Position your work against related work
+        - This becomes foundation for paper's Related Work section
+        - SAVE OUTPUT: Copy docs/literature-review.md
+
+    - agent: research-lead
+      creates: research-proposal.md
+      requires:
+        - refined_research_questions (from brainstorming iterations)
+        - literature-review.md
+      uses: research-proposal-tmpl.yaml
+      notes: |
+        Create research proposal with:
+        - Problem statement (grounded in literature gaps)
+        - Research questions and hypotheses (from brainstorming iterations)
+        - Proposed approach (novel contribution)
+        - Expected contributions (what advances the field)
+        - SAVE OUTPUT: Copy research-proposal.md to your project's docs/ folder
+
+    - agent: research-scientist
+      creates: experimental-architecture.md
+      requires: research-proposal.md
+      uses: experimental-architecture-tmpl.yaml
+      notes: "Design detailed experimental architecture including model architecture, training procedures, baselines, datasets, and evaluation protocols. SAVE OUTPUT: Copy final experimental-architecture.md to your project's docs/ folder."
+
+    - agent: research-lead
+      validates: planning_artifacts
+      reviews:
+        - research-proposal.md
+        - experimental-architecture.md
+      notes: "Validate that proposal and architecture are aligned, feasible, and scientifically sound. Update documents if needed."
+
+    - step: transition_to_ide
+      action: prepare_for_experimentation
+      notes: |
+        CRITICAL TRANSITION POINT - Move to IDE for experimentation phase:
+        1. Ensure research-proposal.md and experimental-architecture.md are in your project's docs/ folder
+        2. Switch to IDE (Cursor, VS Code with extensions, etc.)
+        3. Set up research code repository structure
+        4. Continue with experiment design phase
+
+    # PHASE 2: EXPERIMENT DESIGN (IDE)
+
+    - agent: research-scientist
+      action: design_experiments
+      creates: experiment-specs
+      creates_location: docs/experiments/
+      requires: experimental-architecture.md
+      notes: |
+        Design individual experiments from architecture:
+        - Use *design-experiment command
+        - Creates experiment-spec files for each experiment
+        - Each spec includes hypothesis, methodology, implementation details
+        - Typical experiments: baselines, novel method, ablations
+
+    - agent: data-analyst
+      action: prepare_datasets
+      requires: experimental-architecture.md
+      creates: data_processing_scripts
+      notes: |
+        Prepare all datasets for experiments:
+        - Download and validate datasets
+        - Create train/val/test splits
+        - Implement preprocessing pipelines
+        - Validate data quality
+        - Document dataset statistics
+
+    # PHASE 3: IMPLEMENTATION (IDE)
+
+    - agent: ml-engineer
+      action: implement_baselines
+      requires:
+        - experiment-specs
+        - data_processing_scripts
+      creates: baseline_implementations
+      notes: |
+        Implement baseline methods:
+        - Use experiment specs from docs/experiments/
+        - Implement each baseline accurately
+        - Verify against original papers
+        - Set up experiment tracking (wandb, tensorboard)
+
+    - agent: ml-engineer
+      action: implement_proposed_method
+      requires:
+        - experimental-architecture.md
+        - baseline_implementations
+      creates: novel_method_implementation
+      notes: |
+        Implement the proposed novel approach:
+        - Follow architectural specification precisely
+        - Start simple, add complexity incrementally
+        - Write clean, modular, well-documented code
+        - Include unit tests for key components
+
+    - agent: reproducibility-engineer
+      action: verify_setup
+      checks:
+        - environment_reproducibility
+        - seed_control
+        - dependency_management
+      notes: |
+        Ensure reproducibility infrastructure:
+        - Verify all seeds are set
+        - Create Dockerfile
+        - Pin all dependencies
+        - Document hardware specs
+        - Test environment setup from scratch
+
+    # PHASE 4: EXPERIMENTATION (IDE)
+
+    - agent: ml-engineer
+      action: run_baseline_experiments
+      requires:
+        - baseline_implementations
+        - data_processing_scripts
+      creates: baseline_results
+      repeats: for_each_baseline
+      notes: |
+        Execute baseline experiments:
+        - Run each baseline per experiment spec
+        - Multiple seeds for statistical validity
+        - Monitor training progress
+        - Save all checkpoints and logs
+        - Update experiment spec with results
+
+    - agent: ml-engineer
+      action: run_proposed_method_experiments
+      requires:
+        - novel_method_implementation
+        - baseline_results (for comparison)
+      creates: main_results
+      notes: |
+        Execute main experiments with proposed method:
+        - Run with multiple seeds
+        - Hyperparameter tuning if needed
+        - Compare against baselines
+        - Document observations
+        - Save all artifacts
+
+    - agent: ml-engineer
+      action: run_ablation_studies
+      requires:
+        - experimental-architecture.md
+        - main_results
+      creates: ablation_results
+      notes: |
+        Run ablation studies:
+        - Test each component's contribution
+        - Follow ablation plan from architecture
+        - Systematic removal/modification of components
+        - Document findings
+
+    - agent: reproducibility-engineer
+      action: verify_reproducibility
+      validates: all_experiments
+      uses: reproducibility-checklist-tmpl.yaml
+      notes: |
+        Verify all experiments are reproducible:
+        - Re-run key experiments from scratch
+        - Verify results match within tolerance
+        - Check reproducibility checklist
+        - Fix any reproducibility issues
+
+    # PHASE 5: ANALYSIS (IDE)
+
+    - agent: data-analyst
+      action: analyze_results
+      requires: all_experiment_results
+      creates:
+        - results_tables
+        - results_figures
+      notes: |
+        Analyze experimental results:
+        - Compute all metrics
+        - Statistical significance testing
+        - Create publication-quality figures
+        - Create results tables
+        - Identify key findings and insights
+
+    - agent: research-scientist
+      action: interpret_results
+      requires:
+        - results_tables
+        - results_figures
+        - experiment-specs
+      creates: interpretation_notes
+      notes: |
+        Interpret experimental findings:
+        - Evaluate hypotheses
+        - Explain successes and failures
+        - Identify unexpected behaviors
+        - Determine key contributions
+        - Note limitations
+
+    # PHASE 6: PAPER WRITING (Web UI or IDE)
+
+    - step: optional_transition_to_web
+      action: consider_web_ui_for_writing
+      notes: |
+        OPTIONAL: Can return to web UI for paper writing if preferred.
+        Web UI benefits: Larger context, better for iterative writing.
+        IDE benefits: Integrated with code and results, easier file management.
+
+    - agent: research-writer
+      action: create_paper_outline
+      requires:
+        - research-proposal.md
+        - experimental-architecture.md
+        - interpretation_notes
+      creates: paper-outline.md
+      uses: paper-outline-tmpl.yaml
+      notes: |
+        Create paper outline and structure:
+        - Use *create-paper command
+        - Define all sections
+        - Plan figures and tables
+        - Allocate page budget
+        - SAVE OUTPUT: Copy paper-outline.md to docs/ folder
+
+    - agent: research-writer
+      action: draft_abstract
+      requires: paper-outline.md
+      creates: abstract_draft
+      notes: |
+        Draft compelling abstract:
+        - Follow standard structure (context, gap, approach, results, impact)
+        - Highlight key contributions
+        - 150-250 words
+        - This is most important section - determines if people read paper
+
+    - agent: research-writer
+      action: draft_introduction
+      requires:
+        - paper-outline.md
+        - literature-review.md
+      creates: introduction_draft
+      notes: |
+        Draft introduction:
+        - Motivate the research problem
+        - Review relevant background
+        - State limitations of current approaches
+        - Introduce your approach
+        - Explicitly list contributions
+        - Outline paper organization
+
+    - agent: research-writer
+      action: draft_related_work
+      requires: literature-review.md
+      creates: related_work_draft
+      notes: |
+        Draft related work section:
+        - Organize by themes, not chronologically
+        - Synthesize related approaches
+        - Position your work clearly
+        - Cite generously and accurately
+
+    - agent: research-writer
+      action: draft_methodology
+      requires: experimental-architecture.md
+      creates: methodology_draft
+      notes: |
+        Draft methodology section:
+        - Describe proposed approach in detail
+        - Include architecture diagrams
+        - Explain design rationale
+        - Should be reproducible from this section
+
+    - agent: research-writer
+      action: draft_experiments
+      requires:
+        - experiment-specs
+        - results_tables
+        - results_figures
+      creates: experiments_draft
+      notes: |
+        Draft experiments section:
+        - Describe experimental setup
+        - Present main results
+        - Include ablation studies
+        - Add analysis and interpretation
+        - Reference figures and tables
+
+    - agent: research-writer
+      action: draft_conclusion
+      requires: all_previous_sections
+      creates: conclusion_draft
+      notes: |
+        Draft conclusion:
+        - Summarize problem, approach, and results
+        - Emphasize contributions and impact
+        - Discuss limitations honestly
+        - Suggest future work
+        - Strong closing statement
+
+    - agent: research-lead
+      action: review_full_draft
+      reviews: complete_paper_draft
+      notes: |
+        Comprehensive review of full draft:
+        - Check scientific accuracy
+        - Verify claims match results
+        - Ensure logical flow
+        - Check contribution clarity
+        - Verify all figures/tables referenced
+        - Suggest revisions
+
+    - agent: research-writer
+      action: revise_paper
+      requires: review_feedback
+      creates: revised_draft
+      repeats: until_ready
+      notes: |
+        Revise paper based on feedback:
+        - Address all reviewer comments
+        - Improve clarity and flow
+        - Strengthen arguments
+        - Polish writing
+        - May require multiple iterations
+
+    # PHASE 7: SUBMISSION PREPARATION
+
+    - agent: research-writer
+      action: format_for_venue
+      requires:
+        - revised_draft
+        - target_venue
+      creates: submission_formatted_paper
+      notes: |
+        Format paper for target venue:
+        - Apply venue template (NeurIPS, ICML, ICLR, etc.)
+        - Check page limits
+        - Format references correctly
+        - Prepare supplementary material
+        - Final proofreading
+
+    - agent: reproducibility-engineer
+      action: prepare_code_release
+      creates: public_repository
+      uses: reproducibility-checklist-tmpl.yaml
+      notes: |
+        Prepare code for public release:
+        - Clean repository
+        - Comprehensive README
+        - Complete reproducibility checklist
+        - Test on fresh environment
+        - Prepare to make public on acceptance
+
+    - agent: research-lead
+      action: final_validation
+      validates:
+        - paper_completeness
+        - results_accuracy
+        - code_reproducibility
+      notes: |
+        Final validation before submission:
+        - Verify all claims have supporting evidence
+        - Double-check all numbers in paper
+        - Ensure code can reproduce all results
+        - Verify author information and acknowledgments
+        - Final read-through
+
+    - step: submission
+      action: submit_paper
+      notes: |
+        Submit paper to conference/journal:
+        - Upload formatted paper
+        - Upload supplementary materials
+        - Provide code availability statement
+        - Submit to venue portal
+        - Archive submission version
+
+    # PHASE 8: REVISION (If required after reviews)
+
+    - agent: research-writer
+      action: address_reviews
+      requires: reviewer_feedback
+      creates: response_to_reviewers
+      condition: paper_receives_reviews
+      notes: |
+        Address reviewer feedback:
+        - Carefully read all reviews
+        - Draft point-by-point response
+        - Identify required experiments or changes
+        - Prioritize critical feedback
+
+    - agent: research-scientist
+      action: additional_experiments
+      requires: reviewer_requests
+      condition: reviews_request_experiments
+      notes: |
+        Run additional experiments if requested:
+        - Design new experiments to address concerns
+        - Follow same rigorous methodology
+        - Update results and paper accordingly
+
+    - agent: research-writer
+      action: revise_for_resubmission
+      requires:
+        - response_to_reviewers
+        - additional_experiments (if any)
+      creates: revised_submission
+      notes: |
+        Revise paper for resubmission:
+        - Incorporate reviewer feedback
+        - Add new experiments if conducted
+        - Update text throughout
+        - Highlight changes for reviewers
+        - Resubmit with response letter
+
+    # PHASE 9: PUBLICATION
+
+    - step: paper_acceptance
+      action: celebrate_and_finalize
+      condition: paper_accepted
+      notes: |
+        Upon acceptance:
+        - Celebrate! 🎉
+        - Make code repository public
+        - Upload to arXiv
+        - Share on social media
+        - Prepare presentation (if conference)
+        - Update CV and website
+
+  validation_checkpoints:
+    - checkpoint: proposal_complete
+      validates:
+        - research_questions_clear
+        - hypotheses_testable
+        - approach_novel
+        - feasibility_confirmed
+
+    - checkpoint: architecture_complete
+      validates:
+        - technical_details_sufficient
+        - baselines_appropriate
+        - evaluation_comprehensive
+        - reproducibility_planned
+
+    - checkpoint: experiments_complete
+      validates:
+        - all_experiments_run
+        - results_statistically_significant
+        - ablations_validate_components
+        - reproducibility_verified
+
+    - checkpoint: paper_draft_complete
+      validates:
+        - all_sections_written
+        - figures_tables_complete
+        - claims_supported
+        - references_complete
+
+    - checkpoint: submission_ready
+      validates:
+        - formatting_correct
+        - page_limit_satisfied
+        - code_ready_for_release
+        - all_authors_approved
+
+  notes: |
+    RESEARCH WORKFLOW KEY DIFFERENCES FROM SOFTWARE DEVELOPMENT:
+
+    1. Iteration is expected - experiments often fail, requiring redesign
+    2. Results drive the narrative - paper adapts to what actually works
+    3. Reproducibility is paramount - everything must be replicable
+    4. Statistical rigor - multiple runs, significance tests required
+    5. Open science - code and data shared upon publication
+    6. Peer review cycle - expect revisions and additional experiments
+
+    TIME ESTIMATES:
+    - Planning Phase: 1-2 weeks
+    - Implementation Phase: 2-4 weeks
+    - Experimentation Phase: 2-6 weeks (highly variable)
+    - Analysis Phase: 1-2 weeks
+    - Writing Phase: 2-4 weeks
+    - Revision Phase: 1-4 weeks (if required)
+    - TOTAL: 3-6 months typical for conference paper

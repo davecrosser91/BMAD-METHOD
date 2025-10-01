@@ -1,0 +1,320 @@
+# <!-- Powered by BMAD™ Core -->
+workflow:
+  id: experiment-iteration
+  name: Research Experiment Iteration Cycle
+  description: >-
+    Focused workflow for iterative experiment design, implementation, execution,
+    and analysis. Used after initial research planning is complete.
+  type: research-iteration
+  project_types:
+    - ml-research
+    - ai-research
+    - experiment-focused
+
+  sequence:
+    # EXPERIMENT DESIGN
+
+    - agent: research-scientist
+      action: design_experiment
+      creates: experiment-spec.md
+      creates_location: docs/experiments/{{experiment_id}}.md
+      uses: experiment-spec-tmpl.yaml
+      notes: |
+        Design a new experiment:
+        - Use *design-experiment command
+        - Define clear hypothesis
+        - Specify methodology
+        - Set success criteria
+        - Plan analysis approach
+
+    - agent: data-analyst
+      action: assess_data_requirements
+      requires: experiment-spec.md
+      validates: data_readiness
+      notes: |
+        Check if data requirements are met:
+        - Verify datasets available
+        - Check preprocessing needed
+        - Validate data quality
+        - Prepare data if needed
+
+    # IMPLEMENTATION
+
+    - agent: ml-engineer
+      action: implement_experiment
+      requires:
+        - experiment-spec.md
+        - data_ready
+      creates: experiment_code
+      notes: |
+        Implement experiment:
+        - Create experiment directory/branch
+        - Implement model/method changes
+        - Set up training script
+        - Configure experiment tracking
+        - Set all random seeds
+        - Write unit tests for new components
+
+    - agent: reproducibility-engineer
+      action: pre-execution_check
+      validates:
+        - seeds_set
+        - dependencies_documented
+        - configs_versioned
+      notes: |
+        Pre-flight reproducibility check:
+        - Verify all seeds documented
+        - Check config files in version control
+        - Validate logging setup
+        - Ensure checkpoint saving configured
+
+    # EXECUTION
+
+    - agent: ml-engineer
+      action: dry_run
+      creates: dry_run_results
+      notes: |
+        Run small-scale test:
+        - Small subset of data
+        - Few iterations/epochs
+        - Verify code runs without errors
+        - Check memory usage
+        - Estimate full runtime
+        - Fix any issues before full run
+
+    - agent: ml-engineer
+      action: execute_experiment
+      requires: dry_run_success
+      creates: experiment_results
+      notes: |
+        Execute full experiment:
+        - Run with full data and parameters
+        - Monitor training progress
+        - Watch for issues (NaN loss, OOM, etc.)
+        - Save checkpoints regularly
+        - Log all metrics
+        - Document any issues or observations
+        - Update experiment spec with execution details
+
+    - agent: ml-engineer
+      action: execute_multiple_seeds
+      requires: first_run_success
+      creates: multiple_run_results
+      condition: requires_statistical_validity
+      notes: |
+        Run with multiple random seeds:
+        - Typically 3-5 seeds
+        - Use different seeds from experiment spec
+        - Aggregate results across runs
+        - Compute mean and standard deviation
+
+    # ANALYSIS
+
+    - agent: data-analyst
+      action: compute_metrics
+      requires: experiment_results
+      creates:
+        - metrics_tables
+        - results_summary
+      notes: |
+        Compute all evaluation metrics:
+        - Calculate metrics from experiment spec
+        - Aggregate across seeds if multiple runs
+        - Report mean ± std dev
+        - Compare to expected results
+        - Flag unexpected outcomes
+
+    - agent: data-analyst
+      action: create_visualizations
+      requires: metrics_tables
+      creates: experiment_figures
+      notes: |
+        Create visualizations:
+        - Training curves
+        - Comparison plots
+        - Error analysis visualizations
+        - Qualitative examples (if applicable)
+        - Save in high resolution for potential paper use
+
+    - agent: data-analyst
+      action: statistical_testing
+      requires: multiple_run_results
+      creates: significance_tests
+      condition: comparing_methods
+      notes: |
+        Run statistical tests:
+        - Paired t-test or appropriate test
+        - Compute p-values
+        - Report confidence intervals
+        - Document effect sizes
+        - Update experiment spec with statistical results
+
+    # INTERPRETATION
+
+    - agent: research-scientist
+      action: interpret_results
+      requires:
+        - experiment_results
+        - metrics_tables
+        - experiment_figures
+      creates: interpretation
+      notes: |
+        Interpret experimental findings:
+        - Was hypothesis supported?
+        - Compare to expected results
+        - Explain successes and failures
+        - Identify unexpected behaviors
+        - Consider alternative explanations
+        - Update experiment spec with interpretation
+
+    - agent: research-scientist
+      action: identify_next_steps
+      requires: interpretation
+      creates: next_experiment_ideas
+      notes: |
+        Determine next steps:
+        - What did we learn?
+        - What new questions emerged?
+        - What variations should we try?
+        - Are ablations needed?
+        - Should we modify the approach?
+        - Document in experiment spec
+
+    # VALIDATION
+
+    - agent: reproducibility-engineer
+      action: verify_experiment_reproducibility
+      validates: single_experiment
+      notes: |
+        Verify this experiment is reproducible:
+        - Check all configs saved
+        - Verify checkpoints accessible
+        - Validate logs complete
+        - Test can re-run from scratch
+        - Update experiment spec with reproducibility notes
+
+    # DOCUMENTATION
+
+    - agent: research-scientist
+      action: update_experiment_log
+      updates: docs/experiment-log.md
+      notes: |
+        Update master experiment log:
+        - Add experiment ID and date
+        - Summarize hypothesis and findings
+        - Link to experiment spec
+        - Note key insights
+        - Track what works and what doesn't
+
+    - agent: research-lead
+      action: review_experiment
+      reviews: complete_experiment_cycle
+      decides: next_action
+      notes: |
+        Review experiment cycle:
+        - Assess quality of results
+        - Evaluate interpretation
+        - Decide on next steps:
+          * Run more experiments (iterate this workflow)
+          * Run ablations (to validate components)
+          * Proceed to paper writing (if sufficient results)
+          * Pivot approach (if fundamental issues)
+
+    # DECISION POINT
+
+    - decision: continue_or_proceed
+      options:
+        - action: iterate
+          condition: need_more_experiments
+          notes: "Design and run next experiment. Repeat this workflow."
+
+        - action: ablate
+          condition: need_component_validation
+          notes: "Design ablation studies. Use this workflow for each ablation."
+
+        - action: write_paper
+          condition: sufficient_results
+          notes: "Switch to research-paper-full workflow, Phase 6 (Writing)."
+
+        - action: pivot
+          condition: fundamental_issues
+          notes: "Return to research-scientist to redesign approach."
+
+  iteration_best_practices:
+    start_simple:
+      - Begin with simplest version that could work
+      - Add complexity incrementally
+      - Easier to debug and understand
+
+    fail_fast:
+      - Run quick experiments to validate assumptions
+      - Use dry runs to catch issues early
+      - Don't wait weeks for results before fixing obvious problems
+
+    document_everything:
+      - Update experiment specs in real-time
+      - Log observations and intuitions
+      - Track what doesn't work (avoid repeating failures)
+
+    compare_fairly:
+      - Same data, same compute budget
+      - Proper hyperparameter tuning for all methods
+      - Report variance, not just single runs
+
+    embrace_failure:
+      - Negative results teach us what doesn't work
+      - Failed experiments often lead to insights
+      - Document failures to avoid repetition
+
+  common_experiment_types:
+    baseline_comparison:
+      purpose: Compare proposed method against existing approaches
+      requires: Baseline implementations, same evaluation protocol
+      analysis: Statistical significance testing, multiple metrics
+
+    ablation_study:
+      purpose: Validate contribution of each component
+      requires: Modular implementation allowing component removal
+      analysis: Performance delta for each component
+
+    hyperparameter_search:
+      purpose: Find optimal configuration
+      requires: Parameter grid or search strategy
+      analysis: Sensitivity analysis, optimal settings
+
+    scaling_study:
+      purpose: Understand how method scales (data size, model size, etc.)
+      requires: Multiple runs at different scales
+      analysis: Scaling curves, computational efficiency
+
+    robustness_analysis:
+      purpose: Test method under different conditions
+      requires: Varied test scenarios (domain shift, noise, etc.)
+      analysis: Performance degradation analysis
+
+    qualitative_analysis:
+      purpose: Understand what method learns or produces
+      requires: Examples for manual inspection
+      analysis: Qualitative patterns, failure modes
+
+  notes: |
+    EXPERIMENT ITERATION CYCLE TIPS:
+
+    1. One experiment at a time - Don't parallelize until basics work
+    2. Keep experiments small - Start with quick experiments, scale up
+    3. Version everything - Code, configs, data processing
+    4. Monitor actively - Don't launch and forget
+    5. Document immediately - Write notes while fresh
+    6. Compare systematically - Fair baselines, proper statistics
+    7. Validate incrementally - Test each change before combining
+
+    TYPICAL ITERATION CYCLE:
+    - Design experiment: 1-4 hours
+    - Implementation: 4 hours - 2 days
+    - Execution: Hours to days (depends on scale)
+    - Analysis: 2-8 hours
+    - Interpretation: 2-4 hours
+    - TOTAL PER EXPERIMENT: 1-5 days
+
+    A research project might involve 10-50 experiment iterations before
+    having sufficient results for a strong paper.

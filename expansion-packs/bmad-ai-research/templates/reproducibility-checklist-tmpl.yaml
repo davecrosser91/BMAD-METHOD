@@ -1,0 +1,220 @@
+# <!-- Powered by BMAD™ Core -->
+template:
+  id: reproducibility-checklist-v1
+  name: Reproducibility Checklist
+  version: 1.0
+  output:
+    format: markdown
+    filename: docs/reproducibility-checklist.md
+    title: "{{project_name}} Reproducibility Checklist"
+
+workflow:
+  mode: checklist
+  elicitation: false
+
+sections:
+  - id: overview
+    title: Reproducibility Checklist Overview
+    instruction: |
+      This checklist ensures all experiments are fully reproducible.
+      Check off each item as it's completed.
+    sections:
+      - id: instructions
+        title: Instructions
+        type: text
+        instruction: Mark each item as [ ] (incomplete), [x] (complete), or [N/A] (not applicable)
+
+  - id: code-reproducibility
+    title: Code Reproducibility
+    instruction: |
+      Ensure code can be run by others to reproduce results.
+    sections:
+      - id: code-items
+        title: Code Checklist
+        type: checklist
+        items:
+          - "[ ] All code is version controlled (Git)"
+          - "[ ] Repository has clear README with setup instructions"
+          - "[ ] Dependencies listed with exact versions (requirements.txt or environment.yml)"
+          - "[ ] Code runs without modification on described hardware"
+          - "[ ] All file paths are relative or configurable"
+          - "[ ] No hardcoded credentials or API keys in code"
+          - "[ ] Code includes inline comments for complex sections"
+          - "[ ] Functions and classes have docstrings"
+          - "[ ] Main entry points clearly documented"
+
+  - id: environment-reproducibility
+    title: Environment Reproducibility
+    instruction: |
+      Ensure computational environment can be replicated.
+    sections:
+      - id: environment-items
+        title: Environment Checklist
+        type: checklist
+        items:
+          - "[ ] Python version specified (e.g., Python 3.10.12)"
+          - "[ ] All package versions pinned (no version ranges)"
+          - "[ ] System dependencies documented (CUDA, cuDNN versions)"
+          - "[ ] Operating system specified"
+          - "[ ] Hardware specifications documented"
+          - "[ ] Dockerfile provided for containerized environment"
+          - "[ ] Environment setup script tested on clean machine"
+          - "[ ] Virtual environment or conda environment usage documented"
+
+  - id: data-reproducibility
+    title: Data Reproducibility
+    instruction: |
+      Ensure data processing can be replicated.
+    sections:
+      - id: data-items
+        title: Data Checklist
+        type: checklist
+        items:
+          - "[ ] All datasets publicly available or accessible"
+          - "[ ] Dataset versions specified (where applicable)"
+          - "[ ] Data download scripts or instructions provided"
+          - "[ ] Data preprocessing scripts included"
+          - "[ ] Train/val/test splits specified or provided"
+          - "[ ] Data splits use fixed random seeds"
+          - "[ ] Data augmentation procedures documented"
+          - "[ ] Dataset statistics reported (size, distribution, etc.)"
+          - "[ ] Any data filtering or cleaning steps documented"
+
+  - id: experiment-reproducibility
+    title: Experiment Reproducibility
+    instruction: |
+      Ensure experimental results can be replicated.
+    sections:
+      - id: experiment-items
+        title: Experiment Checklist
+        type: checklist
+        items:
+          - "[ ] All random seeds set (Python, NumPy, PyTorch/TensorFlow)"
+          - "[ ] Seed values documented"
+          - "[ ] All hyperparameters explicitly documented"
+          - "[ ] Training scripts provided for all experiments"
+          - "[ ] Evaluation scripts provided for all metrics"
+          - "[ ] Model checkpoints saved and accessible"
+          - "[ ] Training logs preserved"
+          - "[ ] Experiment configs in version control"
+          - "[ ] Multiple runs performed with different seeds"
+          - "[ ] Mean and standard deviation reported"
+
+  - id: results-reproducibility
+    title: Results Reproducibility
+    instruction: |
+      Ensure reported results can be verified.
+    sections:
+      - id: results-items
+        title: Results Checklist
+        type: checklist
+        items:
+          - "[ ] All tables in paper can be regenerated from saved results"
+          - "[ ] All figures in paper can be regenerated from saved results"
+          - "[ ] Scripts to generate tables provided"
+          - "[ ] Scripts to generate figures provided"
+          - "[ ] Raw experimental results saved and accessible"
+          - "[ ] Evaluation metrics match paper exactly"
+          - "[ ] Ablation study results reproducible"
+          - "[ ] Baseline implementations verified against original papers"
+          - "[ ] Statistical significance tests documented"
+
+  - id: documentation
+    title: Documentation Completeness
+    instruction: |
+      Ensure comprehensive documentation for reproduction.
+    sections:
+      - id: documentation-items
+        title: Documentation Checklist
+        type: checklist
+        items:
+          - "[ ] README.md with project overview"
+          - "[ ] Step-by-step setup instructions"
+          - "[ ] Example commands to run experiments"
+          - "[ ] Expected output format documented"
+          - "[ ] Approximate runtime for each experiment documented"
+          - "[ ] Troubleshooting section for common issues"
+          - "[ ] License file included (e.g., MIT, Apache 2.0)"
+          - "[ ] Citation information provided"
+          - "[ ] Contact information for questions"
+          - "[ ] Changelog or version history"
+
+  - id: testing
+    title: Reproducibility Testing
+    instruction: |
+      Verify reproducibility through actual testing.
+    sections:
+      - id: testing-items
+        title: Testing Checklist
+        type: checklist
+        items:
+          - "[ ] Fresh environment setup tested"
+          - "[ ] Code runs successfully on specified hardware"
+          - "[ ] Dependencies install without errors"
+          - "[ ] Small-scale test run completes successfully"
+          - "[ ] Full experiment reproduction attempted"
+          - "[ ] Results match reported values within tolerance"
+          - "[ ] Another team member can run experiments"
+          - "[ ] Continuous integration tests pass (if applicable)"
+
+  - id: paper-code-alignment
+    title: Paper-Code Alignment
+    instruction: |
+      Ensure paper and code are synchronized.
+    sections:
+      - id: alignment-items
+        title: Alignment Checklist
+        type: checklist
+        items:
+          - "[ ] All claims in paper have corresponding code"
+          - "[ ] Methodology section matches implementation"
+          - "[ ] Hyperparameters in paper match code"
+          - "[ ] Dataset descriptions match actual data used"
+          - "[ ] Evaluation metrics in paper computed correctly in code"
+          - "[ ] Figures in paper generated by provided scripts"
+          - "[ ] Tables in paper match code output"
+          - "[ ] Equations in paper implemented correctly"
+
+  - id: release-preparation
+    title: Code Release Preparation
+    instruction: |
+      Final steps before public code release.
+    sections:
+      - id: release-items
+        title: Release Checklist
+        type: checklist
+        items:
+          - "[ ] Repository cleaned of sensitive information"
+          - "[ ] Unnecessary files removed (.pyc, __pycache__, etc.)"
+          - "[ ] .gitignore configured properly"
+          - "[ ] Pre-trained models uploaded (if sharing)"
+          - "[ ] GitHub repository created"
+          - "[ ] Repository made public (on paper acceptance)"
+          - "[ ] DOI created for code release (e.g., Zenodo)"
+          - "[ ] Code linked in paper"
+          - "[ ] Community contribution guidelines provided (if accepting PRs)"
+
+  - id: additional-notes
+    title: Additional Notes
+    instruction: |
+      Any additional reproducibility considerations specific to this project.
+    sections:
+      - id: notes
+        title: Project-Specific Notes
+        type: paragraphs
+        instruction: Document any project-specific reproducibility considerations
+
+  - id: completion-summary
+    title: Completion Summary
+    instruction: |
+      Summary of reproducibility status.
+    sections:
+      - id: summary
+        title: Summary
+        type: table
+        columns: [Category, Items Complete, Items Total, Percentage]
+        instruction: Auto-calculate completion statistics per category
+      - id: remaining-work
+        title: Remaining Work
+        type: bullet-list
+        instruction: List any incomplete items that need attention

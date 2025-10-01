@@ -1,0 +1,206 @@
+# <!-- Powered by BMAD™ Core -->
+template:
+  id: experiment-spec-v1
+  name: Experiment Specification
+  version: 1.0
+  output:
+    format: markdown
+    filename: docs/experiments/{{experiment_id}}.md
+    title: "Experiment: {{experiment_name}}"
+
+workflow:
+  mode: interactive
+  elicitation: advanced-elicitation
+
+sections:
+  - id: overview
+    title: Experiment Overview
+    instruction: |
+      Define what this experiment aims to test.
+    sections:
+      - id: experiment-id
+        title: Experiment ID
+        type: text
+        instruction: Unique identifier (e.g., EXP-001, baseline-comparison)
+      - id: objective
+        title: Objective
+        type: paragraphs
+        instruction: What is this experiment trying to determine?
+      - id: hypothesis
+        title: Hypothesis
+        type: text
+        instruction: Specific testable hypothesis
+      - id: research-questions
+        title: Research Questions
+        type: bullet-list
+        instruction: What questions will this experiment answer?
+      - id: status
+        title: Status
+        type: text
+        instruction: Planned / In Progress / Completed / Abandoned
+      - id: changelog
+        title: Change Log
+        type: table
+        columns: [Date, Version, Description, Author]
+        instruction: Track experiment specification changes
+
+  - id: methodology
+    title: Methodology
+    instruction: |
+      Detailed experimental methodology.
+    elicit: true
+    sections:
+      - id: model-config
+        title: Model Configuration
+        type: bullet-list
+        instruction: Specific model architecture and hyperparameters
+      - id: data-config
+        title: Data Configuration
+        type: bullet-list
+        instruction: Dataset(s), preprocessing, splits
+      - id: training-config
+        title: Training Configuration
+        type: bullet-list
+        instruction: Optimizer, learning rate, batch size, epochs, etc.
+      - id: evaluation-protocol
+        title: Evaluation Protocol
+        type: bullet-list
+        instruction: Metrics, test sets, evaluation procedure
+
+  - id: implementation
+    title: Implementation Details
+    instruction: |
+      Specific implementation information for ML engineer.
+    sections:
+      - id: code-location
+        title: Code Location
+        type: text
+        instruction: Path to experiment implementation code
+      - id: dependencies
+        title: Dependencies
+        type: bullet-list
+        instruction: Specific package versions required
+      - id: hardware-requirements
+        title: Hardware Requirements
+        type: bullet-list
+        instruction: GPU/CPU specs, memory, estimated time
+      - id: random-seeds
+        title: Random Seeds
+        type: text
+        instruction: Seeds for reproducibility (e.g., 42, 123, 456)
+
+  - id: execution
+    title: Execution Plan
+    instruction: |
+      Step-by-step execution instructions.
+    sections:
+      - id: preparation-steps
+        title: Preparation Steps
+        type: numbered-list
+        instruction: Steps to prepare environment and data
+      - id: execution-command
+        title: Execution Command
+        type: code-block
+        instruction: Exact command to run experiment
+      - id: monitoring
+        title: Monitoring
+        type: bullet-list
+        instruction: What metrics or logs to monitor during training?
+      - id: checkpointing
+        title: Checkpointing Strategy
+        type: text
+        instruction: How often to save checkpoints, what to save
+
+  - id: expected-results
+    title: Expected Results
+    instruction: |
+      Predictions for what results should be.
+    sections:
+      - id: success-criteria
+        title: Success Criteria
+        type: bullet-list
+        instruction: What constitutes success for this experiment?
+      - id: predicted-metrics
+        title: Predicted Metrics
+        type: table
+        columns: [Metric, Expected Value, Acceptable Range]
+        instruction: Quantitative predictions
+      - id: failure-scenarios
+        title: Potential Failure Scenarios
+        type: bullet-list
+        instruction: What could go wrong and how to handle it?
+
+  - id: analysis-plan
+    title: Analysis Plan
+    instruction: |
+      How results will be analyzed and interpreted.
+    sections:
+      - id: metrics-to-compute
+        title: Metrics to Compute
+        type: bullet-list
+        instruction: All metrics to calculate on results
+      - id: visualizations
+        title: Planned Visualizations
+        type: bullet-list
+        instruction: Plots, charts, or figures to create
+      - id: statistical-tests
+        title: Statistical Tests
+        type: bullet-list
+        instruction: Significance tests or comparisons to perform
+      - id: interpretation-criteria
+        title: Interpretation Criteria
+        type: bullet-list
+        instruction: How to interpret different outcome scenarios
+
+  - id: results
+    title: Results (Filled After Execution)
+    instruction: |
+      Document actual results after running experiment.
+    sections:
+      - id: execution-date
+        title: Execution Date
+        type: text
+        instruction: When was this experiment run?
+      - id: actual-metrics
+        title: Actual Metrics
+        type: table
+        columns: [Metric, Value, Comparison to Expected]
+        instruction: Actual experimental results
+      - id: artifacts
+        title: Artifacts
+        type: bullet-list
+        instruction: Paths to checkpoints, logs, visualizations
+      - id: observations
+        title: Observations
+        type: paragraphs
+        instruction: Notable observations during or after experiment
+      - id: issues-encountered
+        title: Issues Encountered
+        type: bullet-list
+        instruction: Any problems during execution and how they were resolved
+
+  - id: interpretation
+    title: Interpretation (Filled After Analysis)
+    instruction: |
+      Analysis and interpretation of results.
+    sections:
+      - id: hypothesis-evaluation
+        title: Hypothesis Evaluation
+        type: text
+        instruction: Was the hypothesis supported or rejected?
+      - id: key-findings
+        title: Key Findings
+        type: bullet-list
+        instruction: Main takeaways from this experiment
+      - id: comparison-to-expected
+        title: Comparison to Expected Results
+        type: paragraphs
+        instruction: How do results compare to predictions?
+      - id: implications
+        title: Implications
+        type: paragraphs
+        instruction: What do these results mean for the research?
+      - id: next-steps
+        title: Next Steps
+        type: bullet-list
+        instruction: Follow-up experiments or analyses suggested by results

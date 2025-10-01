@@ -1,0 +1,16 @@
+# <!-- Powered by BMAD™ Core -->
+bundle:
+  name: AI Research Team
+  icon: 🔬
+  description: Complete AI/ML research team for academic paper development, experiment design, and scientific publication
+agents:
+  - research-lead
+  - research-assistant
+  - research-scientist
+  - ml-engineer
+  - data-analyst
+  - research-writer
+  - reproducibility-engineer
+workflows:
+  - research-paper-full.yaml
+  - experiment-iteration.yaml

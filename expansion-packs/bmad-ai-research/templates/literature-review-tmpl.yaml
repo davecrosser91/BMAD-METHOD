@@ -1,0 +1,147 @@
+# <!-- Powered by BMAD™ Core -->
+template:
+  id: literature-review-v1
+  name: Literature Review Document
+  version: 1.0
+  output:
+    format: markdown
+    filename: docs/literature-review.md
+    title: "{{project_name}} Literature Review"
+
+workflow:
+  mode: interactive
+  elicitation: advanced-elicitation
+
+sections:
+  - id: overview
+    title: Overview
+    instruction: |
+      Establish the scope and purpose of this literature review.
+    sections:
+      - id: research-area
+        title: Research Area
+        type: text
+        instruction: What is the specific research area being reviewed?
+      - id: search-strategy
+        title: Search Strategy
+        type: bullet-list
+        instruction: Keywords, databases, date ranges used for literature search
+      - id: inclusion-criteria
+        title: Inclusion Criteria
+        type: bullet-list
+        instruction: What criteria determined which papers to include?
+      - id: changelog
+        title: Change Log
+        type: table
+        columns: [Date, Version, Description, Author]
+        instruction: Track document versions and changes
+
+  - id: thematic-review
+    title: Thematic Literature Review
+    instruction: |
+      Organize papers by themes, not chronologically. For each theme, synthesize findings.
+    elicit: true
+    sections:
+      - id: themes
+        title: Research Themes
+        type: custom
+        instruction: |
+          For each theme, create a subsection with:
+          - Theme title and description
+          - Key papers (citation, year, main contribution)
+          - Synthesis of findings across papers
+          - Gaps or limitations identified
+          - How our research addresses these gaps
+
+  - id: key-papers
+    title: Key Papers Deep Dive
+    instruction: |
+      Detailed analysis of 5-10 most relevant papers.
+    sections:
+      - id: paper-analysis
+        title: Individual Paper Analysis
+        type: custom
+        instruction: |
+          For each key paper, document:
+          - Full citation
+          - Problem addressed
+          - Methodology
+          - Main results
+          - Strengths
+          - Limitations
+          - Relevance to our research
+
+  - id: methodologies
+    title: Methodological Approaches
+    instruction: |
+      Survey of methods used in the literature.
+    sections:
+      - id: approach-categories
+        title: Approach Categories
+        type: nested-list
+        instruction: Group methods by type
+      - id: evolution
+        title: Evolution of Methods
+        type: paragraphs
+        instruction: How have approaches evolved over time?
+      - id: comparison
+        title: Methodological Comparison
+        type: table
+        columns: [Approach, Key Papers, Strengths, Weaknesses]
+        instruction: Compare different methodological approaches
+
+  - id: benchmarks
+    title: Benchmarks and Evaluation
+    instruction: |
+      Survey of datasets and evaluation practices in the literature.
+    sections:
+      - id: datasets
+        title: Common Datasets
+        type: table
+        columns: [Dataset, Usage Count, Domain, Characteristics]
+        instruction: Datasets frequently used in literature
+      - id: metrics
+        title: Evaluation Metrics
+        type: bullet-list
+        instruction: What metrics are standard in this area?
+      - id: evaluation-gaps
+        title: Evaluation Gaps
+        type: bullet-list
+        instruction: What aspects are under-evaluated?
+
+  - id: research-gaps
+    title: Research Gaps and Opportunities
+    instruction: |
+      Synthesize gaps identified across literature.
+    elicit: true
+    sections:
+      - id: identified-gaps
+        title: Identified Gaps
+        type: numbered-list
+        prefix: GAP
+        instruction: Clear enumeration of gaps
+        examples:
+          - "GAP1: No methods address scenario X despite its practical importance"
+          - "GAP2: Limited evaluation on diverse datasets beyond standard benchmarks"
+      - id: opportunities
+        title: Research Opportunities
+        type: bullet-list
+        instruction: What opportunities do these gaps present?
+      - id: our-positioning
+        title: Our Research Positioning
+        type: paragraphs
+        instruction: How does our proposed research address these gaps?
+
+  - id: summary
+    title: Summary and Implications
+    instruction: |
+      High-level synthesis of literature review findings.
+    sections:
+      - id: key-findings
+        title: Key Findings
+        type: bullet-list
+        instruction: Main takeaways from literature review
+      - id: research-direction
+        title: Implications for Research Direction
+        type: paragraphs
+        instruction: How does this review inform our research strategy?

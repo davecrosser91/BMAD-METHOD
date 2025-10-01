@@ -1,0 +1,9 @@
+# <!-- Powered by BMAD™ Core -->
+name: bmad-ai-research
+version: 1.0.0
+short-title: AI Research Pack
+description: >-
+  AI/ML Research expansion pack for BMad Method - Academic paper writing,
+  experiment design, reproducible research workflows, and scientific publication
+author: BMAD Community
+slashPrefix: bmadres

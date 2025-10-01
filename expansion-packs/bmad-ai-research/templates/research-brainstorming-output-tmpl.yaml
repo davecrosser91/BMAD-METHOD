@@ -1,0 +1,352 @@
+template:
+  id: research-brainstorming-output-v1
+  name: Research Brainstorming Session Results
+  version: 1.0
+  output:
+    format: markdown
+    filename: docs/research-brainstorming-session-results.md
+    title: "Research Brainstorming Session Results"
+
+workflow:
+  mode: non-interactive
+
+sections:
+  - id: header
+    content: |
+      **Session Date:** {{date}}
+      **Research Lead:** {{agent_name}}
+      **Researcher:** {{user_name}}
+      **Research Area:** {{research_area}}
+
+  - id: executive-summary
+    title: Executive Summary
+    sections:
+      - id: summary-details
+        template: |
+          **Research Focus:** {{session_topic}}
+
+          **Brainstorming Phase:** {{phase}} (Discovery / Question Formation / Iteration After Literature)
+
+          **Session Goals:** {{stated_goals}}
+
+          **Techniques Used:** {{techniques_list}}
+
+          **Total Research Questions Generated:** {{total_questions}}
+
+          **Well-Formed Questions:** {{well_formed_count}}
+      - id: key-insights
+        title: "Key Insights & Directions:"
+        type: bullet-list
+        template: "- {{insight}}"
+
+  - id: brainstorming-process
+    title: Brainstorming Process
+    repeatable: true
+    sections:
+      - id: technique
+        title: "{{technique_name}} - {{duration}}"
+        sections:
+          - id: purpose
+            template: "**Purpose:** {{technique_purpose}}"
+          - id: research-questions-generated
+            title: "Research Questions Generated:"
+            type: numbered-list
+            template: "{{question}}"
+          - id: insights
+            title: "Insights Discovered:"
+            type: bullet-list
+            template: "- {{insight}}"
+          - id: literature-connections
+            title: "Connections to Literature (if applicable):"
+            type: bullet-list
+            template: "- {{connection}}"
+          - id: wild-ideas
+            title: "Wild Ideas Worth Noting:"
+            type: bullet-list
+            template: "- {{wild_idea}}"
+
+  - id: research-question-bank
+    title: Research Question Bank
+    sections:
+      - id: well-formed-questions
+        title: Well-Formed Questions
+        content: "*Specific, testable, feasible - ready for research proposal*"
+        repeatable: true
+        type: numbered-list
+        template: |
+          **Q{{number}}: {{question}}**
+          - **Why it matters (Impact):** {{impact}}
+          - **What's novel:** {{novelty}}
+          - **How to test it:** {{testing_approach}}
+          - **Resources needed:** {{resources}}
+          - **Estimated timeline:** {{timeline}}
+
+      - id: interesting-questions
+        title: Interesting Questions
+        content: "*Good direction, needs refinement*"
+        repeatable: true
+        type: numbered-list
+        template: |
+          **Q{{number}}: {{question}}**
+          - **Why interesting:** {{reason}}
+          - **What needs refinement:** {{refinement_needed}}
+
+      - id: wild-questions
+        title: Wild Questions
+        content: "*Ambitious, requires more thought*"
+        repeatable: true
+        type: numbered-list
+        template: |
+          **Q{{number}}: {{question}}**
+          - **Why wild:** {{reason}}
+          - **What would make it feasible:** {{feasibility_path}}
+
+      - id: literature-check-questions
+        title: Questions for Literature Review
+        content: "*Need to check if already answered*"
+        type: bullet-list
+        template: "- {{question}}"
+
+  - id: literature-gaps
+    title: Literature Gaps Identified
+    condition: iteration_mode_or_gaps_known
+    sections:
+      - id: what-done
+        title: "What's Been Done:"
+        type: bullet-list
+        template: "- {{finding}}: {{papers_or_approaches}}"
+      - id: what-missing
+        title: "What's Missing:"
+        type: bullet-list
+        template: "- {{gap}}: {{explanation}}"
+      - id: opportunities
+        title: "Opportunities for Contribution:"
+        type: bullet-list
+        template: "- {{opportunity}}: {{potential_impact}}"
+      - id: gap-addressing
+        title: "How Your Ideas Address Gaps:"
+        repeatable: true
+        template: |
+          **Gap:** {{gap}}
+          **Your Approach:** {{your_idea}}
+          **Why This Works:** {{rationale}}
+
+  - id: novelty-assessment
+    title: Novelty Assessment
+    sections:
+      - id: differentiation
+        title: "What Makes These Ideas Different:"
+        type: bullet-list
+        template: "- {{differentiator}}"
+      - id: contributions
+        title: "Potential Contributions:"
+        type: bullet-list
+        template: "- {{contribution_type}}: {{description}}"
+      - id: unique-angles
+        title: "Unique Angles or Perspectives:"
+        type: bullet-list
+        template: "- {{angle}}: {{why_unique}}"
+      - id: thin-literature
+        title: "Areas Where Literature is Thin:"
+        type: bullet-list
+        template: "- {{area}}: {{opportunity}}"
+
+  - id: feasibility-analysis
+    title: Feasibility Analysis
+    sections:
+      - id: ready-to-pursue
+        title: Ready to Pursue
+        content: "*Can start soon with available resources*"
+        repeatable: true
+        type: numbered-list
+        template: |
+          **{{research_direction}}**
+          - Main question: {{question}}
+          - Resources available: {{resources}}
+          - Timeline: {{timeline}}
+          - First steps: {{next_steps}}
+
+      - id: requires-resources
+        title: Requires Resources
+        content: "*Needs data/compute/expertise to start*"
+        repeatable: true
+        type: numbered-list
+        template: |
+          **{{research_direction}}**
+          - Main question: {{question}}
+          - Resources needed: {{resources_needed}}
+          - Potential sources: {{where_to_get}}
+          - Timeline if acquired: {{timeline}}
+
+      - id: long-term-projects
+        title: Long-term Projects
+        content: "*Multi-year efforts*"
+        repeatable: true
+        type: numbered-list
+        template: |
+          **{{research_direction}}**
+          - Main question: {{question}}
+          - Why long-term: {{reasons}}
+          - Milestones: {{milestones}}
+          - Estimated duration: {{duration}}
+
+      - id: moonshots
+        title: Moonshots
+        content: "*High risk, high reward*"
+        repeatable: true
+        type: numbered-list
+        template: |
+          **{{research_direction}}**
+          - Main question: {{question}}
+          - Potential impact if successful: {{impact}}
+          - Main challenges: {{challenges}}
+          - Why worth pursuing: {{justification}}
+
+  - id: next-steps-recommendation
+    title: Next Steps Recommendation
+    sections:
+      - id: top-directions
+        title: Top 3 Research Directions
+        sections:
+          - id: direction-1
+            title: "#1 Direction: {{direction_name}}"
+            template: |
+              **Specific Research Question:** {{question}}
+
+              **Why This Direction is Promising:**
+              {{rationale}}
+
+              **Immediate Next Steps:**
+              - **Literature to Read:**
+                {{literature_list}}
+              - **Preliminary Experiments to Try:**
+                {{experiments}}
+              - **Collaborators to Consult:**
+                {{collaborators}}
+              - **Resources to Acquire:**
+                {{resources}}
+
+              **Timeline Estimate:** {{timeline}}
+
+          - id: direction-2
+            title: "#2 Direction: {{direction_name}}"
+            template: |
+              **Specific Research Question:** {{question}}
+
+              **Why This Direction is Promising:**
+              {{rationale}}
+
+              **Immediate Next Steps:**
+              - **Literature to Read:**
+                {{literature_list}}
+              - **Preliminary Experiments to Try:**
+                {{experiments}}
+              - **Collaborators to Consult:**
+                {{collaborators}}
+              - **Resources to Acquire:**
+                {{resources}}
+
+              **Timeline Estimate:** {{timeline}}
+
+          - id: direction-3
+            title: "#3 Direction: {{direction_name}}"
+            template: |
+              **Specific Research Question:** {{question}}
+
+              **Why This Direction is Promising:**
+              {{rationale}}
+
+              **Immediate Next Steps:**
+              - **Literature to Read:**
+                {{literature_list}}
+              - **Preliminary Experiments to Try:**
+                {{experiments}}
+              - **Collaborators to Consult:**
+                {{collaborators}}
+              - **Resources to Acquire:**
+                {{resources}}
+
+              **Timeline Estimate:** {{timeline}}
+
+  - id: literature-review-plan
+    title: Literature Review Plan
+    condition: needs_literature_review
+    sections:
+      - id: search-keywords
+        title: "Search Keywords to Use:"
+        type: bullet-list
+        template: "- {{keyword}}"
+      - id: key-venues
+        title: "Key Venues to Check:"
+        template: |
+          - **Recent conferences:** {{conferences}} (last 2-3 years)
+          - **Journals:** {{journals}}
+          - **Workshops:** {{workshops}}
+      - id: specific-papers
+        title: "Specific Papers to Read (if known):"
+        type: bullet-list
+        template: "- {{paper_citation}}: {{why_relevant}}"
+      - id: what-to-look-for
+        title: "What to Look For in Literature:"
+        type: bullet-list
+        template: "- {{aspect}}: {{why_important}}"
+      - id: gap-identification
+        title: "How to Identify Gaps:"
+        type: bullet-list
+        template: "- {{strategy}}"
+
+  - id: reflection-iteration
+    title: Reflection & Iteration
+    sections:
+      - id: what-resonated
+        title: What Resonated in This Session
+        type: bullet-list
+        template: "- {{aspect}}"
+      - id: needs-exploration
+        title: What Needs More Exploration
+        type: bullet-list
+        template: "- {{area}}: {{why}}"
+      - id: deeper-investigation
+        title: Questions That Emerged for Deeper Investigation
+        type: bullet-list
+        template: "- {{question}}"
+      - id: next-session-timing
+        title: When to Do Next Brainstorming Session
+        template: |
+          **Recommended timing:** {{timing}}
+
+          **What to do first:** {{prerequisites}}
+
+          **What to bring to next session:** {{preparation}}
+
+  - id: iteration-tracker
+    title: Brainstorm-Literature Iteration Tracker
+    condition: using_iterative_mode
+    sections:
+      - id: iteration-log
+        title: Iteration History
+        repeatable: true
+        type: table
+        columns: [Iteration, Date, Focus, Key Findings, Refinements Made]
+        template: "| {{iteration_number}} | {{date}} | {{focus}} | {{findings}} | {{refinements}} |"
+      - id: convergence-status
+        title: Convergence Status
+        template: |
+          **Current State:** {{state}} (Exploring / Narrowing / Converged)
+
+          **Confidence Level:** {{confidence}} (Low / Medium / High)
+
+          **Ready for Proposal?** {{ready}} (Yes / No / Almost)
+
+          **What's Needed for Next Level:** {{needs}}
+
+  - id: footer
+    content: |
+      ---
+
+      *Research brainstorming session facilitated using the BMAD-METHOD™ AI Research Expansion Pack*
+
+      **Next Actions:**
+      1. {{action_1}}
+      2. {{action_2}}
+      3. {{action_3}}

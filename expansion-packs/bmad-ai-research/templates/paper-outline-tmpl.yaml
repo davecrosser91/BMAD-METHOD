@@ -1,0 +1,280 @@
+# <!-- Powered by BMAD™ Core -->
+template:
+  id: paper-outline-v1
+  name: Research Paper Outline
+  version: 1.0
+  output:
+    format: markdown
+    filename: docs/paper-outline.md
+    title: "{{project_name}} Paper Outline"
+
+workflow:
+  mode: interactive
+  elicitation: advanced-elicitation
+
+sections:
+  - id: metadata
+    title: Paper Metadata
+    instruction: |
+      Basic paper information and target venue.
+    sections:
+      - id: title
+        title: Paper Title
+        type: text
+        instruction: Descriptive, compelling title that captures the contribution
+      - id: authors
+        title: Authors
+        type: list
+        instruction: Author names and affiliations
+      - id: target-venue
+        title: Target Venue
+        type: text
+        instruction: Primary submission target (e.g., NeurIPS 2025, ICML 2025)
+      - id: page-limit
+        title: Page Limit
+        type: text
+        instruction: Page or word count limit for target venue
+      - id: changelog
+        title: Change Log
+        type: table
+        columns: [Date, Version, Description, Author]
+        instruction: Track document versions and changes
+
+  - id: abstract
+    title: Abstract (150-250 words)
+    instruction: |
+      Draft the abstract following standard structure: context, problem, approach, results, impact.
+      This is the most important section - it determines if people read the paper.
+    elicit: true
+    sections:
+      - id: context
+        title: Context (1-2 sentences)
+        type: text
+        instruction: What is the broader context or problem domain?
+      - id: gap
+        title: Gap/Problem (1-2 sentences)
+        type: text
+        instruction: What specific problem or limitation does this address?
+      - id: approach
+        title: Our Approach (2-3 sentences)
+        type: text
+        instruction: What is the key idea or method proposed?
+      - id: results
+        title: Main Results (2-3 sentences)
+        type: text
+        instruction: What are the key empirical findings?
+      - id: impact
+        title: Impact (1 sentence)
+        type: text
+        instruction: Why does this matter? What does it enable?
+
+  - id: introduction
+    title: 1. Introduction
+    instruction: |
+      Plan the introduction structure. Should tell a compelling story leading to the research.
+    elicit: true
+    sections:
+      - id: hook
+        title: 1.1 Opening Hook
+        type: paragraphs
+        instruction: Compelling opening that motivates the research area
+      - id: background
+        title: 1.2 Background and Context
+        type: bullet-list
+        instruction: Key points about the problem domain and its importance
+      - id: limitations
+        title: 1.3 Limitations of Current Approaches
+        type: bullet-list
+        instruction: What are the shortcomings of existing methods?
+      - id: our-approach
+        title: 1.4 Our Approach
+        type: paragraphs
+        instruction: High-level description of the proposed method
+      - id: contributions
+        title: 1.5 Main Contributions
+        type: numbered-list
+        instruction: Explicit numbered list of contributions
+        examples:
+          - "A novel architecture for X that achieves Y% improvement on Z"
+          - "Comprehensive empirical analysis across N benchmarks"
+          - "Open-source implementation and reproducible experiments"
+      - id: organization
+        title: 1.6 Paper Organization
+        type: text
+        instruction: Brief outline of remaining sections
+
+  - id: related-work
+    title: 2. Related Work
+    instruction: |
+      Organize related work by themes, not chronologically. Position your work clearly.
+    elicit: true
+    sections:
+      - id: themes
+        title: Related Work Themes
+        type: nested-list
+        instruction: Group related work into themes
+        examples:
+          - "2.1 Traditional Approaches to Problem X"
+          - "  - Early methods (papers from 2010-2015)"
+          - "  - Limitations: computational cost, accuracy"
+          - "2.2 Deep Learning Methods for Problem X"
+          - "  - CNN-based approaches"
+          - "  - Transformer-based approaches"
+          - "  - Our work differs by..."
+      - id: positioning
+        title: Positioning Statement
+        type: paragraphs
+        instruction: Clear statement of how this work relates to and differs from prior work
+
+  - id: methodology
+    title: 3. Methodology
+    instruction: |
+      Describe the proposed approach in technical detail. Should be reproducible from this section.
+    elicit: true
+    sections:
+      - id: overview
+        title: 3.1 Overview
+        type: paragraphs
+        instruction: High-level description with diagram
+      - id: technical-details
+        title: 3.2 Technical Details
+        type: nested-list
+        instruction: Break down into subsections
+        examples:
+          - "3.2.1 Model Architecture"
+          - "3.2.2 Training Procedure"
+          - "3.2.3 Inference Process"
+      - id: design-choices
+        title: 3.3 Design Rationale
+        type: bullet-list
+        instruction: Justify key design decisions
+      - id: complexity
+        title: 3.4 Computational Complexity
+        type: paragraphs
+        instruction: Theoretical analysis of time/space complexity
+
+  - id: experiments
+    title: 4. Experiments
+    instruction: |
+      Plan experimental section structure. Should answer all research questions.
+    elicit: true
+    sections:
+      - id: setup
+        title: 4.1 Experimental Setup
+        type: nested-list
+        instruction: Datasets, baselines, metrics, implementation details
+      - id: main-results
+        title: 4.2 Main Results
+        type: nested-list
+        instruction: Primary experimental findings
+        examples:
+          - "4.2.1 Comparison with Baselines (Table 1)"
+          - "4.2.2 Performance Across Datasets (Table 2)"
+          - "4.2.3 Statistical Significance Tests"
+      - id: ablation
+        title: 4.3 Ablation Studies
+        type: nested-list
+        instruction: Component analysis
+        examples:
+          - "4.3.1 Impact of Component A (Table 3)"
+          - "4.3.2 Impact of Component B (Table 4)"
+      - id: analysis
+        title: 4.4 Analysis
+        type: nested-list
+        instruction: Deeper investigation
+        examples:
+          - "4.4.1 Qualitative Examples (Figure 2)"
+          - "4.4.2 Failure Case Analysis"
+          - "4.4.3 Computational Efficiency (Figure 3)"
+
+  - id: discussion
+    title: 5. Discussion (Optional - can merge with Conclusion)
+    instruction: |
+      Interpretation of results, limitations, and broader implications.
+    sections:
+      - id: key-findings
+        title: 5.1 Key Findings
+        type: bullet-list
+        instruction: Main takeaways from experiments
+      - id: limitations
+        title: 5.2 Limitations
+        type: bullet-list
+        instruction: Honest assessment of limitations and boundary conditions
+      - id: future-work
+        title: 5.3 Future Directions
+        type: bullet-list
+        instruction: Promising avenues for future research
+
+  - id: conclusion
+    title: 6. Conclusion
+    instruction: |
+      Brief summary emphasizing contributions and impact.
+    sections:
+      - id: summary
+        title: Summary
+        type: paragraphs
+        instruction: Recap the problem, approach, and results (1-2 paragraphs)
+      - id: impact
+        title: Impact
+        type: paragraph
+        instruction: Broader impact and significance of this work
+      - id: closing
+        title: Closing Statement
+        type: text
+        instruction: Memorable final sentence
+
+  - id: figures-tables
+    title: Figures and Tables Plan
+    instruction: |
+      Plan all figures and tables with clear purposes.
+    elicit: true
+    sections:
+      - id: figures
+        title: Planned Figures
+        type: table
+        columns: [Figure Number, Title, Purpose, Placement]
+        instruction: List all planned figures
+      - id: tables
+        title: Planned Tables
+        type: table
+        columns: [Table Number, Title, Content, Placement]
+        instruction: List all planned tables
+
+  - id: supplementary
+    title: Supplementary Material (Appendix)
+    instruction: |
+      Plan what goes in appendix vs main paper.
+    sections:
+      - id: appendix-items
+        title: Appendix Contents
+        type: bullet-list
+        instruction: What additional details, proofs, or experiments go in appendix?
+        examples:
+          - "A. Additional experimental results on secondary benchmarks"
+          - "B. Detailed hyperparameter settings"
+          - "C. Additional ablation studies"
+          - "D. Proof of Theorem 1"
+          - "E. Implementation details"
+
+  - id: writing-notes
+    title: Writing Notes and Strategy
+    instruction: |
+      Meta-notes about writing strategy for this paper.
+    sections:
+      - id: target-audience
+        title: Target Audience
+        type: text
+        instruction: Who is the primary audience? What can we assume they know?
+      - id: story
+        title: Narrative Strategy
+        type: paragraphs
+        instruction: What is the story arc? How do we make this compelling?
+      - id: emphasis
+        title: Emphasis Points
+        type: bullet-list
+        instruction: What should we emphasize most?
+      - id: page-budget
+        title: Page Budget Allocation
+        type: table
+        columns: [Section, Target Pages, Priority]
+        instruction: How to allocate limited pages
