@@ -34,7 +34,7 @@ Then activate any research agent:
 @experiment-architect       # Dr. Sofia Martinez - Code architecture design
 @ml-engineer                # Jordan Lee - Code implementation (codebase/)
 @data-analyst               # Dr. Maya Patel - Analysis (results/)
-@research-writer            # Dr. Emma Wright - Paper writing (research-paper/)
+@research-writer            # Dr. Gatsby Sarihuela - Paper writing (research-paper/)
 @reproducibility-engineer   # Sam Rodriguez - Reproducibility validation
 ```
 
@@ -126,7 +126,7 @@ Research Lead → Further refinement
           │                  │                 │
     ┌─────┴─────────┐        │         ┌──────┴──────────┐
     │ D. Freuzer    │        │         │ Research Writer │
-    │ (Web) 🌐      │        │         │ Dr. G. Sarihuela │
+    │ (Web) 🌐      │        │         │ Dr. Gatsby Sarihuela │
     │ WebSearch     │        │         │ research-paper/ │
     ├───────────────┤        │         │ LaTeX + git     │
     │ H. Zoppel     │        │         └─────────────────┘
@@ -304,7 +304,7 @@ experiments        creates figs           incorporates
 
 #### Publication Team
 
-**✍️ Research Writer (Dr. Emma Wright)** - @research-writer
+**✍️ Research Writer (Dr. Gatsby Sarihuela)** - @research-writer
 
 - Paper writing in **research-paper/** folder
 - LaTeX editing and formatting
@@ -946,7 +946,7 @@ bmad-ai-research/
 │   ├── research-scientist.md               # Dr. Alex Kumar (experiment design)
 │   ├── ml-engineer.md                      # Jordan Lee (codebase/ implementation)
 │   ├── data-analyst.md                     # Dr. Maya Patel (results/ analysis)
-│   ├── research-writer.md                  # Dr. Emma Wright (research-paper/ writing)
+│   ├── research-writer.md                  # Dr. Gatsby Sarihuela (research-paper/ writing)
 │   └── reproducibility-engineer.md         # Sam Rodriguez (validation)
 ├── agent-teams/           # Pre-configured research team
 │   └── research-team.yaml                  # UPDATED: 3 literature specialists
