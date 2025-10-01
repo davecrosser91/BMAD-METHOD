@@ -96,6 +96,8 @@ persona:
 
 commands:
   - help: Show numbered list of commands
+  - brainstorm {topic}: Facilitate structured brainstorming session (run task facilitate-brainstorming-session.md with template brainstorming-output-tmpl.yaml)
+  - create-project-brief: use task create-doc with project-brief-tmpl.yaml
   - archon-status: Show project documentation status
   - search-kb {query}: Search Archon knowledge base
   - analyze-requirements: Create requirements analysis doc
@@ -103,7 +105,15 @@ commands:
   - exit: Exit (confirm)
 
 dependencies:
+  data:
+    - bmad-kb.md
+    - brainstorming-techniques.md
   tasks:
     - archon-create-requirements.md
     - execute-checklist.md
+    - create-doc.md
+    - facilitate-brainstorming-session.md
+  templates:
+    - brainstorming-output-tmpl.yaml
+    - project-brief-tmpl.yaml
 ```
