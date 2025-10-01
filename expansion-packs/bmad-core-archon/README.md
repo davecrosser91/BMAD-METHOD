@@ -1,6 +1,6 @@
 # BMAD Core + Archon Extension Pack
 
-**Version:** 3.0.0
+**Version:** 3.0.1
 **Status:** Production Ready
 
 > A BMAD Method extension pack that integrates Archon MCP server for task management, document management, and knowledge base capabilities.
@@ -1490,6 +1490,11 @@ Contributions welcome! This extension pack follows BMAD Method contribution guid
 - [Claude Code](https://docs.claude.com/en/docs/claude-code/overview)
 
 ## 📝 Version History
+
+### v3.0.1 (2025-10-01)
+
+- **Bug Fix**: Installer now copies `core-config.yaml` from expansion pack
+- Orchestrator can now properly discover workflows after installation
 
 ### v3.0.0 (2025-10-01)
 

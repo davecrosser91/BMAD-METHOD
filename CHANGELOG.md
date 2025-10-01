@@ -1,3 +1,14 @@
+## [3.0.1](https://github.com/davidkreuzer/bmad-method-ai-research/compare/v3.0.0...v3.0.1) (2025-10-01)
+
+### Bug Fixes
+
+- **installer**: Copy `core-config.yaml` from expansion packs during installation
+  - Fixed issue where `core-config.yaml` was not being copied from expansion packs
+  - Orchestrator can now properly discover workflows after installation
+  - Expansion packs now work correctly with `.bmad-core-archon/core-config.yaml`
+
+---
+
 # [3.0.0](https://github.com/davidkreuzer/bmad-method-ai-research/compare/v2.1.0...v3.0.0) (2025-10-01)
 
 ## Major Features

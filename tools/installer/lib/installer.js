@@ -1281,6 +1281,21 @@ class Installer {
           }
         }
 
+        // Copy core-config.yaml if it exists with {root} replacement
+        const coreConfigPath = path.join(expansionPackDir, 'core-config.yaml');
+        if (await fileManager.pathExists(coreConfigPath)) {
+          const coreConfigDestinationPath = path.join(expansionDotFolder, 'core-config.yaml');
+          if (
+            await fileManager.copyFileWithRootReplacement(
+              coreConfigPath,
+              coreConfigDestinationPath,
+              `.${packId}`,
+            )
+          ) {
+            installedFiles.push(path.join(`.${packId}`, 'core-config.yaml'));
+          }
+        }
+
         // Copy README if it exists with {root} replacement
         const readmePath = path.join(expansionPackDir, 'README.md');
         if (await fileManager.pathExists(readmePath)) {
