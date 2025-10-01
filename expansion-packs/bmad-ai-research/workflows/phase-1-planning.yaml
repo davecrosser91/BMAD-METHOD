@@ -1,0 +1,244 @@
+# <!-- Powered by BMAD™ Core -->
+workflow:
+  id: phase-1-planning
+  name: Phase 1 - Planning & Literature System
+  description: >-
+    Iterative brainstorming and literature search with three-specialist system.
+    Research Lead constructs search keywords from brainstorming results and
+    coordinates parallel literature searches across web, arXiv, and knowledge base.
+  type: research-phase
+  repeatable: true
+  trigger: manual
+
+  sequence:
+    # STEP 1: Initial Brainstorming
+    - agent: research-lead
+      action: brainstorm_research_questions
+      command: "*brainstorm"
+      input: user_provided_topic
+      creates: research-brainstorming-session-results.md
+      uses: facilitate-research-brainstorming.md
+      notes: |
+        Generate initial research questions (10-20):
+        - Use *brainstorm "your evolving topic"
+        - Explore interesting and novel directions
+        - Identify areas worth investigating
+        - Output brainstorming document with questions
+
+        Research Lead will extract key concepts for literature search.
+
+    # STEP 2: Extract Search Keywords
+    - agent: research-lead
+      action: formulate_search_keywords
+      command: "*formulate-questions"
+      requires: research-brainstorming-session-results.md
+      creates: search_keywords_list
+      notes: |
+        Research Lead analyzes brainstorming results and extracts:
+        - Core technical concepts (e.g., "attention mechanisms", "few-shot learning")
+        - Domain-specific terms (e.g., "medical image segmentation")
+        - Methodology keywords (e.g., "meta-learning", "contrastive learning")
+        - Application areas (e.g., "drug discovery", "code generation")
+
+        Output: Structured list of search keywords for each specialist:
+        - Web search keywords (broader, include implementation terms)
+        - ArXiv search keywords (academic, precise)
+        - Knowledge base tags (project-specific, curated corpus)
+
+    # STEP 3: Parallel Literature Search (THREE SPECIALISTS)
+    - parallel_execution: literature_search
+      agents: [research-assistant-web, research-assistant-arxiv, research-assistant-kb]
+      requires: search_keywords_list
+      creates: combined_literature_findings
+
+      specialist_tasks:
+        - agent: research-assistant-web
+          name: D. Freuzer
+          action: search_web_sources
+          command: "*search"
+          input: web_search_keywords
+          searches:
+            - Recent blog posts and tutorials
+            - GitHub repositories and implementations
+            - Documentation and technical posts
+            - Industry perspectives
+          notes: |
+            Web specialist (D. Freuzer) searches:
+            - *search "{keywords from Research Lead}"
+            - *search-github "{implementation keywords}"
+            - *track-trends "{technical area}"
+
+            Focus: Practical implementations, recent trends, industry adoption
+
+        - agent: research-assistant-arxiv
+          name: H. Zoppel
+          action: search_academic_papers
+          command: "*search"
+          input: arxiv_search_keywords
+          checks: arxiv_mcp_availability
+          searches:
+            - ArXiv pre-prints
+            - Recent academic papers
+            - Author-specific searches
+            - Category-specific searches
+          notes: |
+            ArXiv specialist (H. Zoppel) searches:
+            - *check-mcp (verify ArXiv MCP available)
+            - *search "{academic keywords from Research Lead}"
+            - *search-category "{relevant arXiv category}"
+
+            If MCP unavailable: Escalates to Research Lead, provides manual search guidance
+
+            Focus: Cutting-edge academic research, pre-prints, theoretical foundations
+
+        - agent: research-assistant-kb
+          name: A. Pilz
+          action: search_knowledge_base
+          command: "*search"
+          input: kb_search_tags
+          searches:
+            - Project-curated knowledge base
+            - Tagged papers in corpus
+            - Full-text paper analysis
+            - Gap identification
+          notes: |
+            Knowledge Base specialist (A. Pilz) searches:
+            - *set-tag "{project_tag}"
+            - *sources (list available sources)
+            - *search "{concept keywords from Research Lead}"
+            - *identify-gaps
+
+            Focus: Curated project corpus, previously catalogued papers, internal knowledge
+
+    # STEP 4: Synthesis & Refinement
+    - agent: research-lead
+      action: synthesize_literature_findings
+      command: "*literature-review"
+      requires: combined_literature_findings
+      creates: literature-synthesis.md
+      notes: |
+        Research Lead synthesizes ALL findings from three specialists:
+        - What exists (web + academic + curated)?
+        - What's missing (gaps identified)?
+        - What's trending vs. mature?
+        - Positioning opportunities?
+
+        Creates structured literature synthesis document.
+
+    - agent: research-lead
+      action: refine_research_questions
+      command: "*formulate-questions"
+      requires: literature-synthesis.md
+      updates: research-brainstorming-session-results.md
+      notes: |
+        Refine original research questions based on literature:
+        - Sharpen questions to address identified gaps
+        - Pivot away from saturated areas
+        - Focus on novelty opportunities
+        - Assess feasibility
+
+        Updates brainstorming document with refined questions.
+
+    # STEP 5: Iteration Decision
+    - decision_point: iteration_check
+      decides: continue_or_converge
+      criteria:
+        - Research questions are specific and testable
+        - Gaps in literature clearly identified
+        - Novelty is defensible
+        - Feasibility is reasonable
+
+      outcomes:
+        - if_not_converged: |
+            Return to STEP 2 with refined questions
+            - Research Lead generates new search keywords
+            - Three specialists search again (deeper dive)
+            - Typical iterations: 2-4 cycles
+
+        - if_converged: |
+            Proceed to create formal documents
+            - Research proposal
+            - Experimental architecture
+            - Move toward Phase 2
+
+    # STEP 6: Create Formal Documents (After Convergence)
+    - agent: research-lead
+      action: create_research_proposal
+      command: "*create-proposal"
+      requires:
+        - refined research questions (converged)
+        - literature-synthesis.md
+      creates: research-proposal.md
+      uses: research-proposal-tmpl.yaml
+      condition: questions_converged
+      notes: |
+        Create formal research proposal:
+        - Problem statement (grounded in literature gaps)
+        - Research questions and hypotheses (refined through iterations)
+        - Proposed approach (novel contribution)
+        - Expected contributions
+
+        SAVE: docs/research-proposal.md
+
+    - agent: research-scientist
+      action: create_experimental_architecture
+      command: "*create-architecture"
+      requires: research-proposal.md
+      creates: experimental-architecture.md
+      uses: experimental-architecture-tmpl.yaml
+      condition: proposal_complete
+      notes: |
+        Design experimental architecture:
+        - Model architecture specifications
+        - Training procedures
+        - Baseline implementations needed
+        - Evaluation protocols
+        - Reproducibility specifications
+
+        SAVE: docs/experimental-architecture.md
+
+    - agent: research-lead
+      action: validate_planning_artifacts
+      reviews:
+        - research-proposal.md
+        - experimental-architecture.md
+      validates: alignment_and_feasibility
+      notes: |
+        Final validation of Phase 1 outputs:
+        - Proposal and architecture aligned?
+        - Scientifically sound?
+        - Feasible with available resources?
+        - Clear next steps for Phase 2?
+
+  outputs:
+    primary:
+      - research-brainstorming-session-results.md (refined through iterations)
+      - literature-synthesis.md (from three specialists)
+      - research-proposal.md
+      - experimental-architecture.md
+
+    intermediate:
+      - search_keywords_list (Research Lead extracts from brainstorming)
+      - web_literature_findings (D. Freuzer)
+      - arxiv_literature_findings (H. Zoppel)
+      - kb_literature_findings (A. Pilz)
+
+  when_to_rerun:
+    - Initial project setup
+    - After Phase 2 experiments reveal unexpected results
+    - When Phase 3 writing exposes gaps in literature
+    - If pivoting research direction
+    - When reviewer feedback suggests missing related work
+
+  key_innovation: |
+    Research Lead constructs search keywords from brainstorming results,
+    then coordinates three specialists working in parallel:
+    - D. Freuzer (Web): Practical implementations, industry trends
+    - H. Zoppel (ArXiv): Academic research, cutting-edge papers
+    - A. Pilz (KB): Curated project corpus, internal knowledge
+
+    This ensures comprehensive coverage: Industry + Academic + Curated
+
+  typical_duration:
+    - First run: 1-2 weeks (including 2-4 iteration cycles)
+    - Subsequent runs: 2-5 days (focused searches on specific topics)

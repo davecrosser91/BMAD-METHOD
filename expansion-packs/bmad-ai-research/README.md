@@ -396,23 +396,40 @@ your-research-project/
 
 **🔁 REPEATABLE:** Run this phase multiple times as your research questions evolve!
 
-**Manual Invocation:**
+**📋 Automated Workflow:** Use the [phase-1-planning.yaml](workflows/phase-1-planning.yaml) workflow for guided execution!
+
+**Manual Invocation (or follow workflow):**
 
 ```bash
+# The Research Lead orchestrates this entire phase:
 @research-lead
-*brainstorm "your evolving topic"
-*literature-review
-*formulate-questions
+*brainstorm "your evolving topic"      # Step 1: Generate research questions
+*formulate-questions                   # Step 2: Extract search keywords from brainstorming
 
-# Invoke specialists as needed
+# Research Lead then coordinates three specialists in parallel:
+# (Search keywords constructed from brainstorming results)
+
 @research-assistant-web
-*search "new keywords"
+*search "{keywords from Research Lead}"  # Web + GitHub + Industry trends
 
 @research-assistant-arxiv
-*search "refined topic"
+*search "{keywords from Research Lead}"  # Academic papers (if MCP available)
 
 @research-assistant-kb
-*search "specific concept"
+*search "{keywords from Research Lead}"  # Curated knowledge base
+
+# Research Lead synthesizes findings:
+@research-lead
+*literature-review                     # Synthesize all three sources
+*formulate-questions                   # Refine questions based on gaps found
+
+# ITERATE 2-4 times until questions converge
+# Then create formal documents:
+@research-lead
+*create-proposal
+
+@research-scientist
+*create-architecture
 ```
 
 **Workflow:**
@@ -464,7 +481,9 @@ Prof. Dr. Kunz (Research Lead)
 
 **🔁 HIGHLY ITERATIVE:** This phase will be run MANY times! Each experiment may suggest new experiments.
 
-**Manual Invocation:**
+**📋 Automated Workflow:** Use the [phase-2-single-experiment.yaml](workflows/phase-2-single-experiment.yaml) workflow for each experiment iteration!
+
+**Manual Invocation (or follow workflow):**
 
 ```bash
 # Design a new experiment
@@ -573,6 +592,15 @@ Research Scientist (Dr. Alex Kumar)
 
 **🔁 CONTINUOUS:** Update paper after EVERY Phase 2 iteration, not just at the end!
 
+**📋 Automated Workflow:** Use the [phase-3-paper-update.yaml](workflows/phase-3-paper-update.yaml) workflow with different variants!
+
+**Workflow Variants:**
+
+- **initial_setup**: Run once to create paper structure
+- **incremental_update**: Run after EVERY experiment (30 min - 2 hours)
+- **full_revision**: Run every 4-6 weeks for major revision (1-2 days)
+- **pre_submission_polish**: Run once before submission (2-5 days)
+
 **Why Update Continuously:**
 
 - Keeps paper aligned with latest results
@@ -580,7 +608,7 @@ Research Scientist (Dr. Alex Kumar)
 - Helps you see gaps in experiments early
 - Makes story clearer as research progresses
 
-**Manual Invocation:**
+**Manual Invocation (or follow workflow):**
 
 ```bash
 # Initial paper setup (run once)

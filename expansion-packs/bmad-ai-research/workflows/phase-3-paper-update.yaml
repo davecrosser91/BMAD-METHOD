@@ -1,0 +1,352 @@
+# <!-- Powered by BMAD™ Core -->
+workflow:
+  id: phase-3-paper-update
+  name: Phase 3 - Continuous Paper Update
+  description: >-
+    Update paper after EVERY experiment iteration (Phase 2). Keep paper in sync
+    with research progress. Run continuously throughout research, not just at end.
+  type: research-phase
+  repeatable: true
+  trigger: manual
+  trigger_frequency: after_every_phase_2_iteration
+
+  variants:
+    - initial_paper_setup
+    - incremental_update
+    - full_revision
+    - pre_submission_polish
+
+  # VARIANT 1: Initial Paper Setup (Run Once)
+  initial_setup:
+    when: paper_does_not_exist_yet
+    run_once: true
+
+    sequence:
+      - agent: research-writer
+        name: Dr. Gatsby Sarihuela
+        action: create_paper_structure
+        command: "*create-paper"
+        requires: research-proposal.md
+        creates: paper_structure
+        location: research-paper/
+        uses: paper-outline-tmpl.yaml
+        notes: |
+          Create initial paper structure:
+          - *create-paper
+          - Set up research-paper/ folder
+          - Create main.tex and sections/
+          - Initialize git repository
+          - Connect to Overleaf (git push)
+
+          Paper structure:
+          - research-paper/main.tex
+          - research-paper/sections/abstract.tex
+          - research-paper/sections/introduction.tex
+          - research-paper/sections/related_work.tex
+          - research-paper/sections/methodology.tex
+          - research-paper/sections/experiments.tex
+          - research-paper/sections/conclusion.tex
+          - research-paper/references.bib
+          - research-paper/figures/
+
+      - agent: research-writer
+        action: draft_initial_sections
+        commands:
+          - "*draft-abstract"
+          - "*draft-introduction"
+          - "*draft-related-work"
+        requires: literature-synthesis.md
+        creates: initial_paper_draft
+        notes: |
+          Draft early sections (before experiments are done):
+          - *draft-abstract (preliminary version)
+          - *draft-introduction (motivation, contributions)
+          - *draft-related-work (from literature synthesis)
+
+          These will be refined as research progresses.
+
+      - step: git_sync
+        action: commit_and_push
+        commands:
+          - git add .
+          - git commit -m "Initial paper structure"
+          - git push
+        notes: Sync initial paper to Overleaf
+
+  # VARIANT 2: Incremental Update (Run After Each Experiment)
+  incremental_update:
+    when: after_phase_2_experiment_completes
+    run_frequency: after_every_experiment
+    duration: 30 minutes to 2 hours
+
+    sequence:
+      - step: sync_from_overleaf
+        action: pull_latest_changes
+        commands:
+          - git pull
+        location: research-paper/
+        notes: Get latest version from Overleaf before editing
+
+      - agent: research-writer
+        action: update_experiments_section
+        command: "*draft-experiments"
+        requires:
+          - latest_experiment_results (from results/)
+          - interpretation_notes.md
+        updates: research-paper/sections/experiments.tex
+        notes: |
+          Add new experiment results:
+          - *draft-experiments
+          - Add new results paragraph or subsection
+          - Copy figures from results/ to research-paper/figures/
+          - Reference new figures/tables
+          - Add interpretation of results
+          - Maintain narrative flow
+
+          Keep experiments section growing incrementally.
+
+      - agent: research-writer
+        action: refine_methodology
+        command: "*draft-methodology"
+        condition: methodology_needs_update
+        updates: research-paper/sections/methodology.tex
+        notes: |
+          Refine methodology based on what you ACTUALLY did:
+          - *draft-methodology
+          - Update if implementation differs from original plan
+          - Add details learned during implementation
+          - Clarify technical descriptions
+
+          Methodology should match actual experiments, not just plans.
+
+      - agent: research-writer
+        action: update_related_work
+        command: "*draft-related-work"
+        condition: new_papers_discovered
+        updates: research-paper/sections/related_work.tex
+        notes: |
+          Add newly discovered related work:
+          - *draft-related-work
+          - Papers found during implementation
+          - Papers suggested by co-authors
+          - Recent arXiv papers
+
+          Keep related work current.
+
+      - agent: research-writer
+        action: update_abstract
+        command: "*draft-abstract"
+        updates: research-paper/sections/abstract.tex
+        notes: |
+          Update abstract to reflect current story:
+          - *draft-abstract
+          - Update results (as they come in)
+          - Refine contributions (as they crystalize)
+          - Keep abstract aligned with paper
+
+          Abstract evolves as research progresses.
+
+      - step: git_sync
+        action: commit_and_push
+        commands:
+          - git add .
+          - 'git commit -m "Update after experiment: {experiment_name}"'
+          - git push
+        notes: Sync updates to Overleaf
+
+  # VARIANT 3: Full Revision (Periodic)
+  full_revision:
+    when: major_milestone_or_monthly
+    run_frequency: every_4-6_weeks
+    duration: 1-2 days
+
+    sequence:
+      - step: sync_from_overleaf
+        commands:
+          - git pull
+        location: research-paper/
+
+      - agent: research-lead
+        name: Prof. Dr. Kunz
+        action: comprehensive_paper_review
+        reviews: entire_paper_draft
+        creates: review_feedback.md
+        notes: |
+          Prof. Dr. Kunz reviews entire paper:
+          - Read all sections end-to-end
+          - Check narrative coherence
+          - Verify claims match results
+          - Assess contribution clarity
+          - Identify gaps or weaknesses
+          - Suggest structural changes
+
+          Provides detailed feedback document.
+
+      - agent: research-writer
+        action: major_revision
+        command: "*revise-paper"
+        requires: review_feedback.md
+        updates: multiple_sections
+        notes: |
+          Major revision based on feedback:
+          - *revise-paper
+          - Restructure sections if needed
+          - Improve narrative flow
+          - Strengthen arguments
+          - Address all feedback points
+          - Polish writing throughout
+
+          May take 1-2 days of focused work.
+
+      - step: git_sync
+        commands:
+          - git add .
+          - 'git commit -m "Major revision: {focus_of_revision}"'
+          - git push
+
+  # VARIANT 4: Pre-Submission Polish (Run Once Before Submission)
+  pre_submission_polish:
+    when: ready_to_submit
+    run_once: true
+    duration: 2-5 days
+
+    sequence:
+      - step: sync_from_overleaf
+        commands:
+          - git pull
+        location: research-paper/
+
+      - agent: research-writer
+        action: format_for_target_venue
+        command: "*prepare-submission"
+        input: target_venue (NeurIPS, ICML, ICLR, etc.)
+        creates: submission_formatted_paper
+        notes: |
+          Format for specific venue:
+          - *prepare-submission
+          - Apply venue LaTeX template
+          - Check page limits
+          - Format references (venue style)
+          - Ensure all figures properly sized
+          - Check supplementary material requirements
+
+      - agent: research-writer
+        action: final_abstract_polish
+        command: "*draft-abstract"
+        notes: |
+          Final abstract polish:
+          - *draft-abstract
+          - Most important 150-250 words
+          - Clear, compelling, complete
+          - Highlights key contributions
+          - Entices readers to continue
+
+      - agent: research-writer
+        action: final_introduction_polish
+        command: "*draft-introduction"
+        notes: |
+          Final introduction polish:
+          - *draft-introduction
+          - Clear motivation
+          - Explicit contribution list
+          - Strong positioning
+
+      - agent: data-analyst
+        action: final_figure_check
+        command: "*create-figures"
+        notes: |
+          Ensure all figures are publication-quality:
+          - *create-figures (regenerate if needed)
+          - 300 DPI minimum
+          - Readable fonts
+          - Color-blind friendly
+          - Consistent style
+
+      - agent: research-lead
+        action: final_validation
+        validates: entire_paper
+        checks:
+          - All claims supported by results
+          - All figures/tables referenced
+          - No placeholder text
+          - References complete
+          - Author information correct
+        notes: |
+          Final validation before submission:
+          - Read entire paper carefully
+          - Check all numbers match results/
+          - Verify reproducibility claims
+          - Confirm author list and affiliations
+
+      - step: git_sync
+        commands:
+          - git add .
+          - 'git commit -m "Final version for {venue} submission"'
+          - 'git tag "submission-{venue}-{date}"'
+          - git push
+          - git push --tags
+
+  outputs:
+    continuous:
+      - Updated paper sections (after each experiment)
+      - Growing experiments section
+      - Refined methodology
+      - Current abstract
+
+    periodic:
+      - Revised paper (after full review)
+      - Polished narrative
+
+    final:
+      - Submission-ready PDF
+      - Formatted for target venue
+
+  why_continuous_updates:
+    - prevents_massive_rewrites: Update incrementally rather than all at end
+    - shows_gaps_early: See what's missing while you can still fix it
+    - clarifies_story: Writing helps you understand your own research
+    - maintains_motivation: Visible progress as paper grows
+    - easier_collaboration: Co-authors can see progress and provide feedback
+
+  paper_evolution_stages:
+    early_research:
+      - Outline and structure
+      - Introduction and related work drafted
+      - Methodology section (planned)
+      - Experiments section: empty or preliminary
+
+    mid_research:
+      - Introduction refined
+      - Related work growing
+      - Methodology reflects actual implementation
+      - Experiments section: partial results, growing incrementally
+
+    late_research:
+      - All sections present
+      - Experiments section: most results included
+      - Abstract being refined
+      - Narrative coherent
+
+    pre_submission:
+      - Complete draft
+      - All results included
+      - Polished writing
+      - Formatted for venue
+
+  critical_rule:
+    name: update_after_every_experiment
+    description: |
+      Run this workflow (incremental_update variant) after EVERY Phase 2 iteration!
+      Do not wait until "all experiments are done" - that leads to:
+      - Massive rewrites at the end
+      - Forgetting what you did
+      - Discovering gaps too late
+      - High stress before deadline
+
+      Instead: Keep paper in sync with research progress.
+
+  typical_frequency:
+    - Initial setup: Once at project start
+    - Incremental updates: After every experiment (5-20 times)
+    - Full revisions: Every 4-6 weeks (2-4 times)
+    - Pre-submission polish: Once before submission

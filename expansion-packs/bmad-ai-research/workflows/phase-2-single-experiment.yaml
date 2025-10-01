@@ -1,0 +1,279 @@
+# <!-- Powered by BMAD™ Core -->
+workflow:
+  id: phase-2-single-experiment
+  name: Phase 2 - Single Experiment Iteration
+  description: >-
+    Complete workflow for a single experiment iteration: design, plan, implement,
+    execute, analyze. This workflow is run MANY times (5-20+) during research.
+    After each iteration, update the paper (Phase 3) and decide next steps.
+  type: research-phase
+  repeatable: true
+  trigger: manual
+  expected_repetitions: 5-20+ times
+
+  sequence:
+    # STEP 1: Design Experiment
+    - agent: research-scientist
+      action: design_experiment_specification
+      command: "*design-experiment"
+      input: hypothesis_to_test
+      requires: experimental-architecture.md
+      creates: experiment-spec.md
+      uses: design-experiment.md + experiment-spec-tmpl.yaml
+      notes: |
+        Research Scientist designs specific experiment:
+        - *design-experiment "test hypothesis X"
+        - Define hypothesis clearly
+        - Specify methodology details
+        - List baselines to compare against
+        - Define evaluation metrics
+        - Set success criteria
+
+        Creates: docs/experiments/experiment-{name}-spec.md
+
+    # STEP 2: Plan Development (Experiment PM)
+    - agent: experiment-pm
+      name: Dr. Chen Wei
+      action: create_development_plan
+      command: "*plan-experiment"
+      requires: experiment-spec.md
+      creates: experiment-dev-plan.md
+      notes: |
+        Experiment PM breaks down into implementation tasks:
+        - *plan-experiment
+        - Analyze experiment spec
+        - Create task breakdown (5 phases):
+          1. Setup & Data preparation
+          2. Baseline implementation
+          3. Novel method implementation
+          4. Experimentation & tracking
+          5. Documentation
+        - Define milestones
+        - Estimate effort
+
+        Output: Development plan with task sequence
+
+    # STEP 3: Design Architecture (Experiment Architect)
+    - agent: experiment-architect
+      name: Dr. Sofia Martinez
+      action: design_code_architecture
+      command: "*design-experiment-architecture"
+      requires: experiment-dev-plan.md
+      creates: experiment-code-architecture.md
+      notes: |
+        Experiment Architect designs codebase/ structure:
+        - *design-experiment-architecture
+        - Plan codebase/src/ module structure
+        - Define interfaces (BaseModel, Trainer, DataLoader)
+        - Design configuration system (YAML configs)
+        - Plan ablation-friendly architecture
+        - Specify data flow
+
+        Output: Architecture design for ML Engineer
+
+    # STEP 4: Implement Experiment (ML Engineer)
+    - agent: ml-engineer
+      name: Jordan Lee
+      action: implement_experiment_code
+      commands:
+        - "*implement-experiment"
+        - "*implement-baseline"
+        - "*setup-tracking"
+      requires: experiment-code-architecture.md
+      creates: experiment_implementation
+      location: codebase/
+      notes: |
+        ML Engineer implements in codebase/:
+        - *implement-experiment (novel method)
+        - *implement-baseline (comparison methods)
+        - *setup-tracking (wandb/tensorboard)
+
+        Follows Architect's design:
+        - Write code in codebase/src/
+        - Configure experiments in codebase/configs/
+        - Set all random seeds
+        - Add logging and checkpoints
+
+        Output: Working experiment code in codebase/
+
+    # STEP 5: Prepare Data (Data Analyst - if needed)
+    - agent: data-analyst
+      name: Dr. Maya Patel
+      action: prepare_experiment_data
+      command: "*prepare-dataset"
+      condition: new_data_preparation_needed
+      creates: processed_datasets
+      location: codebase/data/
+      notes: |
+        Data Analyst prepares datasets (if not already done):
+        - *prepare-dataset
+        - Download and validate datasets
+        - Create train/val/test splits
+        - Implement preprocessing
+        - Document statistics
+
+        Output: Ready datasets in codebase/data/
+
+    # STEP 6: Execute Experiments (ML Engineer)
+    - agent: ml-engineer
+      action: run_experiments
+      commands:
+        - "*run-ablation"
+      requires:
+        - experiment_implementation
+        - processed_datasets
+      creates: raw_experiment_results
+      location: results/
+      notes: |
+        ML Engineer runs experiments:
+        - *run-ablation (with proper seeds)
+        - Run baselines (multiple seeds: 3-5)
+        - Run novel method (multiple seeds)
+        - Run ablation studies
+        - Monitor training progress
+        - Save all logs and checkpoints
+
+        Output: Results written to results/ folder
+
+    # STEP 7: Analyze Results (Data Analyst)
+    - agent: data-analyst
+      action: analyze_experiment_results
+      commands:
+        - "*analyze-results"
+        - "*create-figures"
+        - "*test-significance"
+      requires: raw_experiment_results
+      creates:
+        - analysis_results
+        - publication_figures
+        - statistical_tests
+      location: results/
+      notes: |
+        Data Analyst analyzes results:
+        - *analyze-results
+        - Compute all metrics (mean ± std)
+        - *test-significance (statistical tests)
+        - *create-figures (publication-quality, 300 DPI)
+        - Format tables (LaTeX-ready)
+
+        Output:
+        - results/figures/ (plots)
+        - results/tables/ (formatted tables)
+        - results/analysis/ (statistical tests)
+
+    # STEP 8: Interpret Results (Research Scientist)
+    - agent: research-scientist
+      action: interpret_experiment_results
+      command: "*interpret-results"
+      requires:
+        - analysis_results
+        - experiment-spec.md
+      creates: interpretation_notes.md
+      notes: |
+        Research Scientist interprets findings:
+        - *interpret-results
+        - Evaluate hypothesis (supported? rejected?)
+        - Explain successes and failures
+        - Identify unexpected behaviors
+        - Note key insights
+        - Assess if more experiments needed
+
+        Output: docs/experiments/experiment-{name}-interpretation.md
+
+    # STEP 9: Decision Point - Next Action
+    - decision_point: post_experiment_decision
+      agent: research-scientist
+      consults: research-lead
+      requires: interpretation_notes.md
+      decides: next_research_action
+
+      outcomes:
+        - run_another_phase_2:
+            trigger: interpretation_suggests_new_experiment
+            action: Design and run new experiment (repeat Phase 2)
+            examples:
+              - "Results suggest ablation study needed"
+              - "Baseline comparison missing"
+              - "Hyperparameter sweep required"
+              - "Different dataset needed"
+
+        - return_to_phase_1:
+            trigger: results_suggest_new_direction
+            action: Return to literature and brainstorming
+            examples:
+              - "Results contradict literature - need more reading"
+              - "Unexpected behavior suggests new research angle"
+              - "Baseline performs surprisingly well - why?"
+
+        - proceed_to_phase_3:
+            trigger: sufficient_results_for_paper
+            action: Update paper with new results
+            required: ALWAYS do this after EVERY experiment
+
+        - move_toward_phase_4:
+            trigger: experiments_complete_story_clear
+            action: Prepare for submission
+            examples:
+              - "All hypotheses tested"
+              - "Story is complete and coherent"
+              - "Results support all claims"
+
+  outputs:
+    primary:
+      - experiment-spec.md (Research Scientist)
+      - experiment_implementation (ML Engineer in codebase/)
+      - experiment_results (Data Analyst in results/)
+      - interpretation_notes.md (Research Scientist)
+
+    artifacts:
+      - codebase/src/ (experiment code)
+      - codebase/configs/ (experiment configurations)
+      - results/figures/ (publication-quality plots)
+      - results/tables/ (formatted tables)
+      - results/metrics/ (raw metrics)
+
+  critical_rules:
+    - rule: always_update_paper
+      description: |
+        ALWAYS update the paper (Phase 3) after completing this workflow!
+        Do not wait until "all experiments are done" - keep paper in sync.
+
+    - rule: multiple_seeds
+      description: |
+        ALWAYS run with multiple seeds (3-5 minimum) for statistical validity.
+        Report mean ± standard deviation.
+
+    - rule: fair_comparison
+      description: |
+        Baselines must be tuned with same effort as novel method.
+        Use same seeds across all methods.
+
+    - rule: save_everything
+      description: |
+        Save all configs, logs, checkpoints, and random seeds.
+        Results must be reproducible.
+
+  when_to_run:
+    - For each hypothesis you want to test
+    - For each baseline comparison
+    - For each ablation study
+    - For each dataset/domain
+    - When trying different hyperparameters
+    - When exploring variants of your method
+
+  expected_frequency:
+    - Typical research project: 5-20 experiment iterations
+    - Each iteration: 1-5 days (depending on compute)
+    - Most research time spent in this phase!
+
+  after_completion:
+    next_phase: phase-3-paper-update
+    required: true
+    notes: |
+      After completing this experiment iteration, you MUST:
+      1. Run Phase 3 workflow to update paper
+      2. Decide next step based on interpretation:
+         - Another Phase 2 iteration?
+         - Return to Phase 1?
+         - Continue with more Phase 2 iterations?
+         - Move toward Phase 4?
