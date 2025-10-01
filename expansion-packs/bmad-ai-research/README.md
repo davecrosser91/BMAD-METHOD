@@ -323,7 +323,47 @@ experiments        creates figs           incorporates
 - **Validates:** All folders
 - **Commands:** `*verify-reproducibility`, `*prepare-release`, `*create-dockerfile`
 
-## Complete Research Workflow (UPDATED!)
+## Complete Research Workflow - ITERATIVE & MANUAL
+
+**CRITICAL: All phases can be invoked manually and repeated as needed!**
+
+Research is inherently iterative. You may:
+
+- Run Phase 1 multiple times as questions evolve
+- Run Phase 2 many times with different experiments
+- Return to Phase 1 after Phase 2 results suggest new directions
+- Update the paper (Phase 3) continuously throughout the process
+- Iterate between phases in any order based on findings
+
+**The workflow below shows the typical flow, but YOU control when to invoke each phase.**
+
+### 🔄 Iterative Research Cycle
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  ITERATIVE RESEARCH LOOP                     │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  Phase 1: Planning ────┐                                    │
+│  (Literature + Brainstorming)                                │
+│           │            │                                     │
+│           ↓            │                                     │
+│  Phase 2: Experiments ─┤ ← Results may trigger              │
+│  (Implementation + Analysis) new questions                   │
+│           │            │                                     │
+│           ↓            │                                     │
+│  Phase 3: Paper Update ┘ ← Update paper after each cycle    │
+│  (Continuous writing)                                        │
+│           │                                                  │
+│           ↓                                                  │
+│  REPEAT until ready for Phase 4                             │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+
+Phase 4: Publication (Run once at the end)
+```
+
+**Key Insight:** The paper (Phase 3) should be updated after EVERY experiment iteration, not just at the end!
 
 ### 📁 Folder Structure
 
@@ -353,6 +393,29 @@ your-research-project/
 ```
 
 ### Phase 1: Planning - THREE-SPECIALIST LITERATURE SYSTEM
+
+**🔁 REPEATABLE:** Run this phase multiple times as your research questions evolve!
+
+**Manual Invocation:**
+
+```bash
+@research-lead
+*brainstorm "your evolving topic"
+*literature-review
+*formulate-questions
+
+# Invoke specialists as needed
+@research-assistant-web
+*search "new keywords"
+
+@research-assistant-arxiv
+*search "refined topic"
+
+@research-assistant-kb
+*search "specific concept"
+```
+
+**Workflow:**
 
 ```
 Prof. Dr. Kunz (Research Lead)
@@ -390,7 +453,49 @@ Prof. Dr. Kunz (Research Lead)
 
 **Key Innovation:** Three specialists cover all sources (web + academic + curated) in parallel!
 
-### Phase 2: Experimentation - BMAD CORE INTEGRATION
+**When to Re-run Phase 1:**
+
+- After Phase 2 experiments reveal unexpected results
+- When you discover new related work during writing
+- If reviewer feedback suggests missing literature
+- When pivoting research direction
+
+### Phase 2: Experimentation - EXPERIMENT PLANNING & ITERATION
+
+**🔁 HIGHLY ITERATIVE:** This phase will be run MANY times! Each experiment may suggest new experiments.
+
+**Manual Invocation:**
+
+```bash
+# Design a new experiment
+@research-scientist
+*design-experiment "test hypothesis X"
+
+# Plan development
+@experiment-pm
+*plan-experiment
+
+# Design architecture
+@experiment-architect
+*design-experiment-architecture
+
+# Implement
+@ml-engineer
+*implement-experiment
+*run-ablation
+
+# Analyze results
+@data-analyst
+*analyze-results
+*create-figures
+
+# Interpret and decide next steps
+@research-scientist
+*interpret-results
+# → May trigger: new Phase 2 iteration OR back to Phase 1 OR update Phase 3
+```
+
+**Workflow:**
 
 ```
 Research Scientist (Dr. Alex Kumar)
@@ -456,7 +561,51 @@ Research Scientist (Dr. Alex Kumar)
 - Trained models (not version controlled)
 - Analysis artifacts (`results/`)
 
-### Phase 3: Writing - LATEX + GIT + OVERLEAF
+**After Phase 2 Iteration:**
+
+1. **ALWAYS update the paper** (go to Phase 3)
+2. **Decide next step:**
+   - Run another Phase 2 iteration (new experiment)
+   - Return to Phase 1 (if results suggest new research direction)
+   - Move toward Phase 4 (if results are sufficient)
+
+### Phase 3: Writing - CONTINUOUS PAPER UPDATES
+
+**🔁 CONTINUOUS:** Update paper after EVERY Phase 2 iteration, not just at the end!
+
+**Why Update Continuously:**
+
+- Keeps paper aligned with latest results
+- Prevents massive rewrites at submission time
+- Helps you see gaps in experiments early
+- Makes story clearer as research progresses
+
+**Manual Invocation:**
+
+```bash
+# Initial paper setup (run once)
+@research-writer
+*create-paper
+
+# After EACH Phase 2 iteration, update relevant sections:
+@research-writer
+*draft-experiments    # Add new results
+*draft-methodology    # Refine based on what you actually did
+*draft-related-work   # Add newly discovered papers
+
+# Sync with git/Overleaf
+# git pull → edit → git commit → git push
+
+# Periodic full reviews
+@research-lead
+# Review entire paper, suggest improvements
+
+@research-writer
+*revise-paper
+*prepare-submission  # When ready for submission
+```
+
+**Workflow:**
 
 ```
 Research Writer (research-paper/)
@@ -496,9 +645,47 @@ Research Writer (research-paper/)
 **Outputs:**
 
 - Complete LaTeX paper (`research-paper/`)
-- Submission-ready PDF
+- Continuously updated sections
+- Submission-ready PDF (when ready)
 
-### Phase 4: Publication - REPRODUCIBILITY VALIDATION
+**Paper Evolution:**
+
+- **Early:** Draft outline, intro, related work
+- **Mid-research:** Growing experiments section, refined methodology
+- **Late-research:** Complete draft with all results
+- **Pre-submission:** Polished, formatted for venue
+
+### Phase 4: Publication - FINAL VALIDATION & SUBMISSION
+
+**🎯 RUN ONCE:** Only when paper is complete and ready to submit!
+
+**Manual Invocation:**
+
+```bash
+# Validate everything works
+@reproducibility-engineer
+*verify-reproducibility  # Can codebase/ reproduce results/?
+*prepare-release        # Clean code for public release
+*create-dockerfile      # Containerization
+
+# Final checks
+@research-lead
+# Review entire pipeline: codebase/ → results/ → research-paper/
+# Ensure story is coherent and claims are supported
+
+@data-analyst
+*test-significance  # Final statistical checks
+
+@research-writer
+*prepare-submission  # Format for target venue
+*draft-abstract     # Final abstract polish
+
+# Submit!
+# → Upload paper to conference/journal
+# → Release code on GitHub
+```
+
+**Workflow:**
 
 ```
 Reproducibility Engineer
@@ -538,6 +725,36 @@ Reproducibility Engineer
 - Submitted paper
 - Public code repository (GitHub)
 - Reproducibility artifacts
+
+---
+
+## 📊 Summary: Manual Phase Control
+
+**The key insight of this workflow: YOU control the iteration!**
+
+| Phase                        | Frequency          | When to Invoke                                                                                   |
+| ---------------------------- | ------------------ | ------------------------------------------------------------------------------------------------ |
+| **Phase 1: Planning**        | Multiple times     | Initial setup, after surprising results, when pivoting direction, during writing when gaps found |
+| **Phase 2: Experimentation** | Many times (5-20+) | For each hypothesis, baseline, ablation, analysis. Most time spent here!                         |
+| **Phase 3: Writing**         | Continuously       | After EVERY Phase 2 iteration. Keep paper in sync with research!                                 |
+| **Phase 4: Publication**     | Once               | When paper is complete, experiments done, story clear, ready to submit                           |
+
+**Typical Research Timeline:**
+
+```
+Week 1-2:   Phase 1 (initial)
+Week 3-4:   Phase 2 iteration 1 → Phase 3 update
+Week 5:     Phase 2 iteration 2 → Phase 3 update
+Week 6:     Phase 1 (refine) + Phase 2 iteration 3 → Phase 3 update
+Week 7-10:  Phase 2 iterations 4-8 → Phase 3 updates
+Week 11:    Phase 1 (final literature check)
+Week 12-14: Phase 2 final experiments → Phase 3 major revision
+Week 15:    Phase 4 (validation + submission)
+```
+
+**Remember:** The phases are guidelines, not prison! Jump between them as your research demands.
+
+---
 
 ## Key Documents
 
