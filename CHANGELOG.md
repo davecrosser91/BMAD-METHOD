@@ -1,3 +1,91 @@
+# [3.0.0](https://github.com/davidkreuzer/bmad-method-ai-research/compare/v2.1.0...v3.0.0) (2025-10-01)
+
+## Major Features
+
+### 🎯 bmad-core-archon Extension Pack - Complete Package
+
+Created a comprehensive new extension pack that integrates Archon MCP server for advanced task and document management.
+
+#### Package Contents
+
+- **10 Archon-Integrated Agents**: PM, Dev, Architect, PO, QA, Analyst, SM, UX Expert, BMad Master, BMad Orchestrator
+- **29 Tasks**: 8 new Archon-specific tasks + 21 from bmad-core
+- **Complete Documentation**: Comprehensive README with workflow examples and best practices
+- **All Supporting Files**: 6 checklists, 13 templates, 4 agent teams, 6 data files, 6 workflows
+
+#### Smart Dependency Checking System
+
+**All 8 working agents now feature automatic prerequisite document checking:**
+
+- **Analyst**: Checks for existing analysis docs (informational)
+- **PM**: Checks for Project Brief, Requirements Analysis before PRD creation
+- **Architect**: Checks for PRD, Requirements before architecture design
+- **Dev**: Checks for Architecture, Tech Stack, Coding Standards before implementation
+- **QA**: Checks for PRD before testing
+- **PO**: Checks for PRD, Project Brief before backlog prioritization
+- **SM**: Checks for PRD, Epics before story creation
+- **UX Expert**: Checks for PRD, Requirements before UX design
+
+**User Experience:**
+
+- Agents automatically check for expected prerequisites
+- Stop and alert user with formatted message if documents missing
+- Provide 3 options: proceed anyway, create prerequisites first, or skip
+- Load and acknowledge found documents
+- Educate users about proper workflow sequence
+
+#### Complete Document Workflow Documentation
+
+**New comprehensive documentation includes:**
+
+- **Why Start with Analyst**: Rationale for analyst-first approach
+- **7-Phase Document Lifecycle**: From Discovery to Documentation
+- **Document Types & Purposes**: Complete table with creators, readers, and Archon types
+- **Document Dependencies**: What each agent reads and creates
+- **Example Document Flow**: Step-by-step flow for "User Authentication System"
+- **How to Access Documents**: Command reference for document operations
+
+**Document workflow covers:**
+
+- Phase 1: Discovery & Analysis (Analyst)
+- Phase 2: Product Definition (PM)
+- Phase 3: Architecture & Design (Architect)
+- Phase 4: Story Breakdown (PM/PO)
+- Phase 5: Development (Dev)
+- Phase 6: QA & Validation (QA)
+- Phase 7: Documentation (Ongoing)
+
+#### Consolidated Documentation
+
+**Single comprehensive README.md** (1,352 lines) includes:
+
+- Design philosophy and brainstorming context
+- Complete workflow examples starting with Analyst
+- 5-minute quick start guide
+- Complete setup guide with verification tests
+- Full workflow example (User Auth System)
+- Agent command reference
+- Configuration details
+- Best practices with workflow sequence guidance
+- Troubleshooting guide
+- Comparison with bmad-core
+
+### Breaking Changes
+
+- Package now includes bmad-core-archon as primary extension pack
+- Workflow examples now emphasize analyst-first approach
+- All agents require Archon MCP server for task/document management
+
+### Documentation
+
+- ✅ Created comprehensive README.md with 13 major sections
+- ✅ Document workflow section with lifecycle and dependencies
+- ✅ Smart dependency checking section with examples
+- ✅ Updated all workflow examples to include Analyst phase
+- ✅ Best practices includes workflow sequence guidance
+
+---
+
 ## [4.36.2](https://github.com/bmadcode/BMAD-METHOD/compare/v4.36.1...v4.36.2) (2025-08-10)
 
 ### Bug Fixes

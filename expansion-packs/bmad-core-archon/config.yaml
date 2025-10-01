@@ -1,0 +1,10 @@
+# <!-- Powered by BMAD™ Core with Archon -->
+name: bmad-core-archon
+version: 3.0.0
+short-title: Core + Archon Pack
+description: >-
+  Core BMAD Method extension pack with Archon MCP integration for task management,
+  knowledge base, and document management. Uses Archon for tracking tasks/docs while
+  keeping agent definitions and source code in Git.
+author: BMAD Community
+slashPrefix: bmadarchon

@@ -1,0 +1,40 @@
+═══════════════════════════════════════════════════════════════
+  BMAD CORE + ARCHON EXTENSION PACK v1.0.0
+═══════════════════════════════════════════════════════════════
+
+📦 PACKAGE CONTENTS:
+  - 6 Archon-integrated agents
+  - 8 Archon-specific tasks
+  - 6 checklists (from bmad-core)
+  - 13 templates (from bmad-core)
+  - Complete documentation (README, SETUP, QUICK-START)
+  - Archon-first configuration
+
+🎯 KEY FEATURES:
+  ✅ Archon MCP integration for task management
+  ✅ Project-scoped documents in Archon
+  ✅ Shared knowledge base (RAG search)
+  ✅ Research-driven development workflows
+  ✅ Code in Git, Tasks/Docs in Archon
+  ✅ Status flow: todo → doing → review → done
+
+📚 DOCUMENTATION:
+  - README.md - Full documentation (11KB)
+  - SETUP-CHECKLIST.md - Setup guide (7.6KB)
+  - QUICK-START.md - Quick start (5.5KB)
+  - IMPLEMENTATION-SUMMARY.md - What was built (13KB)
+
+🚀 QUICK START:
+  1. Start Archon: archon serve
+  2. Configure Claude Code MCP
+  3. Activate agent: @pm
+  4. Create PRD: *create-prd
+  5. Create stories: *create-story
+  6. Implement: @dev *next-task
+
+🔗 LINKS:
+  - BMAD Method: https://github.com/bmad-code-org/BMAD-METHOD
+  - Archon: https://github.com/coleam00/Archon
+  - Claude Code: https://docs.claude.com/en/docs/claude-code
+
+═══════════════════════════════════════════════════════════════

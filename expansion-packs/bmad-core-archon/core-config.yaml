@@ -1,0 +1,53 @@
+# <!-- Powered by BMAD™ Core with Archon -->
+markdownExploder: false # Use Archon docs instead
+
+archon:
+  enabled: true
+  requireMCP: true # Fail if MCP not available
+  defaultProject: null # Set during agent activation
+
+  # Knowledge base settings (user manages manually)
+  knowledgeBase:
+    shared: true # Shared KB across projects
+    searchOnly: true # Agents can only search, not write
+
+  # Task management (project-scoped)
+  taskManagement:
+    defaultAssignee: "User"
+    taskGranularity: "implementation" # or "feature"
+    statusFlow: ["todo", "doing", "review", "done"]
+    autoCreateProject: true # Auto-create Archon project if not found
+
+  # Document types mapping (project-scoped)
+  documentTypes:
+    prd: "spec"
+    architecture: "design"
+    userStory: "note"
+    epic: "note"
+    technicalDoc: "guide"
+
+qa:
+  useArchon: true
+  qaLocation: null # Use Archon tasks with filter_by="status", filter_value="review"
+
+prd:
+  useArchon: true # Load from Archon documents
+  prdFile: null # Deprecated - using Archon
+  prdVersion: v5
+  prdSharded: false # Archon handles document structure
+
+architecture:
+  useArchon: true
+  architectureFile: null # Deprecated - using Archon
+  architectureVersion: v5
+  architectureSharded: false # Archon handles document structure
+
+customTechnicalDocuments: null # Use Archon documents
+
+devLoadAlwaysFiles: [] # Load from Archon knowledge base instead
+
+devDebugLog: null # Use Archon task notes/description updates
+
+devStoryLocation: null # Use Archon tasks
+
+slashPrefix: BMadArchon
