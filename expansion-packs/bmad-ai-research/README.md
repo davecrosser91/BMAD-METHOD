@@ -396,9 +396,22 @@ your-research-project/
 
 **🔁 REPEATABLE:** Run this phase multiple times as your research questions evolve!
 
-**📋 Automated Workflow:** Use the [phase-1-planning.yaml](workflows/phase-1-planning.yaml) workflow for guided execution!
+**🤖 Automated Execution:** Let Prof. Dr. Kunz (Research Lead) orchestrate the entire workflow!
 
-**Manual Invocation (or follow workflow):**
+```bash
+@research-lead
+*run-phase-1 "your research topic"
+# Prof. Dr. Kunz will:
+# 1. Read workflows/phase-1-planning.yaml
+# 2. Execute all steps in sequence
+# 3. Coordinate three specialists automatically
+# 4. Handle iterations (2-4 cycles)
+# 5. Create all output documents
+```
+
+**📋 Or use the workflow as a guide:** [phase-1-planning.yaml](workflows/phase-1-planning.yaml)
+
+**Manual Invocation (if you prefer step-by-step control):**
 
 ```bash
 # The Research Lead orchestrates this entire phase:
@@ -481,9 +494,23 @@ Prof. Dr. Kunz (Research Lead)
 
 **🔁 HIGHLY ITERATIVE:** This phase will be run MANY times! Each experiment may suggest new experiments.
 
-**📋 Automated Workflow:** Use the [phase-2-single-experiment.yaml](workflows/phase-2-single-experiment.yaml) workflow for each experiment iteration!
+**🤖 Automated Execution:** Let Prof. Dr. Kunz orchestrate the experiment iteration!
 
-**Manual Invocation (or follow workflow):**
+```bash
+@research-lead
+*run-phase-2 "test hypothesis X"
+# Prof. Dr. Kunz will:
+# 1. Coordinate Research Scientist to design experiment
+# 2. Coordinate Experiment PM to plan development
+# 3. Coordinate Experiment Architect to design code structure
+# 4. Coordinate ML Engineer to implement and run experiments
+# 5. Coordinate Data Analyst to analyze results
+# 6. Present decision point: What next?
+```
+
+**📋 Or use the workflow as a guide:** [phase-2-single-experiment.yaml](workflows/phase-2-single-experiment.yaml)
+
+**Manual Invocation (if you prefer step-by-step control):**
 
 ```bash
 # Design a new experiment
@@ -592,7 +619,27 @@ Research Scientist (Dr. Alex Kumar)
 
 **🔁 CONTINUOUS:** Update paper after EVERY Phase 2 iteration, not just at the end!
 
-**📋 Automated Workflow:** Use the [phase-3-paper-update.yaml](workflows/phase-3-paper-update.yaml) workflow with different variants!
+**🤖 Automated Execution:** Let Prof. Dr. Kunz orchestrate paper updates!
+
+```bash
+# First time (create paper structure)
+@research-lead
+*run-phase-3 initial_setup
+
+# After each experiment (most common)
+@research-lead
+*run-phase-3 incremental_update
+
+# Every 4-6 weeks (major revision)
+@research-lead
+*run-phase-3 full_revision
+
+# Before submission (final polish)
+@research-lead
+*run-phase-3 pre_submission_polish
+```
+
+**📋 Or use the workflow as a guide:** [phase-3-paper-update.yaml](workflows/phase-3-paper-update.yaml)
 
 **Workflow Variants:**
 
