@@ -93,7 +93,7 @@ Research Lead → Further refinement
 
 - ✅ **D. Freuzer (Web)**: Latest industry trends, practical implementations
 - ✅ **H. Zoppel (ArXiv)**: Cutting-edge academic research, pre-prints
-- ✅ **A. Pilz (KB)**: Your curated corpus, project-tagged papers
+- ✅ **A. Pilz (KB, Archron)**: Your curated corpus, project-tagged papers
 - ✅ **Parallel Search**: All three work simultaneously for comprehensive coverage
 - ✅ **Prof. Dr. Kunz**: Synthesizes all findings, maintains objective focus
 
@@ -126,7 +126,7 @@ Research Lead → Further refinement
           │                  │                 │
     ┌─────┴─────────┐        │         ┌──────┴──────────┐
     │ D. Freuzer    │        │         │ Research Writer │
-    │ (Web) 🌐      │        │         │ Dr. Emma Wright │
+    │ (Web) 🌐      │        │         │ Dr. G. Sarihuela │
     │ WebSearch     │        │         │ research-paper/ │
     ├───────────────┤        │         │ LaTeX + git     │
     │ H. Zoppel     │        │         └─────────────────┘
