@@ -24,49 +24,82 @@ npx bmad-method install
 Then activate any research agent:
 
 ```bash
-@research-lead          # Strategic planning & brainstorming
-@research-assistant     # Literature search (uses Archon MCP)
-@research-scientist     # Experiment design
-@ml-engineer           # Implementation
-@data-analyst          # Analysis & visualization
-@research-writer       # Paper writing
-@reproducibility-engineer  # Code release
+# RESEARCH TEAM (11 agents - all from bmad-ai-research, fully autonomous!)
+@research-lead              # Prof. Dr. Kunz - Team coordination & strategy
+@research-assistant-web     # D. Freuzer - Web/blog/docs research
+@research-assistant-arxiv   # H. Zoppel - ArXiv papers (MCP-dependent)
+@research-assistant-kb      # A. Pilz - Knowledge base curation (Archon MCP)
+@research-scientist         # Dr. Alex Kumar - Experiment design
+@experiment-pm              # Dr. Chen Wei - Experiment planning & tasks
+@experiment-architect       # Dr. Sofia Martinez - Code architecture design
+@ml-engineer                # Jordan Lee - Code implementation (codebase/)
+@data-analyst               # Dr. Maya Patel - Analysis (results/)
+@research-writer            # Dr. Emma Wright - Paper writing (research-paper/)
+@reproducibility-engineer   # Sam Rodriguez - Reproducibility validation
 ```
 
 ## Overview
 
 The **AI Research Expansion Pack** adapts BMAD's proven agentic workflow to the unique demands of scientific research. While the core BMAD framework focuses on software product development, this pack specializes in the complete research lifecycle: from literature review through experiment execution to paper publication.
 
-## 🔄 Key Innovation: The Iterative Brainstorm-Literature Loop
+## 🔄 Key Innovation: Three-Specialist Literature System
 
-**Unlike software development (which is linear), research ideation is cyclical.**
+**NEW: Research Assistants Split into Three Specialists!**
 
-The pack's most powerful feature is the **iterative loop** between brainstorming and literature review:
+Instead of one generalist, you now have **three specialized research assistants** working in parallel:
 
 ```
-Brainstorm Research Questions (Research Lead)
-         ↓
-Literature Search (Research Assistant via Archon MCP)
-         ↓
-Refine Questions Based on Gaps (Research Lead)
-         ↓
-Deeper Literature Dive (Research Assistant)
-         ↓
-Further Refinement (Research Lead)
-         ↓
-Repeat Until Converged (2-4 iterations)
-         ↓
-Well-Formed Research Questions + Identified Gaps
+┌─────────────────────────────────────────────────────────────────┐
+│                    Prof. Dr. Kunz (Research Lead)               │
+│                    Coordinates all literature searches          │
+└────────────────┬────────────────┬──────────────────────────────┘
+                 │                │
+      ┌──────────┴────┐  ┌────────┴─────┐  ┌──────────────┐
+      │ D. Freuzer    │  │ H. Zoppel    │  │ A. Pilz      │
+      │ Web Research  │  │ ArXiv Papers │  │ Knowledge Base│
+      │ 🌐            │  │ 📄           │  │ 📚           │
+      └───────────────┘  └──────────────┘  └──────────────┘
+           │                    │                   │
+      Blogs, docs          Academic papers    Curated project
+      Industry trends      Pre-prints         corpus with tags
+      GitHub repos         Peer-reviewed      Organized papers
 ```
 
-**NEW: Automated Literature Search with Archon MCP!**
+**The Iterative Brainstorm-Literature Loop (Enhanced):**
 
-- Research Assistant searches your knowledge base using project tags
-- No manual literature searching - agent does it for you
-- Finds relevant papers, identifies gaps, suggests additions
+```
+Research Lead (Prof. Dr. Kunz) → Initial Brainstorming (10-20 questions)
+                  ↓
+┌─────────────────┴──────────────────────────────────────────────┐
+│  PARALLEL LITERATURE SEARCH (All 3 Assistants Work Together)   │
+├─────────────────────────────────────────────────────────────────┤
+│  • D. Freuzer  → Web content, blogs, recent industry posts     │
+│  • H. Zoppel   → ArXiv papers (if MCP available)               │
+│  • A. Pilz     → Knowledge base tagged papers                  │
+└────────────────┬───────────────────────────────────────────────┘
+                 ↓
+Research Lead → Synthesize findings, refine questions
+                 ↓
+        DEEPER DIVE (Targeted searches)
+                 ↓
+Research Lead → Further refinement
+                 ↓
+        REPEAT 2-4 iterations until converged
+                 ↓
+   Well-Formed Research Questions + Identified Gaps
+```
+
+**Why Three Specialists?**
+
+- ✅ **D. Freuzer (Web)**: Latest industry trends, practical implementations
+- ✅ **H. Zoppel (ArXiv)**: Cutting-edge academic research, pre-prints
+- ✅ **A. Pilz (KB)**: Your curated corpus, project-tagged papers
+- ✅ **Parallel Search**: All three work simultaneously for comprehensive coverage
+- ✅ **Prof. Dr. Kunz**: Synthesizes all findings, maintains objective focus
 
 **Why This Matters:**
 
+- ✅ Comprehensive coverage: Academic + Industry + Curated sources
 - ✅ Ideas grounded in reality (not already fully solved)
 - ✅ Questions become specific and testable
 - ✅ Clear novelty and gaps identified upfront
@@ -75,149 +108,436 @@ Well-Formed Research Questions + Identified Gaps
 
 **📖 [See detailed iterative workflow guide](docs/ITERATIVE-RESEARCH-WORKFLOW.md)**
 
+## Complete System Architecture
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                     PROF. DR. KUNZ (Research Lead)                     │
+│                         Team Coordinator                               │
+│  • Orchestrates all agents      • Maintains objective focus           │
+│  • Synthesizes findings         • Makes final decisions               │
+└──────────┬─────────────────┬─────────────────┬─────────────────────────┘
+           │                 │                 │
+           │                 │                 │
+   ┌───────▼──────┐  ┌───────▼──────┐  ┌──────▼──────────┐
+   │ LITERATURE   │  │ EXPERIMENT   │  │  PUBLICATION    │
+   │ SPECIALISTS  │  │    TEAM      │  │     TEAM        │
+   └──────┬───────┘  └───────┬──────┘  └──────┬──────────┘
+          │                  │                 │
+    ┌─────┴─────────┐        │         ┌──────┴──────────┐
+    │ D. Freuzer    │        │         │ Research Writer │
+    │ (Web) 🌐      │        │         │ Dr. Emma Wright │
+    │ WebSearch     │        │         │ research-paper/ │
+    ├───────────────┤        │         │ LaTeX + git     │
+    │ H. Zoppel     │        │         └─────────────────┘
+    │ (ArXiv) 📄    │        │
+    │ ArXiv MCP     │        │
+    ├───────────────┤        │
+    │ A. Pilz       │        │
+    │ (KB) 📚       │        │
+    │ Archon MCP    │        │
+    └───────────────┘        │
+                             │
+                      ┌──────▼─────────────────┐
+                      │ Research Scientist     │
+                      │ Dr. Alex Kumar         │
+                      │ Experiment Design      │
+                      │ Creates specifications │
+                      └──────┬─────────────────┘
+                             │
+                             │ experiment specs
+                             ↓
+                   ┌───────────────────────┐
+                   │  EXPERIMENT PLANNING  │
+                   │  (bmad-ai-research)   │
+                   ├───────────────────────┤
+                   │ 1. Experiment PM      │
+                   │    Dr. Chen Wei       │
+                   │    Creates dev plan   │
+                   │         ↓             │
+                   │ 2. Experiment Architect│
+                   │    Dr. Sofia Martinez │
+                   │    Designs code arch  │
+                   └──────┬────────────────┘
+                          │
+                          │ implementation tasks
+                          ↓
+                 ┌────────────────────┐
+                 │ ML Engineer        │
+                 │ Jordan Lee         │
+                 │ codebase/          │
+                 │ Implementation     │
+                 └────────┬───────────┘
+                          │
+                          │ outputs to
+                          ↓
+                 ┌────────────────────┐
+                 │ Data Analyst       │
+                 │ Dr. Maya Patel     │
+                 │ results/           │
+                 │ Analysis & Viz     │
+                 └────────────────────┘
+
+        ┌─────────────────────────────────────────┐
+        │ Reproducibility Engineer (Sam Rodriguez)│
+        │ Validates: codebase/ → results/ → paper/│
+        └─────────────────────────────────────────┘
+```
+
+**Implementation Pipeline (BMAD Core Integration):**
+
+```
+Research Scientist
+    ↓
+    Creates experiment specifications
+    ↓
+PM (Project Manager - BMAD Core)
+    ↓
+    Creates development plan & tasks
+    ↓
+Architect (Solution Architect - BMAD Core)
+    ↓
+    Designs implementation architecture
+    ↓
+ML Engineer
+    ↓
+    Implements in codebase/
+```
+
+**Folder Flow:**
+
+```
+codebase/           results/              research-paper/
+   ↓                   ↓                        ↓
+ML Engineer    →   Data Analyst    →    Research Writer
+implements         analyzes               writes paper
+experiments        creates figs           incorporates
+
+                Reproducibility Engineer validates all →
+```
+
 ## What Makes Research Different
 
-| Software Development    | AI Research                              |
-| ----------------------- | ---------------------------------------- |
-| Build working product   | Advance scientific knowledge             |
-| PRD → Stories → Code    | Proposal → Experiments → Paper           |
-| Features must work      | Experiments often fail (and that's okay) |
-| Deployed software       | Published paper + open code              |
-| QA checks functionality | Peer review checks rigor                 |
+| Software Development     | AI Research                                                                      |
+| ------------------------ | -------------------------------------------------------------------------------- |
+| Build working product    | Advance scientific knowledge                                                     |
+| PRD → Stories → Code     | Proposal → Experiments → Paper                                                   |
+| PM/Architect → Developer | **Research Scientist → PM/Architect → ML Engineer** (Experiment Planning agents) |
+| Features must work       | Experiments often fail (and that's okay)                                         |
+| Deployed software        | Published paper + open code                                                      |
+| QA checks functionality  | Peer review checks rigor                                                         |
+| Single codebase          | **Three folders**: codebase/, results/, research-paper/                          |
 
 ## The Research Team
 
-### 7 Specialized Research Agents
+### 11 Specialized Research Agents (5 NEW!)
 
-**📚 Research Assistant (Dr. Jamie Liu)** - NEW!
+#### Literature Specialists (NEW: Split into 3!)
 
-- Literature search via Archon MCP knowledge base
-- Paper discovery using project tags
-- Gap identification and synthesis
-- Code example search
-- **Commands:** `*set-tag`, `*sources`, `*search`, `*search-codes`
+**🌐 Web Research Specialist (D. Freuzer)** - @research-assistant-web
 
-**🔬 Research Lead (Dr. Sarah Chen)**
+- Live web content, blogs, documentation
+- Industry perspectives and trends
+- GitHub repositories and implementations
+- Recent posts and tutorials
+- **Tools:** WebSearch, WebFetch
+- **Commands:** `*search`, `*fetch`, `*search-docs`, `*search-github`, `*track-trends`
 
-- Research brainstorming and strategy
-- Proposal development
-- Validation and oversight
-- Iterative question refinement
-- **Commands:** `*brainstorm`, `*create-proposal`, `*validate-research`
+**📄 ArXiv Specialist (H. Zoppel)** - @research-assistant-arxiv
 
-**🧪 Research Scientist (Dr. Alex Kumar)**
+- Academic pre-prints from arXiv
+- Recent papers before peer review
+- Author and category searches
+- **MCP-Dependent:** Requires ArXiv MCP (gracefully fails if unavailable)
+- **Tools:** ArXiv MCP (mcp**arxiv**search, mcp**arxiv**get_paper)
+- **Commands:** `*search`, `*search-author`, `*search-category`, `*get-paper`
+
+**📚 Knowledge Base Curator (A. Pilz)** - @research-assistant-kb
+
+- Curated project knowledge base
+- Tagged paper organization
+- Full-text paper analysis
+- Gap identification
+- **Tools:** Archon MCP (rag_search_knowledge_base, rag_search_code_examples)
+- **Commands:** `*set-tag`, `*sources`, `*search`, `*search-codes`, `*catalogue-paper`
+
+#### Team Coordination
+
+**🔬 Research Lead (Prof. Dr. Kunz)** - @research-lead
+
+- Team orchestration and coordination
+- Literature search routing (directs D. Freuzer, H. Zoppel, A. Pilz)
+- Research strategy and objectives
+- Proposal development and validation
+- Cross-agent synthesis
+- Full project visibility (codebase/, results/, research-paper/)
+- **Commands:** `*brainstorm`, `*create-proposal`, `*literature-review`, `*formulate-questions`
+
+#### Experiment Team
+
+**🧪 Research Scientist (Dr. Alex Kumar)** - @research-scientist
 
 - Experimental design and methodology
-- Hypothesis formulation
-- Novel algorithm design
-- Result interpretation
+- Works with Research Lead to construct experiments
+- Creates specifications for PM/Architect → ML Engineer pipeline
+- Interprets results and refines experiments
+- **Reads:** codebase/, results/
 - **Commands:** `*create-architecture`, `*design-experiment`, `*interpret-results`
 
-**⚙️ ML Engineer (Jordan Lee)**
+**⚙️ ML Engineer (Jordan Lee)** - @ml-engineer
 
-- Experiment implementation
-- Baseline coding
-- Training pipeline optimization
-- Debugging and iteration
-- **Commands:** `*implement-experiment`, `*execute-experiment`, `*debug-experiment`
+- Code implementation in **codebase/** folder
+- Receives tasks from PM/Architect (BMAD core workflows)
+- Implements experiments, baselines, novel methods
+- Runs experiments, outputs to results/
+- **Primary workspace:** codebase/
+- **Commands:** `*implement-experiment`, `*implement-baseline`, `*run-ablation`
 
-**📊 Data Analyst (Dr. Maya Patel)**
+**📊 Data Analyst (Dr. Maya Patel)** - @data-analyst
 
-- Dataset preparation
-- Statistical analysis
-- Publication-quality visualization
-- Significance testing
-- **Commands:** `*analyze-results`, `*create-figures`, `*significance-test`
+- Dataset preparation in **codebase/data/**
+- Statistical analysis and visualization
+- Creates publication-quality figures in **results/**
+- Significance testing and error analysis
+- **Workspaces:** codebase/data/, results/
+- **Commands:** `*prepare-dataset`, `*analyze-results`, `*create-figures`, `*test-significance`
 
-**✍️ Research Writer (Dr. Emma Wright)**
+#### Publication Team
 
-- Paper drafting and revision
-- Scientific storytelling
-- Submission formatting
-- Review response
-- **Commands:** `*create-paper`, `*draft-abstract`, `*prepare-submission`
+**✍️ Research Writer (Dr. Emma Wright)** - @research-writer
 
-**🔁 Reproducibility Engineer (Sam Rodriguez)**
+- Paper writing in **research-paper/** folder
+- LaTeX editing and formatting
+- Git/Overleaf synchronization
+- Incorporates results/ into paper
+- **Primary workspace:** research-paper/
+- **Tools:** LaTeX, git
+- **Commands:** `*create-paper`, `*draft-abstract`, `*draft-introduction`, `*prepare-submission`
 
-- Environment setup
-- Seed control and versioning
+**🔁 Reproducibility Engineer (Sam Rodriguez)** - @reproducibility-engineer
+
+- Cross-folder validation (codebase/ → results/ → research-paper/)
+- Ensures experiments are reproducible
 - Code release preparation
-- Reproducibility validation
-- **Commands:** `*validate-reproducibility`, `*prepare-release`
+- Documentation and containerization
+- **Validates:** All folders
+- **Commands:** `*verify-reproducibility`, `*prepare-release`, `*create-dockerfile`
 
-## Research Workflow
+## Complete Research Workflow (UPDATED!)
 
-### Phase 1: Planning - WITH ITERATIVE LOOP + AUTOMATED LITERATURE SEARCH
+### 📁 Folder Structure
 
-```
-Research Lead → Initial Brainstorming (10-20 questions)
-            ↓
-Research Assistant → Search Knowledge Base (Archon MCP)
-            ↓
-Research Lead → Refine Questions Based on Gaps
-            ↓
-Research Assistant → Deeper Literature Search
-            ↓
-Research Lead → Further Refinement
-            ↓
-LOOP REPEATS 2-4 times until converged
-            ↓
-Research Assistant → Identify Gaps & Suggest Additions
-            ↓
-Research Lead → Research Proposal
-            ↓
-Research Scientist → Experimental Architecture
-            ↓
-Research Lead → Validation
-```
-
-**Outputs:** research-brainstorming-session-results.md, literature-review.md, research-proposal.md, experimental-architecture.md
-
-**Key Improvement:** Research Assistant automates literature search using your tagged papers in Archon MCP!
-
-### Phase 2: Experimentation (IDE Required)
+All research artifacts are organized into three main folders:
 
 ```
-Research Scientist → Design Experiments
-            ↓
-Data Analyst → Prepare Datasets
-            ↓
-ML Engineer → Implement & Run Experiments
-            ↓
-Data Analyst → Analyze Results
-            ↓
-Research Scientist → Interpret Findings
+your-research-project/
+├── codebase/              # ML Engineer's primary workspace
+│   ├── data/              # Datasets (Data Analyst + ML Engineer)
+│   ├── src/               # Experiment code
+│   ├── configs/           # Hyperparameters
+│   ├── tests/             # Unit tests
+│   └── README.md          # Setup & reproduction guide
+│
+├── results/               # Data Analyst's primary output
+│   ├── figures/           # Publication-quality visualizations
+│   ├── tables/            # LaTeX-formatted tables
+│   ├── analysis/          # Statistical test results
+│   └── metrics/           # Experimental metrics
+│
+└── research-paper/        # Research Writer's workspace (LaTeX + git)
+    ├── main.tex           # Main paper file
+    ├── sections/          # Paper sections
+    ├── figures/           # Figures copied from results/
+    ├── references.bib     # Bibliography
+    └── .git/              # Git repository (syncs with Overleaf)
 ```
 
-**Outputs:** Experiment specs, code, results, trained models
-
-### Phase 3: Writing (Web UI or IDE)
+### Phase 1: Planning - THREE-SPECIALIST LITERATURE SYSTEM
 
 ```
-Research Writer → Create Paper Outline
-            ↓
-Research Writer → Draft All Sections
-            ↓
-Research Lead → Review Draft
-            ↓
-Research Writer → Revise & Polish
-            ↓
-Research Writer → Format for Submission
+Prof. Dr. Kunz (Research Lead)
+   │
+   ├─→ Initial Brainstorming (10-20 questions)
+   │
+   ├─→ PARALLEL LITERATURE SEARCH ←────────────────────┐
+   │   ├─→ D. Freuzer (Web):    Blogs, docs, GitHub   │
+   │   ├─→ H. Zoppel (ArXiv):   Academic pre-prints   │  Iteration 1
+   │   └─→ A. Pilz (KB):        Tagged knowledge base │
+   │                                                    │
+   ├─→ Synthesize all findings                         │
+   │                                                    │
+   ├─→ Refine research questions                       │
+   │                                                    │
+   └─→ DEEPER DIVE (targeted searches) ────────────────┘
+       │
+       ├─→ REPEAT 2-4 iterations until converged
+       │
+       ├─→ Identify Gaps & Novel Contributions
+       │
+       ├─→ Create Research Proposal
+       │
+       └─→ Research Scientist: Experimental Architecture
+           │
+           └─→ Prof. Dr. Kunz: Validation
 ```
 
-**Outputs:** Complete research paper
+**Outputs:**
 
-### Phase 4: Publication
+- `research-brainstorming-session-results.md` (Research Lead)
+- `literature-review.md` (All 3 assistants' findings synthesized)
+- `research-proposal.md` (Research Lead)
+- `experimental-architecture.md` (Research Scientist)
+
+**Key Innovation:** Three specialists cover all sources (web + academic + curated) in parallel!
+
+### Phase 2: Experimentation - BMAD CORE INTEGRATION
 
 ```
-Reproducibility Engineer → Prepare Code Release
-            ↓
-Research Lead → Final Validation
-            ↓
-Submit to Conference/Journal
+Research Scientist (Dr. Alex Kumar)
+   │
+   ├─→ Design Experiment Specifications
+   │   • Methodology details
+   │   • Baselines to implement
+   │   • Evaluation metrics
+   │   • Success criteria
+   │
+   └─→ EXPERIMENT PLANNING WORKFLOW
+       │
+       ├─→ Project Manager (@experiment-pm from bmad-ai-research)
+       │   │
+       │   ├─→ Creates development plan
+       │   ├─→ Breaks down experiment into tasks
+       │   ├─→ Defines implementation milestones
+       │   │
+       │   └─→ Solution Architect (@experiment-architect from bmad-ai-research)
+       │       │
+       │       ├─→ Designs code architecture
+       │       ├─→ Plans module structure (codebase/src/)
+       │       ├─→ Defines interfaces and APIs
+       │       │
+       │       └─→ ML Engineer (Jordan Lee - codebase/)
+       │           │
+       │           ├─→ Implement experiment code
+       │           ├─→ Implement baselines
+       │           ├─→ Setup experiment tracking
+       │           │
+       │           └─→ Run experiments → outputs to results/
+       │               │
+       │               └─→ Data Analyst (Dr. Maya Patel - results/)
+       │                   │
+       │                   ├─→ Prepare datasets (codebase/data/)
+       │                   ├─→ Statistical analysis
+       │                   ├─→ Create figures (results/figures/)
+       │                   ├─→ Format tables (results/tables/)
+       │                   │
+       │                   └─→ Research Scientist: Interpret Results
+       │                       │
+       │                       └─→ If needed: Refine & iterate
 ```
 
-**Outputs:** Submitted paper, public code repository
+**Experiment Planning Integration:**
+
+- **Research Scientist** creates high-level experiment specs
+- **PM** (from bmad-ai-research) plans development workflow
+- **Architect** (from bmad-ai-research) designs implementation structure
+- **ML Engineer** executes implementation
+
+**Folder Flow:**
+
+- Code lives in: `codebase/`
+- Data lives in: `codebase/data/`
+- Results output to: `results/`
+
+**Outputs:**
+
+- Development plan (PM)
+- Architecture design (Architect)
+- Experiment code (`codebase/`)
+- Trained models (not version controlled)
+- Analysis artifacts (`results/`)
+
+### Phase 3: Writing - LATEX + GIT + OVERLEAF
+
+```
+Research Writer (research-paper/)
+   │
+   ├─→ git pull (sync from Overleaf)
+   │
+   ├─→ Create Paper Outline (main.tex, sections/)
+   │
+   ├─→ Copy figures from results/ → research-paper/figures/
+   │
+   ├─→ Draft All Sections
+   │   ├─→ Abstract
+   │   ├─→ Introduction
+   │   ├─→ Related Work (coordinate with A. Pilz for citations)
+   │   ├─→ Methodology (coordinate with Research Scientist)
+   │   ├─→ Experiments (incorporate from results/)
+   │   └─→ Conclusion
+   │
+   ├─→ git commit -m "Draft complete"
+   ├─→ git push (sync to Overleaf)
+   │
+   ├─→ Prof. Dr. Kunz: Review Draft
+   │
+   ├─→ Research Writer: Revise & Polish
+   │
+   ├─→ Format for Target Venue (NeurIPS/ICML/ICLR/etc.)
+   │
+   └─→ git push (final version synced)
+```
+
+**Folder Flow:**
+
+- Paper lives in: `research-paper/`
+- Reads figures from: `results/`
+- Git syncs with: Overleaf
+
+**Outputs:**
+
+- Complete LaTeX paper (`research-paper/`)
+- Submission-ready PDF
+
+### Phase 4: Publication - REPRODUCIBILITY VALIDATION
+
+```
+Reproducibility Engineer
+   │
+   ├─→ Validate codebase/
+   │   ├─→ Check seeds, dependencies, README
+   │   └─→ Verify experiments can be re-run
+   │
+   ├─→ Validate results/
+   │   └─→ Confirm figures/metrics match paper claims
+   │
+   ├─→ Validate research-paper/
+   │   └─→ Ensure all claims backed by results/
+   │
+   ├─→ Create Documentation
+   │   ├─→ codebase/README.md
+   │   ├─→ codebase/REPRODUCE.md
+   │   └─→ Dockerfile/environment.yml
+   │
+   ├─→ Prepare Code Release
+   │   ├─→ Clean codebase/ for public
+   │   ├─→ Add LICENSE
+   │   └─→ Remove sensitive data
+   │
+   └─→ Prof. Dr. Kunz: Final Validation
+       │
+       └─→ SUBMIT to Conference/Journal
+```
+
+**Cross-Folder Validation:**
+
+- `codebase/` → Can reproduce → `results/`
+- `results/` → Matches claims in → `research-paper/`
+
+**Outputs:**
+
+- Submitted paper
+- Public code repository (GitHub)
+- Reproducibility artifacts
 
 ## Key Documents
 
@@ -344,112 +664,213 @@ If you want automated literature search via the Research Assistant:
 
 ## Usage Examples
 
-### Starting a New Research Project (With Archon MCP)
+### Starting a New Research Project (Three-Specialist System)
 
 ```bash
 # Step 1: Brainstorm initial questions
 @research-lead
 *brainstorm "efficient attention mechanisms for transformers"
-# → Generates 10-20 research questions
+# → Prof. Dr. Kunz generates 10-20 research questions
 
-# Step 2: Search your knowledge base
-@research-assistant
-*set-tag "transformer-research"  # Your project tag
+# Step 2: Parallel literature search (all three specialists)
+# The Research Lead coordinates this, but you can also invoke directly:
+
+@research-assistant-web      # D. Freuzer
+*search "efficient attention mechanisms 2024"
+# → Searches blogs, documentation, GitHub
+# → Finds: HuggingFace blog posts, PyTorch tutorials, recent implementations
+
+@research-assistant-arxiv    # H. Zoppel (if MCP available)
+*search "efficient attention transformers"
+# → Searches arXiv pre-prints
+# → Finds: FlashAttention-3, recent academic papers
+
+@research-assistant-kb       # A. Pilz
+*set-tag "transformer-research"
 *search "attention mechanisms"
-# → Finds relevant papers, identifies gaps
+# → Searches your curated knowledge base
+# → Finds: Tagged papers in your project corpus
 
-# Step 3: Refine based on findings
+# Step 3: Prof. Dr. Kunz synthesizes all findings
 @research-lead
-*brainstorm "efficient attention"
-# → Refines questions based on gaps
+*formulate-questions
+# → Refines questions based on gaps from ALL THREE sources
 
-# Repeat steps 2-3 for 2-4 iterations
+# Step 4: Deeper targeted dive (iteration 2)
+@research-assistant-web
+*search-github "flash attention implementation"
 
-# Step 4: Create formal proposal
+@research-assistant-arxiv
+*search-author "Dao"  # FlashAttention author
+
+@research-assistant-kb
+*identify-gaps
+# → What's missing from KB that should be added?
+
+# Repeat iterations 2-4 times until converged
+
+# Step 5: Create formal proposal
 @research-lead
 *create-proposal
 # → Creates research-proposal.yaml
 
-# Step 5: Design experiments
+# Step 6: Design experiments
 @research-scientist
 *create-architecture
 *design-experiment
+# → Creates detailed experiment specifications
 ```
 
-### Running Experiments
+### Running Experiments (with BMAD Core PM/Architect)
 
 ```bash
 # Step 1: Prepare data
 @data-analyst
 *prepare-dataset
-# → Processes and validates data
+# → Processes data in codebase/data/
+# → Validates and documents datasets
 
-# Step 2: Implement experiment
+# Step 2: Development Planning (BMAD Core Workflow)
+@experiment-pm  # From bmad-core package
+# Takes Research Scientist's experiment specs
+# → Creates development plan
+# → Breaks down into implementation tasks
+# → Defines milestones
+
+@experiment-architect  # From bmad-core package
+# Takes PM's development plan
+# → Designs code architecture
+# → Plans codebase/src/ module structure
+# → Defines interfaces and data flow
+
+# Step 3: Implementation (codebase/)
 @ml-engineer
 *implement-experiment
-# → Codes from experiment spec
+# → Follows Architect's design
+# → Writes code in codebase/src/
+# → Implements experiment logic
 
-*setup-baseline
-# → Implements baseline methods
+*implement-baseline
+# → Codes baseline methods
 
-# Step 3: Execute experiments
+*setup-tracking
+# → wandb/tensorboard integration
+
+# Step 4: Execute experiments
 @ml-engineer
-*execute-experiment
-# → Runs with proper seeds and logging
+*run-ablation
+# → Runs experiments with proper seeds
+# → Outputs metrics/logs to results/
 
-# Step 4: Analyze results
+# Step 4: Analyze results (results/)
 @data-analyst
 *analyze-results
-# → Statistical analysis (mean ± std)
+# → Reads from results/, performs statistical tests
+# → Creates figures in results/figures/
+# → Formats tables in results/tables/
 
 *create-figures
-# → Publication-quality plots
+# → Publication-quality plots (300 DPI, LaTeX fonts)
 
 # Step 5: Interpret findings
 @research-scientist
 *interpret-results
-*suggest-next-experiments
+# → Analyzes results/ against hypotheses
+# → Suggests refinements if needed
 ```
 
-### Writing Paper
+### Writing Paper (research-paper/ with LaTeX + git)
 
 ```bash
-# Step 1: Create outline
+# Step 1: Setup paper folder
 @research-writer
+# → git pull (sync from Overleaf if already exists)
 *create-paper
-# → Drafts complete paper structure
+# → Creates main.tex, sections/, references.bib in research-paper/
 
-# Step 2: Draft sections
+# Step 2: Copy figures from results/
+# → Manually or via Research Writer:
+# cp results/figures/* research-paper/figures/
+
+# Step 3: Draft sections (all in research-paper/)
 @research-writer
 *draft-abstract
+# → Writes abstract in sections/abstract.tex
+
 *draft-introduction
+# → Includes motivation, contributions
+
+*draft-related-work
+# → Coordinates with @research-assistant-kb (A. Pilz) for citations
+
 *draft-methodology
+# → Coordinates with @research-scientist for technical details
+
 *draft-experiments
+# → Incorporates results/ (figures, tables, metrics)
+
 *draft-conclusion
+# → Summary, impact, future work
 
-# Step 3: Review
+# Step 4: Git sync
+# → Research Writer commits and pushes
+# git add . && git commit -m "Complete draft" && git push
+# → Syncs to Overleaf automatically
+
+# Step 5: Review
 @research-lead
-# Provide feedback on draft
+# → Prof. Dr. Kunz reviews on Overleaf
+# → Provides feedback
 
-# Step 4: Revise and submit
+# Step 6: Revise and submit
 @research-writer
+# → git pull (get latest from Overleaf)
 *revise-paper
 *prepare-submission
-# → Formats for NeurIPS/ICML/CVPR/etc.
+# → Formats for NeurIPS/ICML/ICLR/etc.
+# git push (final version)
 ```
 
-### Preparing Code Release
+### Preparing Code Release (Cross-folder validation)
 
 ```bash
 @reproducibility-engineer
-*validate-reproducibility
-# → Checks experiments are reproducible
 
-*prepare-release
-# → Prepares public code repository
+# Step 1: Validate codebase/
+*verify-reproducibility
+# → Check seeds set correctly
+# → Verify requirements.txt/environment.yml complete
+# → Test that codebase/ experiments can be re-run
+# → Ensure codebase/README.md is comprehensive
 
+# Step 2: Validate results/
+# → Confirm figures match paper claims
+# → Check metrics in results/ match research-paper/
+# → Verify all paper figures came from results/
+
+# Step 3: Validate research-paper/
+# → Ensure all claims backed by results/
+# → Check figure numbers match
+# → Verify no orphaned claims
+
+# Step 4: Create documentation
 *create-readme
-# → Generates comprehensive documentation
+# → Generates codebase/README.md
+# → Creates codebase/REPRODUCE.md (step-by-step guide)
+
+*create-dockerfile
+# → Docker/Singularity for reproducibility
+
+# Step 5: Prepare for public release
+*prepare-release
+# → Clean codebase/ (remove secrets, internal paths)
+# → Add LICENSE file
+# → Prepare GitHub repository
+# → Final validation: can a stranger reproduce results/?
+
+# Step 6: Final sign-off
+# → Prof. Dr. Kunz reviews all three folders
+# → Submits paper + code
 ```
 
 ## Best Practices
@@ -517,8 +938,18 @@ This pack helps you prepare papers for:
 
 ```
 bmad-ai-research/
-├── agents/                 # 7 specialized research agents (NEW: Research Assistant)
+├── agents/                 # 9 specialized research agents (3 NEW!)
+│   ├── research-lead.md                    # Prof. Dr. Kunz (team coordinator)
+│   ├── research-assistant-web.md           # NEW! D. Freuzer (web research)
+│   ├── research-assistant-arxiv.md         # NEW! H. Zoppel (arXiv papers)
+│   ├── research-assistant-kb.md            # NEW! A. Pilz (knowledge base)
+│   ├── research-scientist.md               # Dr. Alex Kumar (experiment design)
+│   ├── ml-engineer.md                      # Jordan Lee (codebase/ implementation)
+│   ├── data-analyst.md                     # Dr. Maya Patel (results/ analysis)
+│   ├── research-writer.md                  # Dr. Emma Wright (research-paper/ writing)
+│   └── reproducibility-engineer.md         # Sam Rodriguez (validation)
 ├── agent-teams/           # Pre-configured research team
+│   └── research-team.yaml                  # UPDATED: 3 literature specialists
 ├── templates/             # 6 research document templates
 ├── workflows/             # 2 complete research workflows
 ├── tasks/                 # 3 research-specific tasks
@@ -532,14 +963,28 @@ bmad-ai-research/
 
 ### 🎯 Key Features
 
-- **🆕 Automated Literature Search**: Research Assistant uses Archon MCP to search your knowledge base
-- **🆕 Tag-Based Organization**: Filter papers by project tags for focused research
+**🆕 NEW IN THIS VERSION:**
+
+- **Three-Specialist Literature System**: Web (D. Freuzer) + ArXiv (H. Zoppel) + KB (A. Pilz) working in parallel
+- **Comprehensive Source Coverage**: Industry trends + Academic papers + Curated corpus
+- **Folder-Based Workflow**: Organized structure (codebase/, results/, research-paper/)
+- **BMAD Core Integration**: Full workflow with Project Manager + Solution Architect
+  - Research Scientist designs experiments
+  - PM (bmad-core) plans development
+  - Architect (bmad-core) designs implementation
+  - ML Engineer executes in codebase/
+- **LaTeX + Git + Overleaf**: Professional paper writing with version control
+- **Cross-Folder Validation**: Reproducibility Engineer ensures pipeline integrity
+
+**CORE FEATURES:**
+
 - **Iterative Brainstorming**: Proven 2-4 cycle loop between ideation and literature
 - **Hypothesis-Focused**: Every experiment tests specific hypotheses
 - **Reproducibility-First**: Comprehensive reproducibility infrastructure
 - **Publication-Ready**: Templates match conference/journal requirements
 - **Statistically Rigorous**: Built-in statistical testing guidance
 - **Peer Review Aware**: Anticipates reviewer concerns
+- **Team Coordination**: Prof. Dr. Kunz orchestrates entire research team
 
 ## Documentation
 
@@ -552,14 +997,17 @@ bmad-ai-research/
 
 ## Differences from Core BMAD
 
-| Core BMAD               | AI Research Pack                                |
-| ----------------------- | ----------------------------------------------- |
-| PRD                     | Research Proposal                               |
-| Architecture            | Experimental Architecture                       |
-| User Stories            | Experiment Specifications                       |
-| Dev implements features | ML Engineer implements experiments              |
-| QA checks functionality | Reproducibility Engineer checks reproducibility |
-| Product release         | Paper publication + code release                |
+| Core BMAD                       | AI Research Pack                                                        |
+| ------------------------------- | ----------------------------------------------------------------------- |
+| PRD                             | Research Proposal                                                       |
+| Architecture                    | Experimental Architecture                                               |
+| User Stories                    | Experiment Specifications                                               |
+| **PM/Architect plan features**  | **Research Scientist → PM/Architect → ML Engineer** (fully autonomous!) |
+| Dev implements features         | ML Engineer implements experiments                                      |
+| QA checks functionality         | Reproducibility Engineer checks reproducibility                         |
+| Product release                 | Paper publication + code release                                        |
+| Single codebase                 | Three folders: codebase/, results/, research-paper/                     |
+| 1 generalist research assistant | 3 specialist research assistants (Web, ArXiv, KB)                       |
 
 ## Common Research Pitfalls Avoided
 
@@ -630,8 +1078,16 @@ node /path/to/BMAD-METHOD/tools/installer/bin/bmad.js install
 @research-lead
 *brainstorm "your research topic"
 
-@research-assistant  # If Archon MCP available
-*search "relevant keywords"
+# Parallel literature search (three specialists)
+@research-assistant-web      # D. Freuzer: Web/blogs
+*search "your topic 2024"
+
+@research-assistant-arxiv    # H. Zoppel: ArXiv (if MCP available)
+*search "your topic"
+
+@research-assistant-kb       # A. Pilz: Knowledge base
+*set-tag "your-project"
+*search "your topic"
 ```
 
 **Questions?**

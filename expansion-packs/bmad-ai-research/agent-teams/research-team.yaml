@@ -2,15 +2,19 @@
 bundle:
   name: AI Research Team
   icon: 🔬
-  description: Complete AI/ML research team for academic paper development, experiment design, and scientific publication
+  description: Complete AI/ML research team for academic paper development, experiment design, and scientific publication with specialized research assistants and experiment planning agents
 agents:
-  - research-lead
-  - research-assistant
-  - research-scientist
-  - ml-engineer
-  - data-analyst
-  - research-writer
-  - reproducibility-engineer
+  - research-lead # Prof. Dr. Kunz - Team coordinator, research direction
+  - research-assistant-web # D. Freuzer - Web research specialist
+  - research-assistant-arxiv # H. Zoppel - ArXiv papers specialist (MCP-dependent)
+  - research-assistant-kb # A. Pilz - Knowledge base curator (Archon MCP)
+  - research-scientist # Dr. Alex Kumar - Experiment design
+  - experiment-pm # Dr. Chen Wei - Experiment planning & task breakdown
+  - experiment-architect # Dr. Sofia Martinez - Code architecture design
+  - ml-engineer # Jordan Lee - Code implementation (codebase/)
+  - data-analyst # Dr. Maya Patel - Statistical analysis (results/)
+  - research-writer # Dr. Emma Wright - Paper writing (research-paper/, LaTeX/git)
+  - reproducibility-engineer # Sam Rodriguez - Reproducibility validation
 workflows:
   - research-paper-full.yaml
   - experiment-iteration.yaml
