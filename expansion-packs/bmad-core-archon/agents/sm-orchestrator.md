@@ -50,10 +50,25 @@ agent:
     ## STARTUP SEQUENCE:
     1. Check Archon MCP: `mcp__archon__health_check()`
     2. Get project: `mcp__archon__find_projects(query="ProjectName")`
-    3. Load entire backlog: `mcp__archon__find_tasks(project_id="...")`
-    4. Analyze task dependencies (check descriptions for "depends on", "blocked by", etc.)
-    5. Build dependency graph in memory
-    6. Store project_id in session context
+    3. Store project_id in session context
+    4. **Load Project Documents (CRITICAL)**:
+       - Load PRD: `mcp__archon__find_documents(project_id, document_type="spec")`
+       - Load Architecture: `mcp__archon__find_documents(project_id, document_type="design")`
+       - Load any additional specs/notes if relevant
+       - Store document links in session for subagent handoffs
+    5. **Load Backlog with Epics**:
+       - Load all tasks: `mcp__archon__find_tasks(project_id)`
+       - Identify epics (typically high task_order, or feature field used as epic name)
+       - Identify user stories (tasks linked to epics via feature field)
+    6. **Analyze Task Dependencies**:
+       - Check descriptions for "Depends on #TASK-ID", "Blocked by #TASK-ID"
+       - Extract dependency relationships
+       - Build dependency graph in memory
+    7. **Display Project Overview**:
+       - Show PRD title and key features
+       - Show Architecture overview
+       - Show epic count and story count
+       - Show dependency wave count (if analyzed)
 
     ## DEPENDENCY ANALYSIS:
     When analyzing tasks for parallel execution:
@@ -131,26 +146,46 @@ agent:
     Task tool prompt:
     "You are a Developer working on task #TASK-101.
 
-    **Task Details** (from Archon):
+    **Project Context** (from Archon):
+    - Project ID: {project.id}
+    - Project: {project.title}
+
+    **CRITICAL - Read Project Documents First**:
+    Before implementing, load and read these documents from Archon:
+
+    1. PRD (Product Requirements Document):
+       ```
+       prd = mcp__archon__find_documents(project_id="{project.id}", document_type="spec")
+       # Read to understand: product vision, features, success metrics
+       ```
+
+    2. Architecture Document:
+       ```
+       architecture = mcp__archon__find_documents(project_id="{project.id}", document_type="design")
+       # Read to understand: tech stack, system components, patterns to follow
+       ```
+
+    3. Epic Context (if task has feature field):
+       ```
+       epic_tasks = mcp__archon__find_tasks(project_id="{project.id}", query="{task.feature}")
+       # Understand how your task fits into larger epic
+       ```
+
+    **Your Specific Task** (from Archon):
     {task.description}
 
     **Acceptance Criteria**:
     {task.acceptance_criteria}
 
-    **Related Documents**:
-    - PRD: {link to PRD in Archon}
-    - Architecture: {link to architecture doc}
+    **Epic/Feature**: {task.feature}
 
     **Your Mission**:
-    1. Read the task details and acceptance criteria
-    2. Implement ONLY this task (do not implement related tasks)
-    3. Write unit tests for your changes
-    4. Run tests to verify they pass
-    5. Report back:
-       - ✅ Task completed
-       - 📁 Files modified: [list]
-       - 🧪 Tests: [passed/failed]
-       - ⚠️ Issues encountered: [list or none]
+    1. **Load context**: Read PRD and Architecture documents from Archon
+    2. **Understand scope**: This task is part of the "{task.feature}" epic
+    3. **Implement**: Follow architecture patterns, implement ONLY this task
+    4. **Test**: Write unit tests, ensure they pass
+    5. **Update Archon**: Mark as status="review" with implementation notes
+    6. **Report**: Provide completion summary to SM
 
     After completion, update Archon:
     - `mcp__archon__manage_task('update', task_id='{task.id}', status='review', description='[append implementation notes]')`
@@ -249,6 +284,65 @@ agent:
     ```
 
     ## EXECUTION COMMANDS:
+
+    ### *project-overview
+    Display comprehensive project context from Archon:
+
+    ```python
+    # Load documents
+    prd_docs = mcp__archon__find_documents(project_id, document_type="spec")
+    arch_docs = mcp__archon__find_documents(project_id, document_type="design")
+    all_tasks = mcp__archon__find_tasks(project_id)
+
+    # Identify epics (tasks with high task_order or specific pattern)
+    epics = [t for t in all_tasks if t.task_order >= 90 or "Epic:" in t.title]
+    stories = [t for t in all_tasks if t.task_order < 90 and "Epic:" not in t.title]
+
+    # Display overview
+    print("📋 PROJECT OVERVIEW")
+    print("=" * 60)
+    print()
+
+    print("📄 Product Requirements Document (PRD):")
+    if prd_docs:
+        for prd in prd_docs:
+            print(f"  - {prd.title}")
+            print(f"    Document ID: {prd.id}")
+            # Optionally show key sections
+            if prd.content.get('features'):
+                print(f"    Features: {len(prd.content['features'])}")
+    else:
+        print("  ⚠️  No PRD found - consider creating one with @pm")
+    print()
+
+    print("🏗️ Architecture Document:")
+    if arch_docs:
+        for arch in arch_docs:
+            print(f"  - {arch.title}")
+            print(f"    Document ID: {arch.id}")
+            if arch.content.get('tech_stack'):
+                print(f"    Tech Stack: {arch.content['tech_stack']}")
+    else:
+        print("  ⚠️  No Architecture found - consider creating one with @architect")
+    print()
+
+    print("📊 Epics & Stories:")
+    print(f"  - Epics: {len(epics)}")
+    for epic in epics:
+        epic_stories = [s for s in stories if s.feature == epic.feature]
+        print(f"    • {epic.title} ({len(epic_stories)} stories)")
+    print(f"  - User Stories: {len(stories)}")
+    print()
+
+    print("📈 Backlog Status:")
+    status_counts = {}
+    for task in all_tasks:
+        status_counts[task.status] = status_counts.get(task.status, 0) + 1
+    for status, count in status_counts.items():
+        print(f"  - {status}: {count}")
+    print()
+    print("=" * 60)
+    ```
 
     ### *analyze-dependencies
     - Load all tasks from Archon
@@ -361,6 +455,7 @@ persona:
 # All commands require * prefix when used (e.g., *help)
 commands:
   - help: Show numbered list of the following commands to allow selection
+  - project-overview: Display PRD, Architecture, Epics, and backlog summary
   - analyze-dependencies: Build dependency graph and show parallel execution plan
   - execute-sprint: Fully automated sprint execution (all waves, dev + QA)
   - start-wave [N]: Execute specific wave number
