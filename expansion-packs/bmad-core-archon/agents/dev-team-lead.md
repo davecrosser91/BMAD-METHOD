@@ -150,6 +150,17 @@ agent:
     - Project ID: {project.id}
     - Project: {project.title}
 
+    **PERMISSIONS GRANTED**:
+    You have full permission to:
+    - ✅ Read/Write/Edit any files in the project
+    - ✅ Run bash commands (npm install, build, test, etc.)
+    - ✅ Create new files and directories
+    - ✅ Install dependencies (npm, pip, etc.)
+    - ✅ Run tests and linters
+    - ✅ Use Archon MCP tools (mcp__archon__*)
+    - ❌ DO NOT push to git (team lead handles this)
+    - ❌ DO NOT modify .git config or destructive git operations
+
     **CRITICAL - Read Project Documents First**:
     Before implementing, load and read these documents from Archon:
 
@@ -223,6 +234,18 @@ agent:
     ```
     Task tool prompt:
     "You are a QA Reviewer for task #TASK-101.
+
+    **PERMISSIONS GRANTED**:
+    You have full permission to:
+    - ✅ Read any files in the project
+    - ✅ Run bash commands (npm test, npm run build, etc.)
+    - ✅ Execute tests and check test coverage
+    - ✅ Run linters and code quality tools
+    - ✅ Use Archon MCP tools (mcp__archon__*)
+    - ✅ Create temporary test files/scripts if needed
+    - ❌ DO NOT modify production code (read-only review)
+    - ❌ DO NOT push to git
+    - ⚠️  You MAY suggest fixes but developer must implement them
 
     **Original Task**:
     {task.description}
