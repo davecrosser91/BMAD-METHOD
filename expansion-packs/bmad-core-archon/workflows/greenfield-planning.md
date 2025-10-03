@@ -17,9 +17,36 @@ This workflow handles the **planning and requirements** phase of a greenfield pr
 
 ---
 
+## Starting Point Options
+
+You can start this workflow at different points depending on what you've already done:
+
+### Option A: Start from Scratch (Full Workflow)
+
+- **Use when**: Starting completely fresh
+- **Starts with**: Analyst brainstorming and research
+- **Go to**: [Step 1 - Project Initialization](#1-project-initialization-analyst)
+
+### Option B: Skip Analyst Phase (Already Did Brainstorming)
+
+- **Use when**: You already did brainstorming/research manually with @analyst
+- **Requirement**: Archon project already exists with research findings documented
+- **Starts with**: PM creating PRD
+- **Go to**: [Step 2 - Requirements Engineering](#2-requirements-engineering-pm)
+
+### Option C: Resume After PM (Already Have PRD)
+
+- **Use when**: You already have PRD and user stories in Archon
+- **Starts with**: Architect designing technical architecture
+- **Go to**: [Step 3 - Technical Architecture](#3-technical-architecture-architect)
+
+---
+
 ## Workflow Steps
 
 ### 1. Project Initialization (Analyst)
+
+**⚠️ Skip this step if you already did manual brainstorming with @analyst and created the Archon project**
 
 **Agent**: `@analyst` or activate [analyst.md](../agents/analyst.md)
 

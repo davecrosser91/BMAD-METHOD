@@ -493,6 +493,672 @@ This ensures proper workflow sequence while giving you full flexibility.
 
 ---
 
+## 🎯 Complete Manual Workflow Guide
+
+This section provides a **step-by-step guide** for executing the complete BMAD workflow manually from start to finish, with full control and visibility at every step.
+
+### When to Use This Approach
+
+- ✅ You want full control over each phase
+- ✅ You want to deeply understand the brainstorming and planning process
+- ✅ You're learning BMAD Method for the first time
+- ✅ Your project needs careful, thoughtful analysis
+
+### Complete Workflow: From Idea to Implementation
+
+---
+
+#### Phase 1: Brainstorming & Discovery (Analyst) - 1-2 hours
+
+**Goal**: Transform a vague idea into a well-researched project concept
+
+**Step 1.1: Activate Analyst Agent**
+
+```bash
+# In your IDE chat
+@analyst
+```
+
+Wait for analyst to greet you and show available commands.
+
+**Step 1.2: Start Brainstorming Session**
+
+```bash
+*brainstorm
+# or drag the facilitate-brainstorming-session task into chat
+```
+
+The analyst will guide you through:
+
+- Defining what you're brainstorming about
+- Setting constraints and goals
+- Choosing brainstorming techniques (e.g., "What If", "SCAMPER", "Mind Mapping")
+- Facilitating creative idea generation
+- Capturing all ideas in a structured document
+
+**Example dialogue:**
+
+```
+Analyst: What are we brainstorming about?
+You: A task management app for remote teams
+
+Analyst: Any constraints or parameters?
+You: Must integrate with Slack, needs to be mobile-first
+
+Analyst: Goal: broad exploration or focused ideation?
+You: Focused - we know we want async task management
+
+Analyst: Want a structured document output? (Default Yes)
+You: Yes
+
+Analyst: Here are 4 approach options:
+1. User selects specific techniques
+2. Analyst recommends techniques based on context
+3. Random technique selection
+4. Progressive technique flow
+
+You: 2
+
+Analyst: Based on your context, I recommend starting with "How Might We"
+questions to frame the problem space. Ready?
+
+[... Interactive brainstorming session continues ...]
+```
+
+**Step 1.3: Create Archon Project**
+
+After brainstorming, create the project in Archon:
+
+```bash
+*init-project
+# or drag the archon-init-project task into chat
+```
+
+Analyst will:
+
+- Create new Archon project with your chosen name
+- Document brainstorming findings
+- Store research notes
+- Prepare handoff to PM
+
+**Outputs:**
+
+- ✅ Archon project created
+- ✅ Brainstorming session document
+- ✅ Research findings documented
+- ✅ Project context established
+
+---
+
+#### Phase 2: Requirements Engineering (PM) - 2-3 hours
+
+**Goal**: Transform brainstorming output into a structured PRD with epics and stories
+
+**Step 2.1: Activate PM Agent**
+
+```bash
+# Start new chat or continue in same chat
+@pm
+```
+
+**Step 2.2: Create Product Requirements Document (PRD)**
+
+```bash
+*create-prd
+# or drag the archon-create-prd task into chat
+```
+
+PM will:
+
+- Read analyst's research findings from Archon
+- Ask clarifying questions about features and priorities
+- Create structured PRD document in Archon
+- Include: vision, target users, features, success metrics, constraints
+
+**Example dialogue:**
+
+```
+PM: I've read the analyst's research. Based on the brainstorming,
+I see 3 main feature areas:
+1. Async task management
+2. Slack integration
+3. Mobile-first interface
+
+Should we prioritize all 3 for MVP, or focus on core task management first?
+
+You: Let's do all 3 - they're interconnected
+
+PM: Perfect. For Slack integration, do you want:
+- Just notifications, or
+- Full two-way sync (create/update tasks from Slack)?
+
+[... Detailed PRD conversation continues ...]
+```
+
+**Step 2.3: Break Down into Epics**
+
+```bash
+*create-epic
+# or drag the archon-create-epic task into chat
+```
+
+PM will create 3-7 high-level epics like:
+
+- Epic: Task Management Core
+- Epic: Slack Integration
+- Epic: Mobile Interface
+- Epic: User Authentication
+
+**Step 2.4: Create User Stories**
+
+```bash
+*create-story
+# Repeat for each epic
+```
+
+PM creates detailed user stories for each epic:
+
+- "As a user, I can create a task with title, description, and due date"
+- "As a user, I can assign tasks to team members"
+- "As a user, I receive Slack notifications when assigned a task"
+
+Each story includes:
+
+- Clear acceptance criteria
+- Link to parent epic
+- Priority level
+
+**Outputs:**
+
+- ✅ Complete PRD in Archon
+- ✅ 3-7 epics as tasks
+- ✅ 20-50 user stories as tasks
+- ✅ All linked properly via `feature` field
+
+---
+
+#### Phase 3: Technical Architecture (Architect) - 2-3 hours
+
+**Goal**: Design the technical system and define task dependencies
+
+**Step 3.1: Activate Architect Agent**
+
+```bash
+@architect
+```
+
+**Step 3.2: Create Architecture Document**
+
+```bash
+*create-architecture
+# or drag the archon-create-architecture task into chat
+```
+
+Architect will:
+
+- Read PRD and user stories from Archon
+- Search knowledge base for relevant patterns
+- Design system architecture
+- Create architecture document in Archon
+
+Document includes:
+
+- Tech stack (backend, frontend, database, deployment)
+- System components and their responsibilities
+- Data models
+- API contracts
+- Deployment strategy
+
+**Step 3.3: Analyze Task Dependencies**
+
+```bash
+*analyze-dependencies
+# or drag the analyze-task-dependencies task into chat
+```
+
+Architect will:
+
+- Review all user stories
+- Identify which tasks depend on others
+- Mark dependencies in task descriptions
+- Organize tasks into parallel-safe "waves"
+
+**Example dependency analysis:**
+
+```
+Wave 1 (No dependencies - can start immediately):
+- Setup database schema
+- Create authentication utilities
+- Build base UI components
+
+Wave 2 (Depends on Wave 1):
+- Implement login API (depends on: auth utilities, DB schema)
+- Implement task CRUD API (depends on: DB schema)
+- Build login form (depends on: base UI components)
+
+Wave 3 (Depends on Wave 2):
+- Integrate Slack notifications (depends on: task API)
+- Build task list view (depends on: task API, base components)
+
+Wave 4 (Depends on Wave 3):
+- End-to-end tests (depends on: everything)
+```
+
+**Outputs:**
+
+- ✅ Complete architecture document in Archon
+- ✅ All tasks updated with dependency markers
+- ✅ Tasks organized into parallel waves
+- ✅ Clear execution plan
+
+---
+
+#### Phase 4: Story Refinement (Scrum Master) - 1 hour
+
+**Goal**: Validate all stories meet quality standards and are ready for development
+
+**Step 4.1: Activate Scrum Master Agent**
+
+```bash
+@sm
+```
+
+**Step 4.2: Run Story Quality Checks**
+
+```bash
+*validate-stories
+# or drag the validate-next-story task into chat
+```
+
+SM will systematically check each story for:
+
+- ✅ Clear, actionable title
+- ✅ Detailed description explaining the "what" and "why"
+- ✅ Specific, testable acceptance criteria
+- ✅ Proper link to parent epic (via `feature` field)
+- ✅ Correct dependency markers (if any)
+- ✅ Realistic scope (2-4 hours of work)
+
+**Example refinement:**
+
+```
+SM: Reviewing story #TASK-105: "User Login"
+
+Issues found:
+❌ Acceptance criteria too vague - "login works" isn't testable
+❌ Missing security requirements
+❌ No error handling specified
+
+Refined version:
+Title: "User can log in with email/password"
+
+Description:
+Users need to authenticate with email and password to access their account.
+This includes validation, error handling, and session management.
+
+Acceptance Criteria:
+- [ ] User can enter email and password in login form
+- [ ] Valid credentials create JWT token with 24h expiry
+- [ ] Invalid credentials show "Invalid email or password" error
+- [ ] After 5 failed attempts, account locks for 15 minutes
+- [ ] Successful login redirects to dashboard
+- [ ] Session persists across browser refresh
+- [ ] Logout clears session token
+
+Dependencies: #TASK-101 (Auth utilities), #TASK-102 (DB schema)
+
+Should I update story #TASK-105 with these refinements?
+```
+
+**Step 4.3: Prioritize and Order Stories**
+
+```bash
+*prioritize-stories
+```
+
+SM will help you:
+
+- Assign priority levels (P0/P1/P2)
+- Order stories within each wave
+- Flag any stories that might be too large
+- Suggest stories that could be split
+
+**Step 4.4: Create Sprint Plan**
+
+```bash
+*create-sprint-plan
+```
+
+SM creates a development roadmap:
+
+- Wave 1 stories (ready to start immediately)
+- Wave 2 stories (start after Wave 1 complete)
+- Estimated timeline per wave
+- Potential risks or blockers
+
+**Step 4.5: View Complete Project Status**
+
+```bash
+*archon-status
+```
+
+SM shows you comprehensive overview:
+
+```
+📊 PROJECT: Task Management App for Remote Teams
+
+📋 PRD: Complete (version 1.0)
+🏗️ Architecture: Complete (FastAPI + React + PostgreSQL)
+
+📈 Progress:
+├─ Total Epics: 4
+├─ Total Stories: 23
+├─ By Status:
+│   ├─ Todo: 23 (100%)
+│   ├─ Doing: 0
+│   ├─ Review: 0
+│   └─ Done: 0
+
+🌊 Dependency Waves:
+├─ Wave 1: 5 stories (no dependencies)
+│   └─ Estimated: 8-12 hours
+├─ Wave 2: 8 stories (depends on Wave 1)
+│   └─ Estimated: 16-20 hours
+├─ Wave 3: 7 stories (depends on Wave 2)
+│   └─ Estimated: 12-16 hours
+└─ Wave 4: 3 stories (integration/testing)
+    └─ Estimated: 6-8 hours
+
+⏱️ Total Estimated Time: 42-56 hours
+✅ All stories validated and ready for development
+```
+
+**Outputs:**
+
+- ✅ All stories refined to quality standards
+- ✅ Stories prioritized and ordered
+- ✅ Sprint plan created
+- ✅ Complete project overview
+- ✅ Ready for development kickoff
+
+---
+
+#### Phase 5: User Review & Approval - 15-30 minutes
+
+**Goal**: You review everything before development starts
+
+**What to Review:**
+
+1. **PRD** - Does it match your vision?
+2. **Architecture** - Is the tech stack appropriate?
+3. **Epics** - Are all major features covered?
+4. **Stories** - Are they clear and actionable?
+5. **Dependencies** - Do they make sense?
+
+**How to Review:**
+
+```bash
+# Still with @sm active
+*show-prd
+*show-architecture
+*list-epics
+*list-stories wave=1
+```
+
+**Make Changes:**
+
+If something needs adjustment:
+
+- **PRD changes**: Switch to `@pm`, ask to update PRD
+- **Architecture changes**: Switch to `@architect`, ask to revise architecture
+- **Story refinement**: Ask `@sm` to refine specific stories
+- **Dependencies**: Ask `@architect` to adjust dependency graph
+
+**Approve:**
+
+Once satisfied, you're ready for development!
+
+---
+
+#### Phase 6: Development Execution - Varies (hours to weeks)
+
+**Goal**: Implement all stories, either manually or with agent assistance
+
+You have 3 execution options:
+
+**Option A: Fully Manual (You Implement)**
+
+```bash
+# Get next task
+@sm
+*next-task
+
+# Implement it yourself
+# When done:
+*mark-done task-id
+```
+
+**Option B: Dev Agent Assistance (Agent Implements)**
+
+```bash
+# Activate dev agent
+@dev
+
+# Ask to implement specific task
+*implement task-id
+
+# Dev will:
+# - Read task from Archon
+# - Read PRD and Architecture
+# - Implement the feature
+# - Run tests
+# - Mark task as "review"
+```
+
+**Option C: Team Lead Workflow (Coordinated Execution)**
+
+```bash
+# Activate dev team lead
+@dev-team-lead
+
+# Execute sprint (in-context by default)
+*execute-sprint
+
+# Team Lead will:
+# - Analyze dependency waves
+# - Work through tasks wave by wave
+# - Coordinate dev + QA for each task
+# - Report progress after each wave
+```
+
+**QA Review (for Options B & C):**
+
+```bash
+@qa
+*review-task task-id
+
+# QA will:
+# - Review implementation against acceptance criteria
+# - Run tests
+# - Mark as "done" or send back to dev with feedback
+```
+
+---
+
+#### Phase 7: Epic Completion & Retrospective (Product Owner) - 30-60 minutes
+
+**Goal**: Validate epic completion, capture learnings, and plan next steps
+
+**When to do this**: After completing all stories in an epic (not after every story)
+
+**Step 7.1: Activate Product Owner Agent**
+
+```bash
+@po
+```
+
+**Step 7.2: Review Epic Completion**
+
+```bash
+*review-epic epic-id
+```
+
+PO will systematically check:
+
+- ✅ All stories in epic marked as "done"
+- ✅ All acceptance criteria met and tested
+- ✅ No critical bugs or blockers remaining
+- ✅ Documentation updated
+- ✅ Deployment successful (if applicable)
+
+**Example review:**
+
+```
+PO: Reviewing Epic "User Authentication" (4 stories)
+
+Story Status:
+✅ #TASK-101: Auth utilities - DONE
+✅ #TASK-102: Login API - DONE
+✅ #TASK-103: Signup API - DONE
+✅ #TASK-104: Password reset - DONE
+
+Acceptance Criteria Review:
+✅ Users can sign up with email/password
+✅ Users can log in securely
+✅ JWT tokens generated with 24h expiry
+✅ Password reset flow complete
+✅ All security requirements met
+✅ Unit tests passing (97% coverage)
+✅ Integration tests passing
+
+📋 Epic "User Authentication" is COMPLETE
+```
+
+**Step 7.3: Conduct Retrospective**
+
+```bash
+*epic-retrospective epic-id
+```
+
+PO facilitates structured retrospective:
+
+**What went well?**
+
+- Which stories were implemented smoothly?
+- What helped us move fast?
+- What quality practices worked?
+
+**What could improve?**
+
+- Which stories had issues or rework?
+- What slowed us down?
+- What would we do differently?
+
+**Key learnings:**
+
+- Technical insights (e.g., "JWT refresh tokens need separate endpoint")
+- Process insights (e.g., "More detailed acceptance criteria reduced rework")
+- Architecture insights (e.g., "Middleware pattern works well for auth")
+
+**Action items for next epic:**
+
+- What specific changes will we make?
+- What should we continue doing?
+- What should we stop doing?
+
+**Example retrospective output:**
+
+```
+📝 EPIC RETROSPECTIVE: User Authentication
+
+⏱️ Timeline:
+- Planned: 16 hours
+- Actual: 14 hours
+- 12.5% under estimate ✅
+
+✨ What Went Well:
+- Clear acceptance criteria reduced questions
+- Architect's auth utilities saved time
+- QA caught security issue early
+- Dev and QA collaboration was smooth
+
+⚠️ Challenges:
+- Password reset took longer than expected (underestimated)
+- Had to refactor token refresh logic once
+- Missing test data setup caused initial delays
+
+💡 Key Learnings:
+- JWT middleware pattern is reusable for future features
+- Rate limiting should be added to all auth endpoints
+- Test data fixtures should be created upfront
+
+🎯 Action Items for Next Epic:
+- [ ] Create test data fixtures before starting stories
+- [ ] Add rate limiting to architecture standards
+- [ ] Estimate password reset type stories higher (4-6h not 2-4h)
+- [ ] Continue detailed acceptance criteria practice
+```
+
+**Step 7.4: Plan Next Epic** (Optional)
+
+If continuing to next epic immediately:
+
+```bash
+*plan-next-epic
+```
+
+PO will:
+
+- Review remaining epics
+- Recommend next epic based on priorities and dependencies
+- Check if any learnings affect upcoming stories
+- Prepare handoff to Dev Team Lead or Dev agent
+
+**Outputs:**
+
+- ✅ Epic validated as complete
+- ✅ Retrospective documented in Archon
+- ✅ Learnings captured for future reference
+- ✅ Action items identified
+- ✅ Next epic planned (if applicable)
+- ✅ Continuous improvement cycle closed
+
+---
+
+### Quick Reference: Agent Activation & Key Tasks
+
+| Phase              | Agent     | Activation   | Key Task                |
+| ------------------ | --------- | ------------ | ----------------------- |
+| **Brainstorming**  | Analyst   | `@analyst`   | `*brainstorm`           |
+| **Project Init**   | Analyst   | `@analyst`   | `*init-project`         |
+| **PRD Creation**   | PM        | `@pm`        | `*create-prd`           |
+| **Epic Creation**  | PM        | `@pm`        | `*create-epic`          |
+| **Story Creation** | PM        | `@pm`        | `*create-story`         |
+| **Architecture**   | Architect | `@architect` | `*create-architecture`  |
+| **Dependencies**   | Architect | `@architect` | `*analyze-dependencies` |
+| **Refinement**     | SM        | `@sm`        | `*refine-stories`       |
+| **Development**    | Dev       | `@dev`       | `*implement task-id`    |
+| **QA Review**      | QA        | `@qa`        | `*review-task task-id`  |
+| **Retrospective**  | PO        | `@po`        | `*epic-retrospective`   |
+
+### Pro Tips for Manual Workflow
+
+1. **Take Your Time with Brainstorming** - This is where great ideas emerge. Spend 1-2 hours here.
+
+2. **Keep Archon Open** - View your project at https://archon.so while working with agents
+
+3. **Review Between Phases** - After each phase (Analyst → PM → Architect), review what was created
+
+4. **Ask Questions** - All agents can answer questions about their artifacts. Just ask!
+
+5. **Iterate When Needed** - Don't hesitate to go back and refine PRD or architecture
+
+6. **Use Search** - Agents can search the knowledge base. Ask them to search for relevant patterns.
+
+7. **Document Decisions** - When you make important choices during brainstorming/planning, make sure agents document them
+
+---
+
 ## 🚀 Quick Start (5 Minutes)
 
 ### Prerequisites
