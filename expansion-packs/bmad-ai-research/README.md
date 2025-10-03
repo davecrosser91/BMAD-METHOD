@@ -25,7 +25,13 @@ npx bmad-method install
 
 This expansion pack integrates with two MCP servers for enhanced capabilities:
 
-1. **Archon MCP** - Project management, knowledge base, task tracking (see [Archon integration docs](docs/ARCHON-MCP-INTEGRATION.md))
+1. **Archon MCP** - **[NEW!]** Complete research project management, document storage, task tracking, knowledge base
+   - 📖 **[See comprehensive Archon Research Integration Guide](docs/ARCHON-RESEARCH-INTEGRATION.md)**
+   - 📋 Manages all research documents (proposals, specs, results)
+   - 🗂️ Tracks experiments as tasks with full workflow
+   - 🧠 Searchable knowledge base for papers and methods
+   - 🔗 Links research questions → experiments → results → paper
+
 2. **wandb MCP** - Experiment tracking and results analysis
 
 ```bash
@@ -68,6 +74,93 @@ Then activate any research agent:
 ## Overview
 
 The **AI Research Expansion Pack** adapts BMAD's proven agentic workflow to the unique demands of scientific research. While the core BMAD framework focuses on software product development, this pack specializes in the complete research lifecycle: from literature review through experiment execution to paper publication.
+
+## 🗂️ Archon MCP Integration - Research Project Management
+
+**NEW: Complete Archon integration for research workflows!**
+
+The AI Research pack now uses **Archon MCP** for comprehensive research project management, enabling true collaborative research with full traceability from research question to published paper.
+
+**What Archon Provides:**
+
+- 📋 **17 Critical Research Documents** - All planning, specs, results stored in Archon
+- 🗂️ **Task & Experiment Tracking** - Each experiment is a tracked task with full workflow
+- 🧠 **Knowledge Base Integration** - Searchable corpus of papers, methods, patterns
+- 🔗 **Complete Traceability** - Research questions → Experiments → Results → Paper
+- 👥 **Multi-Agent Collaboration** - All agents read/write to shared Archon project
+
+**The 17 Research Documents in Archon:**
+
+1. **Project Understanding** (Phase 1):
+   - Research Project Brief
+   - Literature Review
+   - Research Proposal
+
+2. **Research Questions** (Phase 1):
+   - Research Questions Document
+   - Gap Analysis
+
+3. **Experimental Design** (Phase 2):
+   - Experimental Architecture
+   - Experiment Specifications (multiple)
+   - Ablation Study Plan
+
+4. **Model Architecture** (Phase 2):
+   - Model Architecture Document
+   - Baseline Specifications
+
+5. **Technical Setup** (Phase 3):
+   - Technical Stack Document
+   - Data Pipeline Design
+   - Experiment Tracking Setup
+
+6. **State of the Art** (Phase 2):
+   - Benchmark Specifications
+   - Baseline Comparison Matrix
+
+7. **Novelties** (Continuous):
+   - Novel Contributions
+   - Innovation Log
+
+**Research Workflow with Archon:**
+
+```
+Phase 1: Planning
+@research-lead → *init-research-project → Creates Archon project
+              → *brainstorm → Updates Research Questions
+              → *create-research-proposal → Creates Research Proposal (type=spec)
+
+Phase 2: Experimental Design
+@research-scientist → *design-experiment → Creates Experimental Architecture (type=design)
+                                         → Creates Experiment Specs (type=spec)
+                                         → Creates experiment tasks in Archon
+
+Phase 3: Implementation
+@ml-engineer → *implement-experiment → Reads specs from Archon
+                                     → Implements in codebase/
+                                     → Logs results to Archon task
+
+Phase 4: Analysis
+@data-analyst → *analyze-results → Reads from Archon + wandb
+                                  → Creates Statistical Analysis (type=note)
+                                  → Creates figures in results/
+                                  → Updates Baseline Comparison Matrix
+
+Phase 5: Writing
+@research-writer → Reads ALL documents from Archon
+                 → Writes paper referencing Archon docs
+                 → Updates continuously
+```
+
+**📖 [Complete Archon Research Integration Guide](docs/ARCHON-RESEARCH-INTEGRATION.md)**
+
+**Key Benefits:**
+
+- ✅ All team members see the same source of truth
+- ✅ Research questions → Experiments → Results flow is tracked
+- ✅ Knowledge accumulates across projects
+- ✅ Nothing gets lost or forgotten
+- ✅ Full traceability for reproducibility
 
 ## 🔄 Key Innovation: Three-Specialist Literature System
 
@@ -355,7 +448,658 @@ experiments        creates figs           incorporates
 - **Validates:** All folders
 - **Commands:** `*verify-reproducibility`, `*prepare-release`, `*create-dockerfile`
 
-## Complete Research Workflow - ITERATIVE & MANUAL
+## 🔬 Two Research Methodologies
+
+The bmad-ai-research pack provides **TWO complementary research methodologies**:
+
+### 1️⃣ Deep Research Workflow (NEW!) - Literature & Information Gathering
+
+**When to use:** Comprehensive literature review, competitive analysis, technology investigation, or any deep information gathering task.
+
+**What it does:** Autonomous multi-agent research system that explores, analyzes, and synthesizes information from multiple sources.
+
+**Architecture:** **Orchestrator-Worker with Parallel Subagents**
+
+```
+Research Lead (Orchestrator)
+    │
+    ├─→ Spawns 3 parallel subagent workers:
+    │   ├─ D. Freuzer (Web Specialist) ──────┐
+    │   ├─ H. Zoppel (ArXiv Specialist) ─────┤ Work simultaneously
+    │   └─ A. Pilz (KB Curator) ─────────────┘
+    │
+    └─→ Synthesizes results from all workers
+```
+
+**Key Innovation:** Research Lead can spawn and coordinate multiple specialist subagents in parallel during the exploration phase, dramatically reducing research time while ensuring comprehensive coverage.
+
+**Duration:** 4-8 hours per iteration (1-3 iterations typical)
+
+### 2️⃣ Academic Paper Development Workflow - Complete Research Lifecycle
+
+**When to use:** Publishing an academic paper with novel experiments, from proposal to submission.
+
+**What it does:** Full research lifecycle from brainstorming → experiments → analysis → paper writing → submission.
+
+**Architecture:** Sequential team coordination with iterative phases
+
+```
+Research Lead → Research Assistants (3 specialists) → Research Scientist
+→ Experiment Team → Data Analyst → Research Writer → Publication
+```
+
+**Duration:** 3-6 months for conference paper
+
+---
+
+## 🔍 METHOD 1: Agentic Deep Research Workflow
+
+**The bmad-ai-research pack now includes a comprehensive SIX-phase agentic deep research workflow that goes beyond traditional literature search!**
+
+This workflow implements state-of-the-art autonomous research methodology used by systems like Anthropic's multi-agent research system, DeepResearcher, and other advanced agentic frameworks.
+
+**🆕 NEW in v2.0:** Phase 0 analyzes existing codebase/data FIRST to ground research in YOUR actual implementation context!
+
+### Six-Phase Methodology
+
+```
+Context Analysis → Planning → Exploration → Analysis → Synthesis → Iteration & Refinement
+```
+
+**Phase 0: Context Analysis** 🆕 **(Optional but Recommended)**
+
+- **IF existing codebase/data:** Analyze FIRST before external research
+- Codebase analysis (technologies, architecture, capabilities, problems)
+- Data & results analysis (previous experiments, what worked/didn't)
+- Context synthesis (grounded research questions, implementation constraints)
+- **Tools used:** Glob, Read, Grep to analyze existing code/data
+- **Skipped if:** Starting from scratch with no existing code
+
+**Phase 1: Planning**
+
+- Query analysis & intent extraction
+- Problem decomposition (3-7 sub-questions)
+- Research strategy development
+- **Incorporates Phase 0 context** if available (implementation-aware questions)
+
+**Phase 2: Exploration** ⭐ **Parallel Subagent Workers**
+
+- Query generation & optimization
+- **Research Lead spawns 3 parallel subagent workers:**
+  - **D. Freuzer** (@research-assistant-web) - Web, GitHub, blogs
+  - **H. Zoppel** (@research-assistant-arxiv) - Academic papers
+  - **A. Pilz** (@research-assistant-kb) - Knowledge base
+- All three specialists execute searches **simultaneously**
+- Source discovery & validation
+
+**Phase 3: Analysis**
+
+- Content extraction & processing
+- Information ranking & filtering
+- Pattern recognition & gap analysis
+
+**Phase 4: Synthesis**
+
+- Multi-source integration
+- Comprehensive report generation
+- Citation & fact-checking
+
+**Phase 5: Iteration & Refinement**
+
+- Quality assessment
+- Human-in-the-loop feedback
+- Continuous improvement
+
+### Parallel Subagent Architecture
+
+**Critical Feature:** The Research Lead acts as an **orchestrator** that can spawn and manage multiple **worker subagents** in parallel:
+
+```
+┌─────────────────────────────────────────────────────┐
+│         Research Lead (Orchestrator)                │
+│         Prof. Dr. Kunz                              │
+│                                                     │
+│  Capabilities:                                      │
+│  • Spawn multiple subagent workers                  │
+│  • Coordinate parallel execution                    │
+│  • Synthesize results from all workers              │
+│  • Make decisions at workflow gates                 │
+└──────────────┬──────────────────────────────────────┘
+               │
+               │ Spawns 3 parallel workers in Phase 2:
+               │
+    ┌──────────┴───────────┬───────────────┐
+    │                      │               │
+    ▼                      ▼               ▼
+┌─────────┐          ┌──────────┐    ┌──────────┐
+│D.Freuzer│          │H. Zoppel │    │ A. Pilz  │
+│Web      │          │ArXiv     │    │KB        │
+│Worker   │          │Worker    │    │Worker    │
+└─────────┘          └──────────┘    └──────────┘
+     │                    │               │
+     │   Execute searches simultaneously  │
+     │                    │               │
+     └────────────────────┴───────────────┘
+                         │
+                         ▼
+              Orchestrator synthesizes
+```
+
+**Benefits of Parallel Subagents:**
+
+- ⚡ **3x faster** than sequential search
+- 📚 **Comprehensive coverage** across web, academic, and curated sources
+- 🎯 **Specialized expertise** - each worker optimized for their domain
+- 🔄 **Scalable** - can spawn more workers if needed
+
+### Quick Start
+
+```bash
+@research-lead
+*run-deep-research "your research topic or question"
+```
+
+The Research Lead will orchestrate the entire five-phase workflow:
+
+1. Decompose your question into focused sub-questions
+2. **Spawn and coordinate 3 parallel specialist workers**
+3. Analyze and rank information by relevance
+4. Synthesize findings into comprehensive report
+5. Iterate based on quality assessment
+
+### How to Use the Workflow
+
+**Step 1: Activate Research Lead**
+
+```bash
+@research-lead
+```
+
+**Step 2: Start Deep Research**
+
+```bash
+*run-deep-research "your research topic or question"
+```
+
+**What Happens Next:**
+
+**Phase 0: Context Analysis (If existing code/data present)**
+
+```
+Research Lead checking for existing context...
+├─ Found: codebase/ directory ✓
+├─ Found: data/ directory ✓
+└─ Analyzing existing implementation...
+
+Codebase Analysis:
+├─ Technologies: Python 3.11, PyTorch 2.1, transformers
+├─ Architecture: [Current design patterns identified]
+├─ Capabilities: [What's already implemented]
+├─ Problems: [Identified pain points and TODOs]
+└─ Constraints: [Technical limitations]
+
+Data Analysis:
+├─ Data available: 10GB preprocessed dataset
+├─ Previous experiments: 5 runs documented
+├─ What worked: [Successful approaches]
+├─ What didn't: [Failed experiments]
+└─ Open questions: [Unanswered from existing work]
+
+Context Synthesis:
+├─ Grounded research questions formulated
+├─ Implementation constraints documented
+└─ Research priorities ranked by impact
+
+Phase 0 complete. Proceeding with context-aware planning...
+```
+
+**If NO existing code/data:**
+
+```
+Research Lead checking for existing context...
+└─ No codebase/ or data/ found. Skipping Phase 0.
+    Proceeding directly to Phase 1 planning...
+```
+
+**Phase 1: Planning (You'll see this happening)**
+
+```
+Research Lead analyzing your question...
+├─ Intent: [Technology investigation / Business intelligence / etc.]
+├─ Scope: [Boundaries defined]
+├─ Context: [From Phase 0 if available]
+└─ Sub-questions generated:
+    1. [Specific sub-question]
+    2. [Specific sub-question]
+    3. [Specific sub-question]
+    ...
+```
+
+**Phase 2: Exploration (Parallel workers in action)**
+
+```
+Research Lead spawning parallel workers...
+
+D. Freuzer (Web) searching:
+├─ Query 1: [optimized keywords]
+├─ Query 2: [optimized keywords]
+└─ Found: 15 web sources
+
+H. Zoppel (ArXiv) searching:
+├─ Query 1: [academic terms]
+├─ Query 2: [academic terms]
+└─ Found: 8 academic papers
+
+A. Pilz (KB) searching:
+├─ Query 1: [corpus search]
+└─ Found: 5 relevant papers from knowledge base
+
+Sources validated: 28 high-quality sources identified
+```
+
+**Phase 3: Analysis (You'll see progress)**
+
+```
+Analyzing sources...
+├─ Content extracted from 28 sources
+├─ Ranked by relevance
+├─ Patterns identified: [key themes]
+└─ Gaps recognized: [missing areas]
+```
+
+**Phase 4: Synthesis (Report generation)**
+
+```
+Synthesizing findings...
+├─ Sub-question 1: [integrated findings]
+├─ Sub-question 2: [integrated findings]
+├─ Sub-question 3: [integrated findings]
+└─ Report drafted with citations
+```
+
+**Phase 5: Refinement (Human-in-the-loop)**
+
+**⚠️ YOUR INPUT NEEDED:**
+
+Research Lead will present quality assessment and ask:
+
+```
+Research Complete - Quality Assessment
+
+Report addresses 5 sub-questions with 28 sources
+
+Quality scores:
+- Completeness: 8/10
+- Accuracy: 9/10
+- Relevance: 9/10
+- Coherence: 8/10
+
+What refinement is needed?
+
+1. Complete - Research meets needs (finalize and deliver)
+2. Deeper exploration - Need more information on specific areas
+3. Reframe question - Need to refine research question
+4. Expand synthesis - Findings need better integration
+5. Other - Specify custom refinement
+
+Your choice: _____
+```
+
+**Choose based on your needs:**
+
+- **Option 1 (Complete)**: Finalize and receive all deliverables
+- **Option 2 (Deeper exploration)**: Research Lead will iterate Phase 2 with refined queries
+- **Option 3 (Reframe)**: Research Lead will iterate Phase 1 with new sub-questions
+- **Option 4 (Expand synthesis)**: Research Lead will improve Phase 4 integration
+
+**Step 3: Receive Final Deliverables**
+
+Once you choose "Complete", you'll receive:
+
+```
+deep-research-[topic]-[date]/
+├── deep-research-report.md          # Full comprehensive report
+├── executive-summary.md             # 1-page summary
+├── bibliography.md                  # Complete source list with ratings
+├── methodology.md                   # Research process documentation
+├── pattern-analysis.md              # Cross-cutting themes
+└── knowledge-gaps.md                # Identified gaps and future directions
+```
+
+### Key Features
+
+✅ **Autonomous & Iterative** - Not one-shot retrieval, but adaptive exploration
+✅ **Parallel Subagent Workers** - Three specialists execute searches simultaneously
+✅ **Deep Synthesis** - Goes beyond aggregation to create meaningful insights
+✅ **Quality-Driven** - Feedback loops ensure thoroughness
+✅ **Context-Preserving** - Maintains context across all phases
+✅ **Orchestrator-Worker Pattern** - Research Lead coordinates all subagents
+
+### Output
+
+After completion, you'll receive:
+
+- **Deep Research Report** - Comprehensive findings organized by sub-questions
+- **Executive Summary** - 1-page high-level overview
+- **Bibliography** - Complete source list with quality ratings
+- **Gap Analysis** - Identified knowledge gaps and future directions
+- **Strategic Insights** - Actionable recommendations
+
+### Timeline
+
+- **Phase 0 (Context Analysis):** 30 minutes - 2 hours (if existing codebase/data)
+- **Single iteration:** 4-8 hours (without Phase 0) or 5-10 hours (with Phase 0)
+- **Phase 2 (Exploration with parallel workers):** 1-3 hours
+- **Typical projects:** 1-3 iterations for comprehensive results
+
+**Timeline Breakdown:**
+
+```
+With Existing Codebase:
+├─ Phase 0: Context Analysis (30 min - 2 hrs)
+├─ Phase 1: Planning (30-60 min)
+├─ Phase 2: Exploration (1-3 hrs)
+├─ Phase 3: Analysis (1-2 hrs)
+├─ Phase 4: Synthesis (1-2 hrs)
+└─ Phase 5: Refinement (30 min - 2 hrs)
+Total: 5-10 hours per iteration
+
+Without Existing Codebase:
+├─ Phase 1: Planning (30-60 min)
+├─ Phase 2: Exploration (1-3 hrs)
+├─ Phase 3: Analysis (1-2 hrs)
+├─ Phase 4: Synthesis (1-2 hrs)
+└─ Phase 5: Refinement (30 min - 2 hrs)
+Total: 4-8 hours per iteration
+```
+
+### Complete Worked Example
+
+**Scenario:** You want to understand the current landscape of vector databases.
+
+**Step 1: Start the workflow**
+
+```bash
+@research-lead
+*run-deep-research "vector database landscape 2024"
+```
+
+**Step 2: Phase 1 - Planning (autonomous)**
+
+Research Lead decomposes your question:
+
+```
+Sub-questions generated:
+1. What are the leading vector database solutions in 2024?
+2. How do vector databases compare on performance benchmarks?
+3. What are the key technical differentiators?
+4. What are pricing and licensing models?
+5. What are emerging trends and future directions?
+```
+
+**Step 3: Phase 2 - Exploration (parallel workers)**
+
+Three workers execute simultaneously:
+
+```
+D. Freuzer (Web) → Finding: Pinecone blogs, Weaviate docs, Qdrant tutorials
+H. Zoppel (ArXiv) → Finding: Vector search papers, benchmark studies
+A. Pilz (KB) → Finding: Previous vector DB analysis from your corpus
+
+Total: 32 high-quality sources validated
+```
+
+**Step 4: Phase 3 & 4 - Analysis & Synthesis (autonomous)**
+
+Research Lead produces comprehensive report organized by your 5 sub-questions.
+
+**Step 5: Phase 5 - Your decision point**
+
+```
+Research Complete - Quality Assessment
+
+Report addresses 5 sub-questions with 32 sources
+Quality scores: 8-9/10 across all dimensions
+
+What refinement is needed?
+
+Your choice: 1 (Complete - looks comprehensive!)
+```
+
+**Step 6: Receive deliverables**
+
+```
+deep-research-vector-db-2024/
+├── deep-research-report.md
+    - Comprehensive 15-page report
+    - All 5 sub-questions answered
+    - 32 sources cited
+    - Performance comparison tables
+    - Pricing analysis
+    - Trend predictions
+
+├── executive-summary.md
+    - 1-page overview
+    - Key findings
+    - Top recommendations
+
+├── bibliography.md
+    - All 32 sources with quality ratings
+    - Categorized by type (web/academic/KB)
+
+└── knowledge-gaps.md
+    - Identified: Need more info on enterprise deployments
+    - Suggested: Interview with practitioners
+```
+
+**Total time:** 6 hours (single iteration)
+
+---
+
+### What If You Want to Iterate?
+
+**Scenario:** After reviewing the report, you realize you need deeper information on a specific area.
+
+**Option 1: Deeper Exploration (Most Common)**
+
+At the decision point, choose option 2:
+
+```
+Your choice: 2 (Deeper exploration)
+
+Research Lead: What specific areas need deeper investigation?
+You: "Need more details on enterprise deployment patterns and case studies"
+
+Research Lead: Spawning workers for targeted deep-dive...
+D. Freuzer → Searching: enterprise case studies, deployment guides
+H. Zoppel → Searching: production implementation papers
+A. Pilz → Searching: enterprise patterns in KB
+
+Additional 12 sources found
+Updated report with new section: "Enterprise Deployment Patterns"
+```
+
+**Option 2: Reframe Question**
+
+If you realize the question needs adjustment:
+
+```
+Your choice: 3 (Reframe question)
+
+Research Lead: How should we refine the research question?
+You: "Focus specifically on open-source vector databases"
+
+Research Lead: Generating new sub-questions for open-source focus...
+1. What are the leading open-source vector database solutions?
+2. How do open-source options compare to commercial alternatives?
+3. What are community adoption trends?
+...
+
+[Entire workflow restarts with refined focus]
+```
+
+**Option 3: Expand Synthesis**
+
+If findings are there but need better integration:
+
+```
+Your choice: 4 (Expand synthesis)
+
+Research Lead: What aspects need better integration?
+You: "Connect technical features to use cases more clearly"
+
+Research Lead: Re-synthesizing with use-case mapping...
+├─ Feature-to-use-case matrix created
+├─ Decision framework added
+└─ Updated recommendations section
+```
+
+**Typical Iteration Pattern:**
+
+- **First iteration (4-8 hours):** Broad landscape analysis
+- **Second iteration (2-4 hours):** Deeper dive on specific areas
+- **Third iteration (1-2 hours):** Final refinements and gap filling
+
+### More Use Cases
+
+**Technology Investigation:**
+
+```bash
+*run-deep-research "efficient attention mechanisms for transformers"
+```
+
+**Business Intelligence:**
+
+```bash
+*run-deep-research "AI regulation trends in healthcare 2024"
+```
+
+**Academic Literature Review:**
+
+```bash
+*run-deep-research "self-supervised learning for computer vision"
+```
+
+**Competitive Analysis:**
+
+```bash
+*run-deep-research "vector database landscape 2024"
+```
+
+### Integration with Academic Paper Workflow (Phase 1)
+
+**CRITICAL:** Deep research workflow is designed to integrate with Phase 1 of the academic paper development workflow!
+
+**Three Integration Options:**
+
+**Option 1: Deep Research First** (Recommended for New Projects)
+
+```bash
+# Step 1: Run deep research to understand landscape (4-8 hours)
+@research-lead
+*run-deep-research "your research area"
+# → Comprehensive landscape analysis with gap identification
+# → Output: deep-research-report.md, bibliography.md, gaps.md
+
+# Step 2: Then run Phase 1 brainstorming with insights (1 week)
+@research-lead
+*run-phase-1 "focused topic based on gaps identified"
+# → Brainstorm specific research questions
+# → Targeted literature searches (not comprehensive)
+# → Create research proposal and architecture
+
+# Benefits: Best of both worlds - comprehensive landscape + focused planning
+# Timeline: 5-10 hours (deep research) + 1 week (phase 1)
+```
+
+**Option 2: Deep Research Integrated** (Recommended for Literature-Heavy Projects)
+
+```bash
+# Step 1: Initial brainstorming (1-2 days)
+@research-lead
+*brainstorm "your evolving topic"
+# → Generate initial research questions
+
+# Step 2: Deep research on those questions (4-8 hours)
+@research-lead
+*run-deep-research "questions from brainstorming"
+# → Uses 5-phase methodology with parallel subagent workers
+# → Produces comprehensive literature synthesis
+
+# Step 3: Create proposal using deep research findings (2-3 days)
+@research-lead
+*create-proposal
+# → Proposal grounded in comprehensive literature
+
+# Benefits: Most thorough literature coverage, highest quality
+# Timeline: 1-2 days + 4-8 hours + 2-3 days = ~1 week total
+```
+
+**Option 3: Manual Iterative Approach**
+
+```bash
+# Use Phase 1 workflow without deep research
+@research-lead
+*run-phase-1 "your topic"
+# → Manual 2-4 iteration cycles with three specialists
+# → More control, step-by-step, pedagogical
+
+# Benefits: Step-by-step control, tight integration with brainstorming
+# Timeline: 1-2 weeks
+```
+
+**Recommendation:**
+
+- **New project, unfamiliar area?** → Option 1 (Deep research first)
+- **Literature-heavy, comprehensive survey needed?** → Option 2 (Deep research integrated)
+- **Need tight control, teaching/learning?** → Option 3 (Manual iterative)
+
+**📖 Full documentation:**
+
+- [Workflow Definition](workflows/deep-research.yaml) - Complete YAML specification
+- [Task Guide](tasks/run-deep-research.md) - Step-by-step execution guide
+- [Methodology Documentation](docs/DEEP-RESEARCH-METHODOLOGY.md) - Detailed methodology explanation
+- [Visual Guide](docs/DEEP-RESEARCH-VISUAL-GUIDE.md) - Visual diagrams and examples
+
+---
+
+## 🔬 METHOD 2: Academic Paper Development Workflow
+
+**Complete research lifecycle from brainstorming to publication with novel experiments.**
+
+This workflow is designed for researchers aiming to publish at top-tier conferences (NeurIPS, ICML, ICLR, CVPR, etc.) with original experimental contributions.
+
+### When to Use Which Method?
+
+| Scenario              | Use Method 1 (Deep Research)                                           | Use Method 2 (Paper Development)                        |
+| --------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------- |
+| **Goal**              | Understand landscape, gather info                                      | Publish paper with experiments                          |
+| **Experiments**       | None needed                                                            | Novel experiments required                              |
+| **Timeline**          | 4-8 hours (1-3 iterations)                                             | 3-6 months                                              |
+| **Output**            | Research report + bibliography                                         | Published paper + code release                          |
+| **Architecture**      | **Orchestrator spawns parallel subagent workers**                      | Sequential team coordination with iterations            |
+| **Three Specialists** | Work as **parallel workers** (simultaneously)                          | Work through **iterative cycles** (2-4 rounds)          |
+| **Phase 2**           | Parallel subagent search (exploration)                                 | Experiment implementation                               |
+| **Best for**          | Standalone literature review, competitive analysis, tech investigation | Academic publication, PhD research, novel contributions |
+| **Relationship**      | **Can be used AS Phase 1 literature component**                        | Full research lifecycle (Phase 1-4)                     |
+
+**IMPORTANT:** Methods 1 and 2 are **complementary, not mutually exclusive**!
+
+**Three Ways to Use Deep Research with Paper Development:**
+
+1. **Deep Research BEFORE Phase 1** - Understand landscape, then start paper development
+2. **Deep Research AS Phase 1 Literature** - Replace Phase 1's manual literature system with deep research workflow
+3. **Deep Research STANDALONE** - Use independently for competitive analysis or technology investigation
+
+**Key Architectural Difference:**
+
+- **Method 1 (Deep Research):** Research Lead spawns three specialist subagents as **parallel workers** that execute searches simultaneously during exploration phase (3x faster, highly autonomous).
+- **Method 2 Phase 1 (Manual Literature):** Research Lead coordinates three specialists through **iterative brainstorming-literature cycles** to progressively refine research questions (more control, pedagogical).
+- **Method 2 Phase 1 (With Deep Research):** Use deep research workflow for literature component, then proceed to experiments (best of both worlds).
+
+---
+
+### 🔄 Iterative Research Cycle (Method 2)
 
 **CRITICAL: All phases can be invoked manually and repeated as needed!**
 
@@ -424,9 +1168,11 @@ your-research-project/
     └── .git/              # Git repository (syncs with Overleaf)
 ```
 
-### Phase 1: Planning - THREE-SPECIALIST LITERATURE SYSTEM
+### Phase 1: Planning - THREE-SPECIALIST ITERATIVE LITERATURE SYSTEM
 
 **🔁 REPEATABLE:** Run this phase multiple times as your research questions evolve!
+
+**💡 Key Difference from Method 1:** In Method 2, the three specialists work through **iterative brainstorming-literature cycles** (2-4 iterations) to refine research questions. In Method 1, they work as **parallel subagent workers** for comprehensive information gathering.
 
 **🤖 Automated Execution:** Let Prof. Dr. Kunz (Research Lead) orchestrate the entire workflow!
 
@@ -436,8 +1182,8 @@ your-research-project/
 # Prof. Dr. Kunz will:
 # 1. Read workflows/phase-1-planning.yaml
 # 2. Execute all steps in sequence
-# 3. Coordinate three specialists automatically
-# 4. Handle iterations (2-4 cycles)
+# 3. Coordinate three specialists through iterations
+# 4. Handle 2-4 brainstorming-literature cycles
 # 5. Create all output documents
 ```
 
@@ -451,8 +1197,8 @@ your-research-project/
 *brainstorm "your evolving topic"      # Step 1: Generate research questions
 *formulate-questions                   # Step 2: Extract search keywords from brainstorming
 
-# Research Lead then coordinates three specialists in parallel:
-# (Search keywords constructed from brainstorming results)
+# Research Lead then coordinates three specialists:
+# (Can work simultaneously or sequentially based on availability)
 
 @research-assistant-web
 *search "{keywords from Research Lead}"  # Web + GitHub + Industry trends
@@ -484,7 +1230,7 @@ Prof. Dr. Kunz (Research Lead)
    │
    ├─→ Initial Brainstorming (10-20 questions)
    │
-   ├─→ PARALLEL LITERATURE SEARCH ←────────────────────┐
+   ├─→ LITERATURE SEARCH (Three Specialists) ←─────────┐
    │   ├─→ D. Freuzer (Web):    Blogs, docs, GitHub   │
    │   ├─→ H. Zoppel (ArXiv):   Academic pre-prints   │  Iteration 1
    │   └─→ A. Pilz (KB):        Tagged knowledge base │
@@ -1451,6 +2197,7 @@ bmad-ai-research/
 - **📚 Setup Guide**: [SETUP-CHECKLIST.md](SETUP-CHECKLIST.md) - Complete installation and setup
 - **🔗 Archon MCP Integration**: [docs/ARCHON-MCP-INTEGRATION.md](docs/ARCHON-MCP-INTEGRATION.md) - Literature search setup
 - **🔄 Iterative Workflow**: [docs/ITERATIVE-RESEARCH-WORKFLOW.md](docs/ITERATIVE-RESEARCH-WORKFLOW.md) - Brainstorm-literature loop
+- **🔍 Deep Research Workflow**: [workflows/deep-research.yaml](workflows/deep-research.yaml) - Five-phase agentic deep research
 - **📖 Research Knowledge Base**: [data/research-kb.md](data/research-kb.md) - Best practices guide
 - **⚙️ Full Workflow**: [workflows/research-paper-full.yaml](workflows/research-paper-full.yaml) - End-to-end process
 - **🔬 Experiment Iteration**: [workflows/experiment-iteration.yaml](workflows/experiment-iteration.yaml) - Focused experiment cycle
@@ -1518,6 +2265,7 @@ Designed for researchers who want to:
 - 📖 [Setup Checklist](SETUP-CHECKLIST.md) - Get started in minutes
 - 🔗 [Archon MCP Setup](docs/ARCHON-MCP-INTEGRATION.md) - Enable automated literature search
 - 🔄 [Iterative Workflow](docs/ITERATIVE-RESEARCH-WORKFLOW.md) - Master the brainstorm-literature loop
+- 🔍 [Deep Research Workflow](workflows/deep-research.yaml) - Five-phase agentic deep research
 - ⚡ [Quick Reference](QUICK-FIX.md) - Common commands and patterns
 
 ---

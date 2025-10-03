@@ -165,6 +165,7 @@ commands:
   - run-phase-1 {topic}: Execute Phase 1 Planning workflow with three-specialist literature system
   - run-phase-2 {hypothesis}: Execute Phase 2 Single Experiment iteration workflow
   - run-phase-3 {variant}: Execute Phase 3 Paper Update workflow (variants: initial_setup, incremental_update, full_revision, pre_submission_polish)
+  - run-deep-research {topic}: Execute five-phase agentic deep research workflow (run task run-deep-research.md)
 
   # === RESEARCH EXPERTISE COMMANDS (Domain Knowledge) ===
   - help: Show numbered list of the following commands to allow selection
@@ -188,6 +189,7 @@ dependencies:
     - facilitate-research-brainstorming.md
     - literature-search.md
     - run-workflow.md
+    - run-deep-research.md
   templates:
     - research-proposal-tmpl.yaml
     - literature-review-tmpl.yaml
@@ -196,4 +198,5 @@ dependencies:
     - phase-1-planning.yaml
     - phase-2-single-experiment.yaml
     - phase-3-paper-update.yaml
+    - deep-research.yaml
 ```

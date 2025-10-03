@@ -6,9 +6,66 @@ workflow:
     Iterative brainstorming and literature search with three-specialist system.
     Research Lead constructs search keywords from brainstorming results and
     coordinates parallel literature searches across web, arXiv, and knowledge base.
+
+    OPTION A: Use full deep research workflow (*run-deep-research) for comprehensive
+    literature analysis (4-8 hours, highly autonomous).
+
+    OPTION B: Use manual iterative approach (below) for step-by-step control and
+    integration with brainstorming (1-2 weeks, more control).
   type: research-phase
   repeatable: true
   trigger: manual
+
+  integration_with_deep_research: |
+    **RECOMMENDED APPROACH:**
+
+    For comprehensive literature coverage, use the deep research workflow BEFORE
+    or DURING Phase 1:
+
+    Option 1: Deep Research First (Recommended for New Projects)
+    ============================================================
+    Step 1: Run deep research to understand landscape
+      @research-lead
+      *run-deep-research "your research area"
+      → Produces comprehensive literature analysis in 4-8 hours
+      → Identifies gaps and positioning opportunities
+      → Output: deep-research-report.md, bibliography.md, gaps.md
+
+    Step 2: Then run Phase 1 brainstorming with deep research insights
+      @research-lead
+      *run-phase-1 "focused topic based on gaps identified"
+      → Brainstorm specific research questions
+      → Targeted literature searches (not comprehensive)
+      → Create research proposal and architecture
+
+    Benefits: Best of both worlds - comprehensive landscape + focused planning
+    Timeline: 5-10 hours (deep research) + 1 week (phase 1)
+
+    Option 2: Deep Research Integrated (Recommended for Literature-Heavy Projects)
+    ==============================================================================
+    Replace STEPS 2-4 below with deep research workflow:
+      @research-lead
+      *brainstorm "your evolving topic"
+      → Generate initial research questions
+
+      @research-lead
+      *run-deep-research "questions from brainstorming"
+      → Uses 5-phase methodology (Planning → Exploration → Analysis → Synthesis → Iteration)
+      → Spawns parallel subagent workers
+      → Produces comprehensive literature synthesis
+
+      @research-lead
+      *create-proposal (using deep research findings)
+      → Create proposal grounded in comprehensive literature
+
+    Benefits: Most thorough literature coverage, highest quality
+    Timeline: 1-2 days (brainstorming) + 4-8 hours (deep research) + 2-3 days (proposal)
+
+    Option 3: Manual Iterative Approach (Use workflow below)
+    ========================================================
+    Use the manual workflow below for step-by-step control.
+    Good for: Pedagogical purposes, tight integration with brainstorming
+    Timeline: 1-2 weeks
 
   sequence:
     # STEP 1: Initial Brainstorming

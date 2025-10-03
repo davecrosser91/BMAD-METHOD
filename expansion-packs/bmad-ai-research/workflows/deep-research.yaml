@@ -1,0 +1,691 @@
+name: Deep Research Workflow
+version: "2.0.0"
+id: deep-research
+description: |
+  Agentic Deep Research workflow implementing the SIX-phase methodology:
+  Context Analysis → Planning → Exploration → Analysis → Synthesis → Iteration & Refinement
+
+  PHASE 0 (NEW): If working on existing project, analyze codebase/data FIRST
+  to ground research in actual implementation context and constraints.
+
+  This workflow goes beyond traditional search to conduct autonomous, iterative
+  information gathering and analysis with AI agents that can plan, explore,
+  analyze, and synthesize information in a self-improving process.
+
+metadata:
+  difficulty: advanced
+  estimated_duration: 2-10 hours per iteration (includes optional Phase 0)
+  agents_required:
+    - research-lead (orchestrator)
+    - research-assistant-web
+    - research-assistant-arxiv
+    - research-assistant-kb
+  prerequisites:
+    - Research topic defined
+    - MCP servers configured (optional but recommended)
+    - Existing codebase/data (optional, enables Phase 0)
+  outputs:
+    - Codebase context analysis (if Phase 0 executed)
+    - Deep research report
+    - Source bibliography
+    - Gap analysis
+    - Strategic insights
+    - Implementation-grounded recommendations
+
+# ==============================================================================
+# PHASE 0: CODEBASE & DATA CONTEXT ANALYSIS (OPTIONAL BUT RECOMMENDED)
+# ==============================================================================
+phases:
+  - id: phase-0-context-analysis
+    name: "Phase 0: Context Analysis (Optional)"
+    description: |
+      CRITICAL: If working on an existing project with codebase or data, analyze
+      that context FIRST before external research. This grounds the research in
+      actual implementation details and constraints.
+
+      This phase is SKIPPED if starting from scratch with no existing code/data.
+
+    steps:
+      - id: check-existing-context
+        name: Check for Existing Codebase/Data
+        agent: research-lead
+        description: |
+          Check if there is existing code or data that should inform the research:
+          - Does a codebase/ directory exist?
+          - Does a data/ directory exist?
+          - Does a results/ directory exist with previous experiments?
+          - Are there existing implementations to understand?
+          - Is there existing documentation to review?
+        actions:
+          - Check for codebase/ directory
+          - Check for data/ directory
+          - Check for results/ directory
+          - Check for any README or documentation files
+          - Determine if Phase 0 analysis is needed
+        decision_point:
+          question: "Is there existing code or data to analyze?"
+          options:
+            - value: "yes"
+              next: codebase-analysis
+              note: "Proceed with context analysis"
+            - value: "no"
+              next: phase-1-planning
+              note: "Skip Phase 0, proceed directly to planning"
+
+      - id: codebase-analysis
+        name: Codebase Analysis
+        agent: research-lead
+        description: |
+          Analyze existing codebase to understand current implementation:
+          - What is already implemented?
+          - What technologies/frameworks/libraries are used?
+          - What are the architectural patterns and design decisions?
+          - What are the current capabilities and features?
+          - What are the limitations or pain points?
+          - What problems exist that research could address?
+          - What are the dependencies and constraints?
+        actions:
+          - Use Glob to find all relevant code files (*.py, *.js, *.cpp, etc.)
+          - Use Read to examine key files (README.md, main modules, config files)
+          - Use Grep to search for specific patterns, technologies, or TODO comments
+          - Analyze project structure and organization
+          - Identify key components and their relationships
+          - Document current technology stack
+          - Note any technical debt or known issues
+        tools_used:
+          - Glob: "**/*.{py,js,ts,cpp,java}" # Find source files
+          - Read: "README.md, setup.py, package.json, requirements.txt"
+          - Grep: "TODO|FIXME|BUG|XXX|HACK" # Find issues
+        outputs:
+          - codebase-analysis.md
+          - technology-stack.md
+          - existing-capabilities.md
+          - identified-problems.md
+          - technical-constraints.md
+
+      - id: data-analysis
+        name: Data & Results Analysis
+        agent: research-lead
+        description: |
+          Analyze existing data and results (if present):
+          - What data is available and in what format?
+          - What experiments have been run previously?
+          - What results exist already?
+          - What worked and what didn't?
+          - What patterns emerge from previous experiments?
+          - What questions remain unanswered?
+          - What are data quality or availability issues?
+        actions:
+          - Examine data/ directory structure and contents
+          - Review results/ directory if it exists
+          - Analyze experiment logs, metrics, or outputs
+          - Identify successful and failed approaches
+          - Note data limitations or quality issues
+          - Extract lessons learned from previous work
+        outputs:
+          - data-inventory.md
+          - previous-experiments-summary.md
+          - results-analysis.md
+          - open-questions.md
+          - data-constraints.md
+
+      - id: context-synthesis
+        name: Context Synthesis & Research Question Formulation
+        agent: research-lead
+        description: |
+          Synthesize codebase and data analysis into actionable research context:
+          - What do we already know from existing code/data?
+          - What constraints does existing implementation impose?
+          - What specific problems need solving?
+          - What research directions are most relevant to THIS implementation?
+          - What questions are grounded in actual codebase needs?
+        actions:
+          - Combine codebase and data findings into unified context
+          - Map identified problems to potential research areas
+          - Formulate context-aware, implementation-grounded research questions
+          - Define technical constraints that research must respect
+          - Prioritize research areas by impact on existing system
+          - Create bridge between current state and research needs
+        outputs:
+          - context-summary.md (comprehensive synthesis)
+          - grounded-research-questions.md (specific to codebase)
+          - implementation-constraints.md (technical boundaries)
+          - research-priorities.md (ranked by impact)
+
+  # ==============================================================================
+  # PHASE 1: PLANNING
+  # ==============================================================================
+  - id: phase-1-planning
+    name: "Phase 1: Planning"
+    description: |
+      Sophisticated analysis of the research query to understand intent, context,
+      and scope. Decompose complex questions into focused sub-questions and develop
+      a comprehensive research strategy.
+
+      NOTE: If Phase 0 was executed, this phase uses context from codebase/data
+      analysis to create grounded, implementation-aware research questions.
+
+    steps:
+      - id: query-analysis
+        name: Query Analysis & Intent Extraction
+        agent: research-lead
+        description: |
+          Analyze the research query to extract:
+          - Underlying intent and context
+          - Required information type (current, historical, comparative, predictive)
+          - Research scope and boundaries
+          - Success criteria for the investigation
+          - Context from Phase 0 (if available): existing implementation constraints
+        actions:
+          - Understand the research question deeply
+          - Identify whether question requires current information, historical analysis, comparative research, or predictive insights
+          - Document research objectives and scope
+          - Define quality criteria and resource allocation
+          - Incorporate Phase 0 context if available (implementation constraints, existing capabilities)
+        inputs:
+          - User-provided research question
+          - context-summary.md (from Phase 0, if available)
+          - grounded-research-questions.md (from Phase 0, if available)
+        outputs:
+          - Research intent analysis
+          - Scope definition
+          - Success criteria
+          - Context-aware research strategy
+
+      - id: problem-decomposition
+        name: Problem Decomposition
+        agent: research-lead
+        description: |
+          Systematically break down complex research questions into 3-7 focused
+          sub-questions that collectively address the main research objective.
+
+          Example: "AI safety developments" →
+          - Recent research papers on AI safety
+          - Regulatory changes and policy developments
+          - Industry safety initiatives
+          - Expert opinion and debates
+          - Technical safety approaches
+        actions:
+          - Decompose main question into 3-7 focused sub-questions
+          - Ensure sub-questions are specific and answerable
+          - Verify sub-questions collectively address main objective
+          - Prioritize sub-questions by importance
+        outputs:
+          - List of 3-7 focused sub-questions
+          - Sub-question priorities
+
+      - id: strategy-development
+        name: Research Strategy Development
+        agent: research-lead
+        description: |
+          Develop comprehensive strategy including:
+          - Search depth requirements
+          - Relevant data sources identification
+          - Quality criteria establishment
+          - Resource allocation priorities
+        actions:
+          - Determine appropriate search depth for each sub-question
+          - Identify relevant data sources (web, academic, knowledge base)
+          - Establish quality and relevance criteria
+          - Plan resource allocation across sub-questions
+          - Set time limits and iteration bounds
+        outputs:
+          - Research strategy document
+          - Resource allocation plan
+          - Quality criteria checklist
+
+  # ==============================================================================
+  # PHASE 2: EXPLORATION
+  # ==============================================================================
+  - id: phase-2-exploration
+    name: "Phase 2: Exploration"
+    description: |
+      Parallel multi-agent exploration using specialized search agents.
+      Iterative and agent-driven process enabling deep exploration of sparse
+      or scattered information across diverse sources.
+
+    steps:
+      - id: query-generation
+        name: Query Generation & Optimization
+        agent: research-lead
+        description: |
+          For each sub-question, generate optimized search terms.
+          Create diverse, contextual queries varying in abstraction and specificity.
+          Ensure comprehensive coverage while avoiding redundancy.
+        actions:
+          - Generate 3-5 optimized search queries per sub-question
+          - Vary query abstraction levels (broad to specific)
+          - Include technical terms and common language variants
+          - Optimize for different search engines and sources
+          - CRITICAL: Keep queries SHORT (2-5 keywords max)
+        outputs:
+          - Query matrix (sub-questions × search queries)
+          - Query optimization notes
+        examples:
+          good_queries:
+            - "vector search pgvector"
+            - "React useState hooks"
+            - "authentication JWT tokens"
+            - "FastAPI middleware async"
+          bad_queries:
+            - "how to implement vector search with pgvector in PostgreSQL for semantic similarity"
+            - "React hooks useState useEffect useContext useReducer useMemo useCallback"
+
+      - id: parallel-web-search
+        name: Web Search & Information Retrieval
+        agent: research-assistant-web
+        description: |
+          Search web content, blogs, documentation, GitHub repositories.
+          Focus on industry perspectives, recent trends, and practical implementations.
+        actions:
+          - Execute optimized web searches for each query
+          - Search GitHub for implementations and code examples
+          - Find industry blog posts and tutorials
+          - Collect recent documentation and guides
+          - Filter low-quality sources
+          - Prioritize recent content for time-sensitive queries
+        outputs:
+          - Web source list with relevance scores
+          - Industry perspective summary
+          - Implementation examples
+
+      - id: parallel-arxiv-search
+        name: Academic Paper Search (ArXiv)
+        agent: research-assistant-arxiv
+        description: |
+          Search academic pre-prints and papers from arXiv.
+          Focus on cutting-edge research, theoretical foundations, and empirical studies.
+        actions:
+          - Execute academic searches via ArXiv MCP
+          - Search by author for known experts
+          - Search by category for domain coverage
+          - Retrieve recent pre-prints
+          - Identify highly-cited foundational papers
+        outputs:
+          - Academic paper list with citations
+          - Theoretical foundation summary
+          - Key findings from recent research
+        fallback_if_mcp_unavailable:
+          - Manual arXiv search via web interface
+          - Google Scholar searches
+          - Delegate to web assistant
+
+      - id: parallel-kb-search
+        name: Knowledge Base Search
+        agent: research-assistant-kb
+        description: |
+          Search curated knowledge base with project-specific tags.
+          Focus on previously collected papers, organizational knowledge,
+          and domain-specific corpus.
+        actions:
+          - Execute knowledge base searches via Archon MCP
+          - Search with project-specific tags
+          - Find code examples in knowledge base
+          - Identify patterns across stored papers
+          - Detect gaps in current knowledge base
+        outputs:
+          - Relevant papers from knowledge base
+          - Pattern analysis across KB papers
+          - Knowledge gaps identification
+
+      - id: source-validation
+        name: Source Discovery & Validation
+        agent: research-lead
+        description: |
+          Continuously validate discovered sources while maintaining quality standards.
+          Prioritize credible sources and filter out low-quality content.
+        actions:
+          - Review all sources from three assistants
+          - Validate source credibility and authority
+          - Check publication dates and relevance
+          - Remove duplicates and low-quality sources
+          - Prioritize sources by relevance and quality
+          - Identify additional search needs
+        decision_point:
+          question: "Is coverage comprehensive or do we need deeper exploration?"
+          options:
+            - value: "comprehensive"
+              next: phase-3-analysis
+            - value: "need_more"
+              next: query-generation
+              note: "Iterate exploration with refined queries"
+
+  # ==============================================================================
+  # PHASE 3: ANALYSIS
+  # ==============================================================================
+  - id: phase-3-analysis
+    name: "Phase 3: Analysis"
+    description: |
+      Extract, rank, and analyze information from discovered sources.
+      Identify patterns, inconsistencies, and knowledge gaps.
+
+    steps:
+      - id: content-extraction
+        name: Content Extraction & Processing
+        agents:
+          - research-assistant-web
+          - research-assistant-arxiv
+          - research-assistant-kb
+        description: |
+          Download and extract clean, readable content from all sources.
+          Handle modern JavaScript-heavy websites, remove navigation/ads,
+          and split content into manageable passages.
+        actions:
+          - Download full content from all validated sources
+          - Extract clean text (remove navigation, ads, boilerplate)
+          - Handle JavaScript-rendered content
+          - Split long documents into coherent passages
+          - Preserve context and metadata
+          - Extract figures, tables, and key visualizations
+        outputs:
+          - Cleaned content passages
+          - Source metadata
+          - Extracted media/figures
+
+      - id: information-ranking
+        name: Information Ranking & Filtering
+        agent: research-lead
+        description: |
+          Evaluate and prioritize information based on relevance to original
+          research question. Ensure most valuable information rises to the top.
+        actions:
+          - Rank passages by relevance to each sub-question
+          - Apply quality scoring (credibility, recency, depth)
+          - Filter redundant or contradictory information
+          - Identify high-value insights
+          - Create relevance-ranked passage lists
+        outputs:
+          - Ranked information by sub-question
+          - High-value insight highlights
+          - Redundancy report
+
+      - id: pattern-recognition
+        name: Pattern Recognition & Gap Analysis
+        agent: research-lead
+        description: |
+          Identify patterns across sources, detect inconsistencies,
+          and recognize knowledge gaps requiring additional research.
+        actions:
+          - Identify recurring themes and patterns
+          - Detect contradictions and disagreements
+          - Find consensus views and outlier opinions
+          - Recognize knowledge gaps and missing information
+          - Map relationships between concepts
+          - Note methodological differences
+        outputs:
+          - Pattern analysis report
+          - Contradictions and tensions
+          - Knowledge gap inventory
+          - Concept relationship map
+
+  # ==============================================================================
+  # PHASE 4: SYNTHESIS
+  # ==============================================================================
+  - id: phase-4-synthesis
+    name: "Phase 4: Synthesis"
+    description: |
+      Combine information from diverse sources into coherent narratives.
+      Generate comprehensive reports with proper citations and fact-checking.
+
+    steps:
+      - id: multi-source-integration
+        name: Multi-source Integration
+        agent: research-lead
+        description: |
+          Integrate findings from diverse sources into coherent narratives.
+          Create meaningful connections between different pieces of information.
+          Go beyond simple aggregation to synthesize insights.
+        actions:
+          - Select relevant evidence for each sub-question
+          - Integrate findings from web, academic, and KB sources
+          - Create coherent narrative structure
+          - Establish logical flow between concepts
+          - Ensure consistency across integrated content
+          - Highlight agreements and disagreements
+        outputs:
+          - Integrated narrative for each sub-question
+          - Cross-source synthesis
+          - Unified framework
+
+      - id: report-generation
+        name: Report Generation
+        agent: research-lead
+        description: |
+          Generate comprehensive research report with structured format including
+          executive summary, detailed findings, strategic insights, and recommendations.
+        actions:
+          - Create executive summary (1-2 paragraphs)
+          - Write detailed findings section (organized by sub-questions)
+          - Develop strategic insights (implications, trends, predictions)
+          - Formulate actionable recommendations
+          - Include methodology appendix
+          - Add limitations and caveats
+        outputs:
+          - Deep research report (markdown)
+          - Executive summary
+          - Strategic insights document
+        structure:
+          - Executive Summary
+          - Research Objective & Methodology
+          - Detailed Findings (by sub-question)
+          - Pattern Analysis & Key Insights
+          - Knowledge Gaps & Future Directions
+          - Strategic Recommendations
+          - Sources & Bibliography
+          - Methodology & Limitations
+
+      - id: citation-fact-checking
+        name: Citation & Fact-checking
+        agent: research-lead
+        description: |
+          Ensure every claim is properly attributed to sources.
+          Prevent unsupported statements and incorrect attributions.
+          Maintain integrity and traceability of all findings.
+        actions:
+          - Verify all claims have source attribution
+          - Check citation accuracy and completeness
+          - Validate quoted text against original sources
+          - Ensure no unsupported generalizations
+          - Create complete bibliography
+          - Add inline citations
+        outputs:
+          - Fact-checked report
+          - Complete bibliography
+          - Citation verification log
+
+  # ==============================================================================
+  # PHASE 5: ITERATION & REFINEMENT
+  # ==============================================================================
+  - id: phase-5-refinement
+    name: "Phase 5: Iteration & Refinement"
+    description: |
+      Continuously evaluate quality, incorporate feedback, and improve.
+      Iterative refinement ensures research remains aligned with needs
+      and maintains high quality standards.
+
+    steps:
+      - id: quality-assessment
+        name: Quality Assessment
+        agent: research-lead
+        description: |
+          Evaluate research output using multiple criteria:
+          completeness, accuracy, relevance, coherence, and actionability.
+        actions:
+          - Assess completeness (all sub-questions answered?)
+          - Evaluate accuracy (claims supported by sources?)
+          - Check relevance (findings address original question?)
+          - Test coherence (narrative flows logically?)
+          - Verify actionability (insights are practical?)
+          - Identify gaps or weaknesses
+        outputs:
+          - Quality assessment report
+          - Gap and weakness inventory
+          - Improvement recommendations
+
+      - id: feedback-incorporation
+        name: Feedback Loop (Human-in-the-Loop)
+        agent: research-lead
+        description: |
+          Allow human expert to provide feedback, redirect research focus,
+          or validate findings. Iteratively refine based on feedback.
+        actions:
+          - Present findings to user/stakeholder
+          - Elicit feedback on completeness and relevance
+          - Identify areas needing deeper investigation
+          - Incorporate feedback into next iteration
+          - Redirect research focus if needed
+        user_interaction: true
+        decision_point:
+          question: "What refinement is needed?"
+          options:
+            - value: "complete"
+              next: finalization
+              note: "Research meets quality criteria and user needs"
+            - value: "deeper_exploration"
+              next: phase-2-exploration
+              note: "Need more information on specific sub-questions"
+            - value: "reframe_question"
+              next: phase-1-planning
+              note: "Need to refine research question or decomposition"
+            - value: "expand_synthesis"
+              next: phase-4-synthesis
+              note: "Findings need better integration or framing"
+
+      - id: continuous-improvement
+        name: Continuous Improvement
+        agent: research-lead
+        description: |
+          Learn from the research process to improve future iterations.
+          Document effective strategies and areas for enhancement.
+        actions:
+          - Document what worked well
+          - Note inefficiencies or bottlenecks
+          - Record valuable sources for future use
+          - Update search strategies based on effectiveness
+          - Refine quality criteria if needed
+          - Log lessons learned
+        outputs:
+          - Process improvement notes
+          - Source quality ratings
+          - Strategy refinements
+          - Lessons learned log
+
+  # ==============================================================================
+  # FINALIZATION
+  # ==============================================================================
+  - id: finalization
+    name: Finalization
+    description: Final packaging and delivery of research outputs
+
+    steps:
+      - id: final-report
+        name: Final Report Package
+        agent: research-lead
+        description: Create final deliverable package with all artifacts
+        actions:
+          - Finalize main research report
+          - Package all supporting documents
+          - Create executive summary (1-page)
+          - Generate bibliography and citations
+          - Add methodology appendix
+          - Include source quality ratings
+        outputs:
+          - Final research report (PDF + Markdown)
+          - Executive summary (1-page)
+          - Complete bibliography
+          - Source evaluation matrix
+          - Methodology documentation
+
+# ==============================================================================
+# WORKFLOW METADATA
+# ==============================================================================
+workflow_patterns:
+  orchestrator_worker:
+    description: |
+      Research Lead acts as orchestrator managing overall process while
+      delegating specific tasks to specialized workers (web, arxiv, KB assistants)
+
+  parallel_processing:
+    description: |
+      Multiple agents work simultaneously on different aspects (Phase 2: Exploration)
+
+  iterative_refinement:
+    description: |
+      System can revisit and refine earlier conclusions based on new information
+      (Phase 5 can loop back to any earlier phase)
+
+key_capabilities:
+  - Dynamic adaptation based on intermediate findings
+  - Parallel processing via multiple specialized agents
+  - Context preservation across iterations
+  - Tool integration (search APIs, content extractors, MCPs)
+  - Iterative reasoning and refinement
+
+best_practices:
+  query_construction:
+    - Keep queries SHORT (2-5 keywords)
+    - Focus on technical terms and specific concepts
+    - Avoid filler words like "how to", "implement", "example"
+    - For multi-concept searches, do multiple focused queries
+
+  source_evaluation:
+    - Prioritize credible, authoritative sources
+    - Check publication dates for currency
+    - Verify author expertise and credentials
+    - Cross-reference claims across multiple sources
+
+  synthesis:
+    - Go beyond simple aggregation
+    - Create meaningful connections between findings
+    - Acknowledge contradictions and uncertainties
+    - Provide actionable insights and recommendations
+
+estimated_timeline:
+  phase_1_planning: "30-60 minutes"
+  phase_2_exploration: "1-3 hours"
+  phase_3_analysis: "1-2 hours"
+  phase_4_synthesis: "1-2 hours"
+  phase_5_refinement: "30 minutes - 2 hours"
+  total_single_iteration: "4-8 hours"
+  typical_iterations: "1-3 iterations"
+
+outputs:
+  primary:
+    - Deep research report (comprehensive)
+    - Executive summary (1-page)
+    - Strategic insights document
+
+  supporting:
+    - Complete bibliography with source ratings
+    - Gap analysis and future directions
+    - Methodology documentation
+    - Pattern analysis and concept maps
+    - Knowledge base additions (papers catalogued)
+
+success_criteria:
+  - All sub-questions answered comprehensively
+  - Multiple high-quality sources per sub-question
+  - Clear patterns and insights identified
+  - Knowledge gaps explicitly documented
+  - Actionable recommendations provided
+  - All claims properly cited
+  - Report is coherent and well-structured
+
+notes: |
+  This workflow implements the five-phase agentic deep research methodology:
+  1. Planning - Query analysis, problem decomposition, strategy development
+  2. Exploration - Parallel multi-source search and discovery
+  3. Analysis - Content extraction, ranking, pattern recognition
+  4. Synthesis - Multi-source integration, report generation, fact-checking
+  5. Iteration & Refinement - Quality assessment, feedback loops, continuous improvement
+
+  The workflow is designed to be iterative, with decision points allowing
+  the system to loop back to earlier phases based on quality assessment
+  and user feedback. This mirrors the self-improving nature of agentic research.
+
+  Key differentiators from traditional search:
+  - Iterative and adaptive (not one-shot retrieval)
+  - Multi-agent parallel processing
+  - Deep synthesis (not just aggregation)
+  - Quality-driven with feedback loops
+  - Context-preserving across iterations
