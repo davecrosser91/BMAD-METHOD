@@ -94,9 +94,9 @@ mcp__archon__manage_task("update", task_id=task.id, status="done")
 
 ### **Option C: Team Lead Workflow** 🎯
 
-**Best for**: Large projects (20+ stories), clear dependencies, need speed
+**Best for**: Large projects (20+ stories), clear dependencies, want coordination
 
-**How it works**: Parallel development with dependency-aware waves
+**How it works**: Coordinated development with dependency-aware waves (in-context by default, parallel subagents optional)
 
 **Task**: [step-2-parallel-team-execution.md](step-2-parallel-team-execution.md)
 
@@ -106,24 +106,31 @@ mcp__archon__manage_task("update", task_id=task.id, status="done")
 
 ```python
 # Activate Dev Team Lead
-@dev-team-lead: "Please execute sprint using parallel team workflow for project {project_id}"
+@dev-team-lead: "Please execute sprint for project {project_id}"
 
-# Team Lead will:
+# Team Lead will (IN-CONTEXT by default):
 # 1. Analyze dependency graph
-# 2. Identify Wave 1 (no dependencies) → spawn 3-5 dev subagents
-# 3. Wait for completion → spawn 3-5 QA subagents
+# 2. Identify Wave 1 (no dependencies) → work through tasks in this chat
+# 3. Execute QA reviews in this chat
 # 4. Process results → start Wave 2
 # 5. Repeat until all waves complete
+
+# For parallel execution with subagents (when explicitly requested):
+@dev-team-lead: "Please execute sprint with parallel subagents for project {project_id}"
+# or use *execute-sprint-parallel command
 ```
 
-**Timeline**: ~8 hours for 20 stories = **5x speedup!**
+**Timeline**:
+
+- In-context: ~30 hours for 20 stories (sequential, full visibility)
+- Parallel subagents: ~8 hours for 20 stories (5x faster, less visibility)
 
 **Advantages**:
 
-- ✅ Massive parallelization (3-5x faster)
 - ✅ Dependency-aware execution
 - ✅ Automated coordination
-- ⚠️ Less visibility (subagents work in background)
+- ✅ In-context by default (full visibility)
+- ✅ Parallel mode optional (3-5x faster when explicitly requested)
 
 **Requirements**:
 
@@ -135,14 +142,14 @@ mcp__archon__manage_task("update", task_id=task.id, status="done")
 
 ## Mode Comparison
 
-| Aspect           | Manual        | Simple Workflow | Team Lead   |
-| ---------------- | ------------- | --------------- | ----------- |
-| **Speed**        | 1x (baseline) | 1.5x            | 5x          |
-| **Control**      | 🔥🔥🔥 Full   | 🔥🔥 High       | 🔥 Medium   |
-| **Visibility**   | 100%          | 100%            | ~30%        |
-| **Setup Effort** | None          | Low             | Medium      |
-| **Best For**     | 5-10 stories  | 10-20 stories   | 20+ stories |
-| **Timeline**     | 20h for 10    | 30h for 20      | 8h for 20   |
+| Aspect           | Manual        | Simple Workflow | Team Lead (In-Context) | Team Lead (Parallel) |
+| ---------------- | ------------- | --------------- | ---------------------- | -------------------- |
+| **Speed**        | 1x (baseline) | 1.5x            | 1.5x                   | 5x                   |
+| **Control**      | 🔥🔥🔥 Full   | 🔥🔥 High       | 🔥🔥 High              | 🔥 Medium            |
+| **Visibility**   | 100%          | 100%            | 100%                   | ~30%                 |
+| **Setup Effort** | None          | Low             | Medium                 | Medium               |
+| **Best For**     | 5-10 stories  | 10-20 stories   | 20+ stories            | 50+ stories          |
+| **Timeline**     | 20h for 10    | 30h for 20      | 30h for 20             | 8h for 20            |
 
 ---
 

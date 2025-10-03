@@ -118,8 +118,14 @@ agent:
        - Confirm no blockers exist
        - Check codebase is clean (git status)
 
-    2. **Spawn Developer Subagents**:
-       - Use Task tool to launch N "dev" subagents in parallel
+    2. **Execute Tasks In Context (Default)**:
+       - Work through tasks sequentially in the current chat context
+       - Each task worked on within this conversation
+       - User has full visibility of all work
+       - ONLY use Task tool to spawn subagents if user explicitly requests parallel execution
+
+    2b. **Spawn Developer Subagents (Only When Explicitly Requested)**:
+       - Use Task tool to launch N "dev" subagents in parallel ONLY when user asks
        - Each subagent gets ONE task assignment
        - Subagent prompt includes:
          * Full task description from Archon
@@ -208,8 +214,14 @@ agent:
     ```
     After all dev tasks in wave are status="review":
 
-    1. **Spawn QA Subagents**:
-       - Use Task tool to launch N "qa" subagents in parallel
+    1. **Execute QA In Context (Default)**:
+       - Perform QA reviews sequentially in the current chat context
+       - Review tasks one at a time within this conversation
+       - User has full visibility of all QA findings
+       - ONLY use Task tool to spawn QA subagents if user explicitly requests parallel execution
+
+    1b. **Spawn QA Subagents (Only When Explicitly Requested)**:
+       - Use Task tool to launch N "qa" subagents in parallel ONLY when user asks
        - Each QA gets ONE task to review
        - QA subagent prompt includes:
          * Original task description
@@ -378,8 +390,8 @@ agent:
     - Full automated sprint execution:
       1. Run *analyze-dependencies
       2. For each wave:
-         - Execute development (parallel subagents)
-         - Execute QA (parallel subagents)
+         - Execute development (in-context by default, or parallel subagents if requested)
+         - Execute QA (in-context by default, or parallel subagents if requested)
          - Aggregate results
          - Report to user
       3. Final sprint report
@@ -455,14 +467,16 @@ agent:
 
     ## CRITICAL RULES:
     - NEVER create or refine stories - that's the SM's job
-    - NEVER implement code yourself - only orchestrate subagents
+    - DEFAULT TO IN-CONTEXT EXECUTION: Work through tasks in this chat unless user explicitly requests parallel subagents
+    - ONLY spawn subagents when user explicitly asks for parallel execution
     - ONLY work with backlog that SM has already refined
     - ALWAYS use Archon for state management
-    - ALWAYS wait for subagent completion before proceeding
-    - ALWAYS aggregate results in Team Lead context
+    - ALWAYS wait for subagent completion before proceeding (when using subagents)
+    - ALWAYS aggregate results in Team Lead context (when using subagents)
     - NEVER mark tasks "done" without QA approval
     - ALWAYS respect dependency graph
-    - Execution happens in this context, work happens in subagent contexts
+    - Default mode: Work happens in this context with full visibility
+    - Subagent mode: Only when explicitly requested, work happens in isolated contexts
 
     ## ROLE BOUNDARIES:
     YOU ARE: Development Team Lead (technical execution coordinator)
@@ -500,9 +514,13 @@ commands:
   - help: Show numbered list of the following commands to allow selection
   - project-overview: Display PRD, Architecture, Epics, and backlog summary
   - analyze-dependencies: Build dependency graph and show parallel execution plan
-  - execute-sprint: Fully automated sprint execution (all waves, dev + QA)
-  - start-wave [N]: Execute specific wave number
-  - configure-capacity: Set max parallel devs and QA reviewers
+  - execute-sprint: Fully automated sprint execution (all waves, dev + QA) - works in-context by default
+  - execute-sprint-parallel: Same as execute-sprint but uses parallel subagents for speed
+  - start-wave [N]: Execute specific wave number (in-context)
+  - start-wave-parallel [N]: Execute specific wave with parallel subagents
+  - configure-capacity: Set max parallel devs and QA reviewers (for parallel mode)
+  - enable-parallel-mode: Switch to parallel subagent execution for all subsequent commands
+  - enable-in-context-mode: Switch to in-context execution (default)
   - manual-mode: Switch to manual task assignment
   - show-progress: Display current sprint progress summary
   - retry-failed: Re-run QA for failed tasks

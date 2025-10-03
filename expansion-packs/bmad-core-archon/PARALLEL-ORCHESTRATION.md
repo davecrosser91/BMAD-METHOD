@@ -1,27 +1,41 @@
-# Parallel Team Orchestration - Quick Start
+# Team Orchestration - Quick Start
 
-**Version:** 3.1.0
-**Feature:** Parallel development with dependency-aware task orchestration
-**Speedup:** 3-5x faster than sequential development
+**Version:** 3.2.0
+**Feature:** Coordinated development with dependency-aware task orchestration
+**Default Mode:** In-context execution (full visibility)
+**Optional Mode:** Parallel subagents (3-5x faster when explicitly requested)
 
 ---
 
-## What's New?
+## What's New in 3.2.0?
 
-The bmad-core-archon expansion pack now supports **parallel team orchestration** - allowing multiple AI developers and QA reviewers to work simultaneously on independent tasks while the Scrum Master Orchestrator maintains oversight and coordination.
+**Default behavior changed**: The Dev Team Lead now works **in-context by default** - executing tasks sequentially in the current chat with full visibility. Parallel subagent execution is now **opt-in** only.
 
-### Key Innovation
+The bmad-core-archon expansion pack supports **flexible team orchestration** with two modes:
+
+### Mode 1: In-Context Execution (Default)
 
 ```
-Traditional BMAD:              Parallel BMAD:
+Traditional BMAD:              In-Context with Dev Team Lead:
 Dev → Task 1 (2hr)            Dev Team Lead analyzes dependencies
-Dev → Task 2 (2hr)            Wave 1: 5 devs work in parallel (2hr)
-Dev → Task 3 (2hr)            Wave 1: 3 QA review in parallel (1hr)
-...                           Wave 2: 8 devs work in parallel (2hr)
-20 tasks = 40 hours           Wave 2: 3 QA review in parallel (1hr)
-                              20 tasks = 8 hours total
+Dev → Task 2 (2hr)            Wave 1: Work tasks in this chat (6hr)
+Dev → Task 3 (2hr)            Wave 1: QA review in this chat (2hr)
+...                           Wave 2: Work tasks in this chat (8hr)
+20 tasks = 40 hours           20 tasks = 30 hours total
 
-                              ⚡ 5x FASTER
+                              ✅ FULL VISIBILITY
+```
+
+### Mode 2: Parallel Subagents (Opt-In)
+
+```
+In-Context Mode:              Parallel Subagent Mode (when requested):
+Wave 1: Tasks in chat (6hr)  Wave 1: 5 devs work in parallel (2hr)
+Wave 1: QA in chat (2hr)     Wave 1: 3 QA review in parallel (1hr)
+Wave 2: Tasks in chat (8hr)  Wave 2: 8 devs work in parallel (2hr)
+20 tasks = 30 hours          20 tasks = 8 hours total
+
+                              ⚡ 5x FASTER (but less visibility)
 ```
 
 ---
