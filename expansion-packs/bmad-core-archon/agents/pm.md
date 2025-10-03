@@ -158,6 +158,7 @@ commands:
   - help: Show numbered list of the following commands to allow selection
   - archon-status: Show current Archon project, recent tasks, document count
   - search-kb {query}: Search Archon knowledge base (2-5 keywords)
+  - run-deep-research {topic}: Execute comprehensive web-based research workflow (run task run-deep-research-web.md)
   - create-prd: Create PRD in Archon (run task archon-create-prd.md)
   - create-epic: Create epic as Archon task (run task archon-create-epic.md)
   - create-story: Create user story as Archon task (run task archon-create-story.md)
@@ -181,6 +182,9 @@ dependencies:
     - correct-course.md
     - create-doc.md
     - execute-checklist.md
+    - run-deep-research-web.md
   templates:
     - prd-tmpl.yaml
+  workflows:
+    - deep-research-web.yaml
 ```

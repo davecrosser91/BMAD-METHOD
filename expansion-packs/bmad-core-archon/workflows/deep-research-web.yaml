@@ -1,0 +1,416 @@
+name: Deep Research Workflow (Web-Only)
+version: "1.0.0"
+id: deep-research-web
+description: |
+  Simplified deep research workflow using ONLY WebSearch tool.
+  Implements a streamlined four-phase methodology:
+  Planning → Exploration → Analysis → Synthesis
+
+  Perfect for bmad-core-archon where you want comprehensive research
+  without requiring external MCP servers or specialized search agents.
+
+metadata:
+  difficulty: intermediate
+  estimated_duration: 1-4 hours per iteration
+  agents_required:
+    - analyst (or any agent with WebSearch access)
+  prerequisites:
+    - Research topic defined
+    - WebSearch tool available
+  outputs:
+    - Deep research report
+    - Source bibliography
+    - Strategic insights
+    - Actionable recommendations
+
+# ==============================================================================
+# PHASE 1: PLANNING
+# ==============================================================================
+phases:
+  - id: phase-1-planning
+    name: "Phase 1: Planning"
+    description: |
+      Analyze the research query, understand intent, and develop a focused
+      research strategy. Break down complex questions into manageable sub-questions.
+
+    steps:
+      - id: query-analysis
+        name: Query Analysis & Intent Extraction
+        description: |
+          Understand the research question deeply:
+          - What is the underlying intent?
+          - What type of information is needed? (current, historical, comparative)
+          - What is the scope and boundaries?
+          - What are the success criteria?
+        actions:
+          - Analyze research question intent and context
+          - Identify information type requirements
+          - Define scope and boundaries
+          - Establish success criteria
+          - Check if this relates to existing Archon project context
+        outputs:
+          - Research intent analysis
+          - Scope definition
+          - Success criteria
+
+      - id: problem-decomposition
+        name: Problem Decomposition
+        description: |
+          Break down the main research question into 3-7 focused sub-questions
+          that are specific, answerable, and collectively address the main objective.
+
+          Example: "Modern authentication best practices" →
+          - Current authentication standards (OAuth2, OIDC)
+          - JWT token security considerations
+          - Multi-factor authentication approaches
+          - Password policies and alternatives
+          - Session management techniques
+        actions:
+          - Decompose main question into 3-7 sub-questions
+          - Ensure each sub-question is specific and answerable
+          - Verify sub-questions collectively address main objective
+          - Prioritize sub-questions by importance
+        outputs:
+          - List of 3-7 focused sub-questions
+          - Sub-question priorities
+
+      - id: search-strategy
+        name: Search Strategy Development
+        description: |
+          Plan the search approach for comprehensive coverage:
+          - Identify key search terms for each sub-question
+          - Plan search depth and breadth
+          - Define quality criteria for sources
+        actions:
+          - Identify primary search terms (2-5 keywords each)
+          - Plan search iterations and depth
+          - Define source quality criteria
+          - Estimate time and effort
+        outputs:
+          - Search strategy document
+          - Quality criteria checklist
+
+  # ==============================================================================
+  # PHASE 2: EXPLORATION
+  # ==============================================================================
+  - id: phase-2-exploration
+    name: "Phase 2: Exploration"
+    description: |
+      Systematic web search across all sub-questions using WebSearch tool.
+      Iterative search process to ensure comprehensive coverage.
+
+    steps:
+      - id: query-generation
+        name: Query Generation & Optimization
+        description: |
+          For each sub-question, generate optimized search queries.
+          CRITICAL: Keep queries SHORT (2-5 keywords maximum).
+        actions:
+          - Generate 2-4 search queries per sub-question
+          - Keep queries focused and concise (2-5 keywords)
+          - Include technical terms and common variants
+          - Plan query sequence for comprehensive coverage
+        outputs:
+          - Query list for each sub-question
+        examples:
+          good_queries:
+            - "OAuth2 OIDC authentication"
+            - "JWT token security"
+            - "MFA implementation guide"
+            - "passwordless authentication 2024"
+          bad_queries:
+            - "how to implement modern authentication with OAuth2 and OpenID Connect"
+            - "complete guide to JWT token security best practices and common vulnerabilities"
+
+      - id: web-search-execution
+        name: Web Search Execution
+        description: |
+          Execute web searches systematically for each sub-question.
+          Use WebSearch tool for each optimized query.
+        actions:
+          - Execute WebSearch for each query
+          - Collect results with URLs and summaries
+          - Track search coverage for each sub-question
+          - Note any gaps in coverage
+        tool: WebSearch
+        outputs:
+          - Search results per sub-question
+          - Source URLs and summaries
+          - Coverage assessment
+
+      - id: source-validation
+        name: Source Discovery & Validation
+        description: |
+          Review discovered sources and validate quality.
+          Filter out low-quality sources and prioritize credible content.
+        actions:
+          - Review all search results
+          - Validate source credibility (authoritative domains, expert authors)
+          - Check publication dates for currency
+          - Remove duplicates and low-quality sources
+          - Prioritize sources by relevance and authority
+        outputs:
+          - Validated source list
+          - Source quality ratings
+        decision_point:
+          question: "Is coverage sufficient or need additional searches?"
+          options:
+            - value: "sufficient"
+              next: phase-3-analysis
+            - value: "need_more"
+              next: query-generation
+              note: "Refine queries and search additional areas"
+
+  # ==============================================================================
+  # PHASE 3: ANALYSIS
+  # ==============================================================================
+  - id: phase-3-analysis
+    name: "Phase 3: Analysis"
+    description: |
+      Extract insights from sources, identify patterns, and recognize gaps.
+
+    steps:
+      - id: content-review
+        name: Content Review & Key Points Extraction
+        description: |
+          Review content from all validated sources and extract key points.
+          Organize findings by sub-question.
+        actions:
+          - Review content from each source
+          - Extract key points and insights
+          - Organize findings by sub-question
+          - Note source attribution for all points
+          - Identify high-value insights
+        outputs:
+          - Key points organized by sub-question
+          - Source-attributed findings
+          - High-value insight highlights
+
+      - id: pattern-recognition
+        name: Pattern Recognition & Gap Analysis
+        description: |
+          Identify recurring themes, detect contradictions, and recognize
+          knowledge gaps across all sources.
+        actions:
+          - Identify recurring themes and patterns
+          - Detect contradictions and disagreements
+          - Find consensus views and outlier opinions
+          - Recognize knowledge gaps and missing information
+          - Map relationships between concepts
+        outputs:
+          - Pattern analysis
+          - Contradictions and tensions
+          - Knowledge gap inventory
+          - Concept relationship map
+
+      - id: insight-synthesis
+        name: Insight Synthesis
+        description: |
+          Synthesize findings into coherent insights that answer each sub-question.
+        actions:
+          - Synthesize findings for each sub-question
+          - Create coherent narrative from diverse sources
+          - Identify key takeaways and implications
+          - Note areas of uncertainty or debate
+        outputs:
+          - Synthesized insights per sub-question
+          - Key takeaways
+          - Uncertainty areas
+
+  # ==============================================================================
+  # PHASE 4: SYNTHESIS & REPORTING
+  # ==============================================================================
+  - id: phase-4-synthesis
+    name: "Phase 4: Synthesis & Reporting"
+    description: |
+      Combine all findings into comprehensive research report with proper
+      citations and actionable recommendations.
+
+    steps:
+      - id: report-generation
+        name: Report Generation
+        description: |
+          Generate comprehensive research report with structured format.
+        actions:
+          - Create executive summary (1-2 paragraphs)
+          - Write detailed findings section (organized by sub-questions)
+          - Develop strategic insights and implications
+          - Formulate actionable recommendations
+          - Add methodology notes
+          - Include limitations and caveats
+        outputs:
+          - Deep research report (markdown)
+          - Executive summary
+        structure:
+          - Executive Summary
+          - Research Objective
+          - Methodology (WebSearch approach)
+          - Detailed Findings (by sub-question)
+          - Pattern Analysis & Key Insights
+          - Knowledge Gaps & Future Directions
+          - Strategic Recommendations
+          - Sources & Bibliography
+          - Limitations
+
+      - id: archon-integration
+        name: Archon Integration (Optional)
+        description: |
+          If working within an Archon project, save research findings as
+          project document for future reference.
+        actions:
+          - Check if Archon project context exists
+          - If yes, save report as project document (type=note)
+          - Tag with research topic and date
+          - Link to related tasks or PRDs if applicable
+        tool: mcp__archon__manage_document
+        outputs:
+          - Research report saved in Archon (if applicable)
+
+      - id: bibliography-creation
+        name: Bibliography & Citation Verification
+        description: |
+          Create complete bibliography with all sources properly attributed.
+          Ensure every claim is traceable to sources.
+        actions:
+          - Compile complete source list
+          - Verify all citations are accurate
+          - Ensure inline citations for all claims
+          - Add URLs and access dates
+          - Rate source quality and relevance
+        outputs:
+          - Complete bibliography
+          - Source quality ratings
+          - Citation verification log
+
+      - id: quality-review
+        name: Quality Review & Refinement
+        description: |
+          Final quality check and user review opportunity.
+        actions:
+          - Assess report completeness (all sub-questions answered?)
+          - Verify accuracy (claims supported by sources?)
+          - Check relevance (findings address original question?)
+          - Test coherence (narrative flows logically?)
+          - Verify actionability (insights are practical?)
+        decision_point:
+          question: "Is research complete or needs refinement?"
+          options:
+            - value: "complete"
+              next: finalization
+            - value: "need_more_depth"
+              next: phase-2-exploration
+              note: "Additional research on specific areas"
+            - value: "need_better_synthesis"
+              next: phase-4-synthesis
+              note: "Improve integration and recommendations"
+
+  # ==============================================================================
+  # FINALIZATION
+  # ==============================================================================
+  - id: finalization
+    name: Finalization
+    description: Final packaging and delivery of research outputs
+
+    steps:
+      - id: final-deliverables
+        name: Final Deliverables Package
+        description: Prepare final research package
+        actions:
+          - Finalize main research report
+          - Create executive summary (1-page)
+          - Generate bibliography
+          - Add methodology notes
+          - Package all artifacts
+        outputs:
+          - Final research report (Markdown)
+          - Executive summary (1-page)
+          - Complete bibliography with URLs
+          - Methodology documentation
+
+# ==============================================================================
+# WORKFLOW METADATA
+# ==============================================================================
+workflow_patterns:
+  single_agent:
+    description: |
+      Single agent (analyst or PM) conducts entire research process using
+      only WebSearch tool. Simpler than multi-agent orchestration.
+
+  iterative_refinement:
+    description: |
+      Quality review phase can loop back to exploration or synthesis
+      based on gaps or refinement needs.
+
+key_capabilities:
+  - Web-only research (no external MCP dependencies)
+  - Systematic sub-question approach
+  - Quality-driven source validation
+  - Proper citation and attribution
+  - Archon integration (optional)
+  - Iterative refinement
+
+best_practices:
+  query_construction:
+    - Keep queries SHORT (2-5 keywords maximum)
+    - Focus on technical terms and specific concepts
+    - Avoid filler words like "how to", "implement", "guide"
+    - Do multiple focused queries instead of one broad query
+
+  source_evaluation:
+    - Prioritize authoritative sources (official docs, recognized experts)
+    - Check publication dates for currency (prefer recent for trends)
+    - Verify author credentials and expertise
+    - Cross-reference claims across multiple sources
+
+  archon_integration:
+    - Save research reports as project documents (type=note)
+    - Tag with research topic for easy retrieval
+    - Link to related PRDs, tasks, or architecture docs
+    - Build organizational knowledge base over time
+
+estimated_timeline:
+  phase_1_planning: "15-30 minutes"
+  phase_2_exploration: "30-90 minutes"
+  phase_3_analysis: "30-60 minutes"
+  phase_4_synthesis: "30-60 minutes"
+  total_single_iteration: "2-4 hours"
+  typical_iterations: "1-2 iterations"
+
+outputs:
+  primary:
+    - Deep research report (comprehensive)
+    - Executive summary (1-page)
+
+  supporting:
+    - Complete bibliography with URLs
+    - Source quality ratings
+    - Methodology documentation
+    - Archon document (if applicable)
+
+success_criteria:
+  - All sub-questions answered with evidence
+  - Multiple high-quality sources per sub-question (3-5 minimum)
+  - Clear patterns and insights identified
+  - Knowledge gaps explicitly documented
+  - Actionable recommendations provided
+  - All claims properly cited with URLs
+  - Report is coherent and well-structured
+
+notes: |
+  This is a simplified, web-only version of the deep research workflow
+  designed specifically for bmad-core-archon. It uses only the WebSearch
+  tool and does not require external MCP servers or specialized agents.
+
+  Key differences from full deep-research workflow:
+  - No ArXiv or knowledge base search (web-only)
+  - No parallel multi-agent processing (single agent)
+  - No Phase 0 codebase analysis (optional in execution)
+  - Simpler and faster (2-4 hours vs 4-8 hours)
+  - Integrates with Archon for document storage
+
+  When to use this workflow:
+  - Quick research needs (2-4 hours available)
+  - No MCP servers configured
+  - General web-available information sufficient
+  - Working within Archon project context
+  - Need structured, cited research output

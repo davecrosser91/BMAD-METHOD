@@ -34,6 +34,7 @@
 - ✅ **Archon-First Task Management** - Tasks, epics, and stories managed via Archon MCP
 - ✅ **Project-Scoped Documents** - PRDs, architecture, specs stored in Archon per project
 - ✅ **Shared Knowledge Base** - RAG-powered semantic search across your documentation
+- ✅ **Deep Research Workflow** - Comprehensive web-based research using structured 4-phase methodology
 - ✅ **Agent Integration** - All agents use Archon for coordination
 - ✅ **Git for Code** - Source code and tests stay in Git
 - ✅ **Same Workflows** - All BMAD workflows work identically, just with Archon backend
@@ -1796,13 +1797,14 @@ This example shows the complete flow from idea to implementation using bmad-core
 #### **PM Agent Commands**
 
 ```
-*archon-status          # Show project status
-*search-kb "query"      # Search knowledge base
-*create-prd             # Create PRD in Archon
-*create-epic            # Create epic
-*create-story           # Create story
-*list-tasks             # View all tasks
-*list-docs              # View all documents
+*archon-status                # Show project status
+*run-deep-research "topic"    # Execute web-based deep research workflow (2-4 hours)
+*search-kb "query"            # Search knowledge base
+*create-prd                   # Create PRD in Archon
+*create-epic                  # Create epic
+*create-story                 # Create story
+*list-tasks                   # View all tasks
+*list-docs                    # View all documents
 ```
 
 #### **Dev Agent Commands**
@@ -1839,12 +1841,14 @@ This example shows the complete flow from idea to implementation using bmad-core
 #### **Analyst Agent Commands**
 
 ```
-*archon-status          # Analysis status
-*analyze-project        # Conduct project analysis
-*stakeholder-interview  # Document stakeholder interviews
-*search-kb "query"      # Research similar projects
-*create-brief           # Create project brief
-*list-docs              # View analysis documents
+*archon-status                # Analysis status
+*run-deep-research "topic"    # Execute web-based deep research workflow (2-4 hours)
+*brainstorm "topic"           # Facilitate structured brainstorming
+*analyze-project              # Conduct project analysis
+*stakeholder-interview        # Document stakeholder interviews
+*search-kb "query"            # Research similar projects
+*create-brief                 # Create project brief
+*list-docs                    # View analysis documents
 ```
 
 #### **PO Agent Commands**
@@ -1865,6 +1869,51 @@ This example shows the complete flow from idea to implementation using bmad-core
 *sprint-plan            # Plan sprint
 *retrospective          # Run retro
 ```
+
+### Deep Research Workflow
+
+**bmad-core-archon** includes a comprehensive web-based deep research workflow perfect for:
+
+- Product discovery and market research
+- Technical investigation and architecture planning
+- Requirements analysis before PRD creation
+- Decision support with evidence-based insights
+
+**When to use:**
+
+```
+@analyst
+*run-deep-research "modern authentication best practices"
+
+@pm
+*run-deep-research "vector database landscape 2024"
+```
+
+**What you get:**
+
+- Comprehensive research report (10-15 pages)
+- Executive summary (1-2 paragraphs)
+- Complete bibliography with URLs
+- Saved to Archon project for future reference
+
+**How it works:**
+
+1. **Planning** - Decompose research question into 3-7 sub-questions
+2. **Exploration** - Systematic WebSearch across all sub-questions (20-40 sources)
+3. **Analysis** - Extract patterns, identify gaps, synthesize insights
+4. **Synthesis** - Generate comprehensive report with citations and recommendations
+
+**Timeline:** 2-4 hours per research topic
+
+**Integration:**
+
+- Research saved as Archon document (type=note)
+- Tagged with topic and date for easy retrieval
+- Can inform PRDs, architecture, and technical decisions
+
+See: [tasks/run-deep-research-web.md](tasks/run-deep-research-web.md) for complete guide
+
+---
 
 ### Tips & Tricks
 
