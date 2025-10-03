@@ -75,6 +75,68 @@ The bmad-core-archon expansion pack implements a **hybrid architecture** that co
 4. **Shared Knowledge Base** - All projects benefit from accumulated knowledge
 5. **Smart Dependency Checking** - Agents verify prerequisites before major work
 6. **Workflow Consistency** - Same workflows as bmad-core, different backend
+7. **Parallel Execution** - NEW: Orchestrated teams of subagents for maximum throughput
+
+### 1.3 Parallel Development Architecture (NEW)
+
+The bmad-core-archon expansion pack now supports **parallel team orchestration** using Claude Code subagents:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  SM Orchestrator Context                     │
+│                                                              │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │ Dependency Graph Analysis                            │  │
+│  │ • Parse task dependencies                            │  │
+│  │ • Build execution waves                              │  │
+│  │ • Track progress                                     │  │
+│  └──────────────────────────────────────────────────────┘  │
+│                           ↓                                  │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │ Wave 1: Parallel Execution (5 devs simultaneously)   │  │
+│  │ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐    │  │
+│  │ │ Dev #1  │ │ Dev #2  │ │ Dev #3  │ │ Dev #4  │... │  │
+│  │ │ TASK-101│ │ TASK-102│ │ TASK-103│ │ TASK-104│    │  │
+│  │ └─────────┘ └─────────┘ └─────────┘ └─────────┘    │  │
+│  │      ↓           ↓           ↓           ↓          │  │
+│  │ [All update Archon, report to SM]                   │  │
+│  └──────────────────────────────────────────────────────┘  │
+│                           ↓                                  │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │ QA Phase: Parallel Review (3 QA simultaneously)      │  │
+│  │ ┌────────┐ ┌────────┐ ┌────────┐                    │  │
+│  │ │ QA #1  │ │ QA #2  │ │ QA #3  │                    │  │
+│  │ │TASK-101│ │TASK-102│ │TASK-103│                    │  │
+│  │ └────────┘ └────────┘ └────────┘                    │  │
+│  │      ↓          ↓          ↓                         │  │
+│  │ [PASS/FAIL verdicts → Archon]                       │  │
+│  └──────────────────────────────────────────────────────┘  │
+│                           ↓                                  │
+│  [Aggregate results, proceed to Wave 2]                     │
+└─────────────────────────────────────────────────────────────┘
+                           ↕
+              ┌──────────────────────┐
+              │    Archon MCP        │
+              │  (Shared State)      │
+              │ • Task status        │
+              │ • Docs & PRDs        │
+              │ • Progress tracking  │
+              └──────────────────────┘
+```
+
+**Key Benefits:**
+
+- **3-5x Speedup**: Multiple developers work simultaneously on independent tasks
+- **Context Isolation**: Each dev/QA has clean, focused context for their task
+- **SM Oversight**: All results flow back to SM for aggregation and tracking
+- **Dependency Management**: Only unblocked tasks are executed, ensuring correctness
+- **Quality Gates**: All code reviewed by QA before marking done
+
+**Example Speedup:**
+
+- Traditional: 20 tasks × 2 hours = 40 hours sequential
+- Parallel: 4 waves × 2 hours = 8 hours (with 5 devs per wave)
+- **Result: 5x faster delivery**
 
 ---
 
@@ -92,7 +154,8 @@ expansion-packs/bmad-core-archon/
 │   ├── dev.md
 │   ├── pm.md
 │   ├── po.md
-│   └── qa.md
+│   ├── qa.md
+│   └── sm-orchestrator.md     # NEW: Parallel team orchestration
 │
 ├── tasks/                     # Executable workflow tasks
 │   ├── archon-init-project.md
@@ -101,13 +164,15 @@ expansion-packs/bmad-core-archon/
 │   ├── archon-create-story.md
 │   ├── archon-develop-task.md
 │   ├── archon-create-architecture.md
+│   ├── analyze-task-dependencies.md    # NEW: Build dependency graph
+│   ├── execute-parallel-sprint.md      # NEW: Parallel execution
 │   ├── create-doc.md
 │   ├── execute-checklist.md
 │   ├── advanced-elicitation.md
 │   ├── apply-qa-fixes.md
 │   ├── brownfield-*.md        # (multiple brownfield tasks)
 │   ├── create-*.md            # (various creation tasks)
-│   └── ... (21 total from core + 8 Archon-specific)
+│   └── ... (21 total from core + 10 Archon-specific)
 │
 ├── templates/                 # Document structure templates
 │   ├── prd-tmpl.yaml
@@ -120,7 +185,11 @@ expansion-packs/bmad-core-archon/
 │   └── ... (13 templates total)
 │
 ├── workflows/                 # Orchestration sequences
-│   ├── greenfield-fullstack.yaml
+│   ├── greenfield-planning.md          # NEW: Planning phase
+│   ├── greenfield-development.md       # NEW: Parallel dev phase
+│   ├── brownfield-planning.md          # NEW: Brownfield planning
+│   ├── brownfield-development.md       # NEW: Brownfield parallel dev
+│   ├── greenfield-fullstack.yaml       # Legacy YAML workflows
 │   ├── greenfield-service.yaml
 │   ├── greenfield-ui.yaml
 │   ├── brownfield-fullstack.yaml
@@ -430,6 +499,74 @@ Before creating PRD:
 #### 10. **BMad Orchestrator**
 
 **Purpose:** Workflow coordination, agent handoffs, progress tracking
+
+#### 11. **SM Orchestrator - Team Orchestrator (Bob 🎯)** ⭐ NEW
+
+**Purpose:** Parallel team orchestration, dependency management, coordinating multiple dev/QA subagents
+
+**Core Workflow:**
+1. Analyze task dependencies and build execution graph
+2. Organize tasks into parallel execution waves
+3. Spawn N developer subagents for each wave
+4. Spawn N QA subagents for review phase
+5. Aggregate results in SM context
+6. Proceed to next wave when current wave completes
+
+**Key Commands:**
+- `*analyze-dependencies` - Parse dependencies and create execution plan
+- `*execute-sprint` - Run full automated sprint (all waves)
+- `*start-wave N` - Execute specific wave manually
+- `*configure-capacity` - Set max parallel devs/QA (default: 3 devs, 2 QA)
+- `*manual-mode` - Manual task assignment mode
+- `*show-progress` - Display sprint progress summary
+
+**Parallel Execution Features:**
+- **Dependency Graph**: Automatically parse `Depends on: #TASK-ID` markers
+- **Wave Execution**: Groups tasks into waves based on dependencies
+- **Capacity Management**: Respects configurable dev/QA limits
+- **Context Isolation**: Each dev/QA works in separate context
+- **SM Aggregation**: All results flow back to SM's main context
+- **Quality Gates**: No task marked "done" without QA approval
+
+**Example Execution:**
+```
+*analyze-dependencies
+→ Builds graph, shows execution plan with 4 waves
+
+*configure-capacity
+→ Set 5 devs, 3 QA reviewers
+
+*execute-sprint
+→ Wave 1: 5 devs work in parallel on independent tasks
+→ Wave 1 QA: 3 QA reviewers test in parallel
+→ Wave 2: 8 devs (batched: 5+3) work on tasks that depended on Wave 1
+→ Wave 2 QA: 3 QA reviewers (batched: 3+3+2)
+→ ... continues through Wave 4
+→ Final sprint report with metrics
+```
+
+**Brownfield Support:**
+- Enhanced QA for regression testing
+- Backward compatibility verification
+- Risk-level tracking (🟢 Low, 🟡 Medium, 🔴 High)
+- Feature flag integration
+- Phased deployment support
+
+**Archon Integration:**
+- Reads: All project tasks with dependencies
+- Updates: Task status throughout waves (todo → doing → review → done)
+- Tracks: Dev cycles, QA cycles, time metrics
+- Reports: Comprehensive sprint statistics
+
+**Performance:**
+- **Typical Speedup**: 3-5x faster than sequential
+- **Example**: 20 tasks × 2hr = 40hr sequential → 4 waves × 2hr = 8hr parallel
+
+**See Also:**
+- [workflows/greenfield-development.md](workflows/greenfield-development.md) - Detailed parallel workflow
+- [workflows/brownfield-development.md](workflows/brownfield-development.md) - Brownfield parallel workflow
+- [tasks/analyze-task-dependencies.md](tasks/analyze-task-dependencies.md) - Dependency analysis
+- [tasks/execute-parallel-sprint.md](tasks/execute-parallel-sprint.md) - Sprint execution
 
 ### 3.4 The Archon-First Rule
 
