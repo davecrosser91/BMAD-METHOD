@@ -198,9 +198,37 @@ This workflow handles the **planning and requirements** phase of a greenfield pr
 - ✅ Architecture document in Archon
 - ✅ All tasks updated with dependency markers
 - ✅ Tasks categorized into parallel waves
-- ✅ Clear execution plan for SM orchestrator
+- ✅ Clear execution plan ready
 
-**Handoff**: Tell user to switch to SM Orchestrator for development phase
+**Handoff**: Tell user to switch to Scrum Master for final refinement
+
+---
+
+### 4. Story Refinement (Scrum Master)
+
+**Agent**: `@sm` or activate [sm.md](../agents/sm.md)
+
+**Objective**: Final review and refinement of all user stories
+
+**Activities**:
+
+1. Review all stories: `mcp__archon__find_tasks(project_id)`
+2. Verify each story has:
+   - ✅ Clear title
+   - ✅ Detailed description
+   - ✅ Acceptance criteria
+   - ✅ Link to epic (feature field)
+   - ✅ Dependencies marked (if any)
+3. Refine any unclear stories
+4. Add missing details
+5. Create project overview for user
+
+**Deliverables**:
+
+- ✅ All stories refined and ready for development
+- ✅ Project overview displayed to user
+
+**Handoff**: Tell user to review and choose execution mode
 
 ---
 
@@ -211,26 +239,59 @@ This workflow handles the **planning and requirements** phase of a greenfield pr
 - Archon project with complete context
 - PRD documenting WHAT to build
 - Architecture documenting HOW to build
-- User stories with acceptance criteria
+- Epics (3-7 high-level features)
+- User stories (20-50) with acceptance criteria
 - Dependency graph for parallel execution
-- Tasks organized into execution waves
-
-**Ready for**: [greenfield-development.md](greenfield-development.md)
+- All stories refined by Scrum Master
 
 **Estimated Timeline**:
 
 - Analyst: 1-2 hours
 - PM: 2-4 hours
 - Architect: 2-3 hours
-- **Total Planning**: 5-9 hours
+- SM Refinement: 1 hour
+- **Total Planning**: 6-10 hours
 
-**Next Steps**:
+---
+
+## 🛑 USER REVIEW CHECKPOINT
+
+**Before development starts, YOU review everything:**
+
+### Step 1: Activate Scrum Master for Overview
 
 ```
-User activates: @sm-orchestrator
-
-SM analyzes dependencies, creates execution plan, spawns developer teams
+User: "Please act as the Scrum Master from .bmad-core-archon/agents/sm.md"
+SM: *archon-status
 ```
+
+### Step 2: Review Artifacts
+
+- Review PRD and Architecture
+- Review Epics and Stories
+- Check dependencies are correct
+- Verify acceptance criteria are clear
+
+### Step 3: Request Changes (if needed)
+
+```
+User: "Refine story #TASK-105 - add more detail"
+User: "Add acceptance criteria to #TASK-201"
+```
+
+### Step 4: Approve and Choose Execution Mode
+
+Once satisfied, proceed to development kickoff:
+
+**👉 [Continue to Development Kickoff](development-kickoff.md)**
+
+You will choose one of 3 execution modes:
+
+- **Manual Mode**: You coordinate each step (best for learning)
+- **Simple Workflow**: Automated dev/QA handoffs (moderate speed)
+- **Team Lead Workflow**: Parallel teams (3-5x faster)
+
+See [development-kickoff.md](development-kickoff.md) for detailed comparison and guidance.
 
 ---
 
@@ -258,6 +319,8 @@ SM analyzes dependencies, creates execution plan, spawns developer teams
 
 **See Also**:
 
-- [greenfield-development.md](greenfield-development.md) - Development phase
+- [development-kickoff.md](development-kickoff.md) - Choose execution mode (NEXT STEP)
+- [greenfield-development.md](greenfield-development.md) - Team Lead parallel workflow
 - [brownfield-planning.md](brownfield-planning.md) - Planning for existing projects
-- [../agents/sm-orchestrator.md](../agents/sm-orchestrator.md) - Team orchestration
+- [../agents/dev-team-lead.md](../agents/dev-team-lead.md) - Dev Team Lead agent
+- [../agents/sm.md](../agents/sm.md) - Scrum Master agent

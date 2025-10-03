@@ -14,7 +14,7 @@ The bmad-core-archon expansion pack now supports **parallel team orchestration**
 
 ```
 Traditional BMAD:              Parallel BMAD:
-Dev → Task 1 (2hr)            SM Orchestrator analyzes dependencies
+Dev → Task 1 (2hr)            Dev Team Lead analyzes dependencies
 Dev → Task 2 (2hr)            Wave 1: 5 devs work in parallel (2hr)
 Dev → Task 3 (2hr)            Wave 1: 3 QA review in parallel (1hr)
 ...                           Wave 2: 8 devs work in parallel (2hr)
@@ -50,14 +50,14 @@ Depends on: #101
 
 ---
 
-### Phase 2: Development (Parallel - SM Orchestrator)
+### Phase 2: Development (Parallel - Dev Team Lead)
 
 **Workflow:** [workflows/greenfield-development.md](workflows/greenfield-development.md)
 
-**Activate SM Orchestrator:**
+**Activate Dev Team Lead:**
 
 ```
-User: "Please act as the SM Orchestrator from .bmad-core-archon/agents/sm-orchestrator.md"
+User: "Please act as the Dev Team Lead from .bmad-core-archon/agents/dev-team-lead.md"
 ```
 
 **Commands:**
@@ -147,7 +147,7 @@ Integrate login form component with authentication API.
 - Errors display clearly
 ```
 
-### SM Orchestrator Parses Dependencies
+### Dev Team Lead Parses Dependencies
 
 ```python
 # SM extracts: task depends on #TASK-201, #TASK-205
@@ -173,7 +173,7 @@ Integrate login form component with authentication API.
    - Output: Archon project with dependency-tracked tasks
 
 2. **Development**: [greenfield-development.md](workflows/greenfield-development.md)
-   - SM Orchestrator coordinates parallel teams
+   - Dev Team Lead coordinates parallel teams
    - Output: Tested, production-ready features
 
 ### Brownfield Projects (Existing Codebase)
@@ -185,7 +185,7 @@ Integrate login form component with authentication API.
    - Output: Tasks with dependencies AND constraints
 
 2. **Development**: [brownfield-development.md](workflows/brownfield-development.md)
-   - SM Orchestrator with enhanced safety checks
+   - Dev Team Lead with enhanced safety checks
    - QA includes regression testing
    - Feature flags for safe rollout
    - Output: Enhanced system, backward compatible
@@ -208,7 +208,7 @@ Integrate login form component with authentication API.
 - SM creates stories one by one
 - User coordinates handoffs to dev/QA
 
-### SM Orchestrator (Bob 🎯)
+### Dev Team Lead (Bob 🎯)
 
 **Use for:**
 
@@ -219,7 +219,7 @@ Integrate login form component with authentication API.
 
 **Workflow:**
 
-- User activates SM Orchestrator
+- User activates Dev Team Lead
 - SM analyzes dependencies, creates plan
 - SM spawns N developers (parallel)
 - SM spawns N QA reviewers (parallel)
@@ -296,7 +296,7 @@ cd .bmad-core-archon
 ./setup-bmad-subagents.sh
 
 # Creates .claude_code/agents/ with 9 subagents:
-# - analyst, pm, architect, dev, qa, po, sm, sm-orchestrator, ux-expert
+# - analyst, pm, architect, dev, qa, po, sm, dev-team-lead, ux-expert
 ```
 
 ### Capacity Configuration
@@ -339,7 +339,7 @@ Depends on: #TASK-101, #TASK-102
 Depends on the authentication stuff being done
 ```
 
-SM Orchestrator parses exact task IDs only.
+Dev Team Lead parses exact task IDs only.
 
 ### 2. Task Granularity
 
@@ -379,7 +379,7 @@ Each dev/QA subagent:
 - ✅ Better code quality
 - ✅ Easier debugging
 
-SM Orchestrator:
+Dev Team Lead:
 
 - ✅ Sees all progress in one place
 - ✅ Aggregates all results
@@ -461,7 +461,7 @@ Remaining tasks: #TASK-201, #TASK-202
 4. **Try It Out:**
    - Start a small project (5-10 tasks)
    - Use Architect to mark dependencies
-   - Activate SM Orchestrator
+   - Activate Dev Team Lead
    - Run `*execute-sprint`
    - Observe the speedup!
 
@@ -471,7 +471,7 @@ Remaining tasks: #TASK-201, #TASK-202
 
 - **README_DETAILED.md** - Complete technical deep dive
 - **MULTI-AGENT-WORKFLOWS.md** - Subagent patterns and party mode
-- **agents/sm-orchestrator.md** - Full SM Orchestrator definition
+- **agents/dev-team-lead.md** - Full Dev Team Lead definition
 - **tasks/analyze-task-dependencies.md** - Dependency analysis details
 - **tasks/execute-parallel-sprint.md** - Sprint execution details
 

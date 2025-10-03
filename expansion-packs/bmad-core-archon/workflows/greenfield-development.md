@@ -1,19 +1,25 @@
 <!-- Powered by BMAD™ Core with Archon -->
 
-# greenfield-development
+# greenfield-development (Team Lead Mode)
 
-**Phase**: Development & QA
-**Team**: SM Orchestrator → N × Developers → N × QA Reviewers
-**Input**: Completed planning from [greenfield-planning.md](greenfield-planning.md)
+**Phase**: Development & QA (Option C: Parallel Teams)
+**Team**: Dev Team Lead → N × Developers → N × QA Reviewers
+**Input**: User-approved planning from [greenfield-planning.md](greenfield-planning.md) + [development-kickoff.md](development-kickoff.md)
 **Output**: Tested, production-ready features
 
 ---
 
 ## Overview
 
-This workflow handles the **parallel development and QA** phase. The SM Orchestrator spawns multiple developer and QA subagents to work on independent tasks simultaneously.
+This workflow handles **parallel development with Dev Team Lead orchestration** (Option C from development-kickoff).
+
+**This is the FASTEST execution mode** (3-5x speedup) - use when you have 20+ stories with well-defined dependencies.
+
+The Dev Team Lead spawns multiple developer and QA subagents to work on independent tasks simultaneously.
 
 **Key Innovation**: Tasks are executed in **parallel waves** based on dependency graph, with each dev/QA working in isolated context.
+
+> **Note**: If you want Manual Mode (Option A) or Simple Workflow (Option B), see [development-kickoff.md](development-kickoff.md)
 
 ---
 

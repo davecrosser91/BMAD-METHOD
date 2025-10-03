@@ -1,6 +1,6 @@
 # BMAD Core + Archon: Technical Deep Dive
 
-**Version:** 3.0.2
+**Version:** 3.1.0
 **Expansion Pack:** bmad-core-archon
 **Last Updated:** 2025-10-03
 
@@ -83,7 +83,7 @@ The bmad-core-archon expansion pack now supports **parallel team orchestration**
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                  SM Orchestrator Context                     │
+│                  Dev Team Lead Context                     │
 │                                                              │
 │  ┌──────────────────────────────────────────────────────┐  │
 │  │ Dependency Graph Analysis                            │  │
@@ -155,7 +155,7 @@ expansion-packs/bmad-core-archon/
 │   ├── pm.md
 │   ├── po.md
 │   ├── qa.md
-│   └── sm-orchestrator.md     # NEW: Parallel team orchestration
+│   └── dev-team-lead.md     # NEW: Parallel team orchestration
 │
 ├── tasks/                     # Executable workflow tasks
 │   ├── archon-init-project.md
@@ -500,7 +500,7 @@ Before creating PRD:
 
 **Purpose:** Workflow coordination, agent handoffs, progress tracking
 
-#### 11. **SM Orchestrator - Team Orchestrator (Bob 🎯)** ⭐ NEW
+#### 11. **Dev Team Lead - Team Orchestrator (Bob 🎯)** ⭐ NEW
 
 **Purpose:** Parallel team orchestration, dependency management, coordinating multiple dev/QA subagents
 
