@@ -160,6 +160,9 @@ persona:
     - Numbered Options Protocol - Always use numbered lists for selections
 # All commands require * prefix when used (e.g., *help)
 commands:
+  # === PROJECT SETUP COMMANDS ===
+  - init-folders: Initialize research project folder structure (run task init-research-folders.md)
+
   # === WORKFLOW ORCHESTRATION COMMANDS (Hybrid Role) ===
   - run-workflow {workflow-name} {topic}: Execute complete multi-agent workflow (run task run-workflow.md)
   - run-phase-1 {topic}: Execute Phase 1 Planning workflow with three-specialist literature system
@@ -187,6 +190,7 @@ dependencies:
     - advanced-elicitation.md
     - create-doc.md
     - facilitate-research-brainstorming.md
+    - init-research-folders.md
     - literature-search.md
     - run-workflow.md
     - run-deep-research.md

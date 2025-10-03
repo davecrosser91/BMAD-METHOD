@@ -1868,6 +1868,104 @@ If you want automated literature search via the Research Assistant:
 
 **📖 Full setup guide:** [SETUP-CHECKLIST.md](SETUP-CHECKLIST.md)
 
+---
+
+## 📁 Research Project Folder Structure
+
+The AI Research pack expects a specific folder structure for research projects. Initialize it automatically:
+
+```bash
+@research-lead
+*init-folders
+```
+
+This creates the complete folder structure and archives any existing code to `old_code/`.
+
+### Standard Folder Layout
+
+```
+research-project/
+├── codebase/              # ML implementation (Python, notebooks, configs)
+│   ├── models/            # Model implementations
+│   ├── datasets/          # Dataset loaders and preprocessing
+│   ├── training/          # Training scripts and loops
+│   ├── evaluation/        # Evaluation metrics and scripts
+│   ├── utils/             # Utility functions
+│   ├── configs/           # Experiment configurations
+│   └── notebooks/         # Jupyter notebooks for exploration
+│
+├── data/                  # Datasets
+│   ├── raw/               # Raw, unprocessed data (immutable)
+│   ├── processed/         # Preprocessed, ready-to-use data
+│   └── external/          # External datasets (downloaded)
+│
+├── results/               # Experiment outputs
+│   ├── experiments/       # Per-experiment results (exp001/, exp002/, etc.)
+│   ├── figures/           # Plots, graphs, visualizations
+│   ├── tables/            # Result tables (CSV, LaTeX)
+│   └── analysis/          # Statistical analysis outputs
+│
+├── research-paper/        # Paper drafts and submission materials
+│   ├── drafts/            # Paper versions (v1, v2, etc.)
+│   ├── figures/           # Publication-ready figures
+│   ├── tables/            # Publication-ready tables
+│   ├── bibliography/      # BibTeX files
+│   ├── reviews/           # Reviewer comments and responses
+│   └── submission/        # Final submission package
+│
+├── old_code/              # Archive for legacy/deprecated code
+│   └── YYYY-MM-DD_HH-MM-SS/  # Timestamped archives
+│
+└── scripts/               # Utility scripts
+    ├── setup/             # Environment setup
+    ├── preprocessing/     # Data preprocessing
+    └── analysis/          # Analysis automation
+```
+
+### Folder Access Matrix
+
+| Folder              | Primary Agent    | Write Access         | Read Access |
+| ------------------- | ---------------- | -------------------- | ----------- |
+| **codebase/**       | @ml-engineer     | ML Engineer          | All agents  |
+| **data/**           | @ml-engineer     | ML Engineer          | All agents  |
+| **results/**        | @data-analyst    | Data Analyst, ML Eng | All agents  |
+| **research-paper/** | @research-writer | Research Writer      | All agents  |
+| **old_code/**       | (archive)        | None (read-only)     | All agents  |
+| **scripts/**        | Various          | As needed            | All agents  |
+
+### When to Initialize
+
+- **Starting a new research project** - Create clean folder structure
+- **Migrating existing research** - Organize and archive old code
+- **Onboarding to BMAD AI Research** - Set up workspace properly
+
+### What Gets Created
+
+- ✅ Complete folder hierarchy with subdirectories
+- ✅ README.md in each major folder with guidelines
+- ✅ .gitignore configured for research projects
+- ✅ Experiment template (exp001) ready to use
+- ✅ Old code archived with timestamp (if existing code found)
+
+### Example Usage
+
+```bash
+# Initialize folder structure
+@research-lead
+*init-folders
+
+# Check if in correct directory: "Is this the correct project root?" → yes
+# Archive existing code: "What would you like to do?" → 1 (archive)
+
+# ✓ Folder structure initialized
+# ✓ Existing code archived to old_code/2024-10-03_14-30-00/
+# ✓ Ready to start research!
+```
+
+**📖 Complete guide:** [tasks/init-research-folders.md](tasks/init-research-folders.md)
+
+---
+
 ## Usage Examples
 
 ### Starting a New Research Project (Three-Specialist System)
