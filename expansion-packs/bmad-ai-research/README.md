@@ -21,6 +21,33 @@ npx bmad-method install
 # Select "bmad-ai-research"
 ```
 
+**MCP Server Setup (Required for Full Features):**
+
+This expansion pack integrates with two MCP servers for enhanced capabilities:
+
+1. **Archon MCP** - Project management, knowledge base, task tracking (see [Archon integration docs](docs/ARCHON-MCP-INTEGRATION.md))
+2. **wandb MCP** - Experiment tracking and results analysis
+
+```bash
+# Install wandb MCP server
+npm install -g @wandb/mcp-server
+# or
+pip install wandb-mcp
+
+# Configure in your Claude desktop config
+# Add to claude_desktop_config.json:
+{
+  "mcpServers": {
+    "wandb": {
+      "command": "wandb-mcp",
+      "env": {
+        "WANDB_API_KEY": "your_api_key_from_wandb.ai/authorize"
+      }
+    }
+  }
+}
+```
+
 Then activate any research agent:
 
 ```bash
@@ -289,18 +316,21 @@ experiments        creates figs           incorporates
 - Code implementation in **codebase/** folder
 - Receives tasks from PM/Architect (BMAD core workflows)
 - Implements experiments, baselines, novel methods
+- **Weights & Biases (wandb) integration:** Tracks all experiments, logs metrics, saves artifacts
 - Runs experiments, outputs to results/
 - **Primary workspace:** codebase/
-- **Commands:** `*implement-experiment`, `*implement-baseline`, `*run-ablation`
+- **Commands:** `*implement-experiment`, `*implement-baseline`, `*setup-wandb`, `*track-experiment`, `*export-wandb-results`
 
 **📊 Data Analyst (Dr. Maya Patel)** - @data-analyst
 
 - Dataset preparation in **codebase/data/**
+- **wandb MCP integration:** Fetches experiment data directly from wandb for analysis
 - Statistical analysis and visualization
 - Creates publication-quality figures in **results/**
 - Significance testing and error analysis
 - **Workspaces:** codebase/data/, results/
-- **Commands:** `*prepare-dataset`, `*analyze-results`, `*create-figures`, `*test-significance`
+- **MCP Tools:** mcp**wandb**query_wandb_tool, mcp**wandb**create_wandb_report_tool
+- **Commands:** `*prepare-dataset`, `*analyze-results`, `*fetch-wandb-data`, `*compare-wandb-runs`, `*create-wandb-figures`
 
 #### Publication Team
 

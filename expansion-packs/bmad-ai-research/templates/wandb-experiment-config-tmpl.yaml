@@ -1,0 +1,197 @@
+# Weights & Biases Experiment Configuration Template
+# Use this template to configure wandb tracking for each experiment
+
+experiment:
+  # Experiment identification
+  id: "exp-001" # From experiment spec
+  name: "baseline-transformer-imagenet" # Descriptive name
+  description: "Baseline transformer model on ImageNet classification"
+
+  # wandb project settings
+  wandb:
+    project: "phd-research" # Your wandb project name
+    entity: "your-username" # Your wandb username or team
+    group: "baseline-experiments" # Group related experiments
+    job_type: "train" # train, eval, sweep, etc.
+
+    # Tags for organization
+    tags:
+      - "exp-001"
+      - "baseline"
+      - "transformer"
+      - "imagenet"
+      - "2025-q1"
+
+    # Notes
+    notes: |
+      Baseline experiment for transformer architecture.
+      Testing standard self-attention on ImageNet.
+      Expected accuracy: ~85%
+
+# Hyperparameters (logged to wandb.config)
+hyperparameters:
+  # Model architecture
+  model:
+    name: "transformer"
+    num_layers: 12
+    hidden_size: 768
+    num_heads: 12
+    mlp_ratio: 4
+    dropout: 0.1
+    attention_dropout: 0.1
+
+  # Training
+  training:
+    epochs: 100
+    batch_size: 128
+    learning_rate: 0.0003
+    optimizer: "adamw"
+    weight_decay: 0.01
+    lr_scheduler: "cosine"
+    warmup_epochs: 5
+
+  # Data
+  data:
+    dataset: "imagenet"
+    image_size: 224
+    augmentation: "randaugment"
+    num_workers: 8
+
+  # Reproducibility
+  seed: 42
+  deterministic: true
+
+# Metrics to log
+metrics:
+  # Training metrics (logged every N steps)
+  training:
+    - name: "train/loss"
+      log_frequency: 100 # Log every 100 steps
+    - name: "train/accuracy"
+      log_frequency: 100
+    - name: "train/learning_rate"
+      log_frequency: 100
+
+  # Validation metrics (logged every epoch)
+  validation:
+    - name: "val/loss"
+      log_frequency: "epoch"
+    - name: "val/accuracy"
+      log_frequency: "epoch"
+    - name: "val/top5_accuracy"
+      log_frequency: "epoch"
+
+  # System metrics
+  system:
+    - name: "system/gpu_utilization"
+      log_frequency: 100
+    - name: "system/gpu_memory_gb"
+      log_frequency: 100
+    - name: "system/cpu_percent"
+      log_frequency: 100
+
+# Artifacts to save
+artifacts:
+  # Model checkpoints
+  model_checkpoints:
+    - type: "model"
+      name: "best_model"
+      save_condition: "val/accuracy improves"
+      files:
+        - "model.pth"
+        - "optimizer.pth"
+
+    - type: "model"
+      name: "final_model"
+      save_condition: "training complete"
+      files:
+        - "model.pth"
+
+  # Predictions
+  predictions:
+    - type: "results"
+      name: "test_predictions"
+      save_condition: "evaluation complete"
+      files:
+        - "predictions.csv"
+        - "confidence_scores.npy"
+
+  # Visualizations
+  visualizations:
+    - type: "results"
+      name: "training_curves"
+      files:
+        - "loss_curve.png"
+        - "accuracy_curve.png"
+
+# Experiment tracking settings
+tracking:
+  # Log frequency
+  log_interval: 100 # Log every N training steps
+  eval_interval: 1 # Evaluate every N epochs
+  save_interval: 5 # Save checkpoint every N epochs
+
+  # What to track
+  track_gradients: false # Can be expensive
+  track_parameters: false # Log param histograms
+  log_code: true # Save code snapshot
+  log_git: true # Log git commit hash
+  log_system_metrics: true # GPU, CPU, memory
+
+# Sweep configuration (optional)
+sweep:
+  enabled: false
+  method: "bayes" # random, grid, bayes
+  metric:
+    name: "val/accuracy"
+    goal: "maximize"
+
+  parameters:
+    learning_rate:
+      distribution: "log_uniform_values"
+      min: 0.00001
+      max: 0.01
+
+    batch_size:
+      values: [64, 128, 256]
+
+    dropout:
+      distribution: "uniform"
+      min: 0.1
+      max: 0.5
+
+# Results export settings
+export:
+  # Export final results to results/ folder
+  enabled: true
+  output_dir: "results/exp-001"
+
+  # What to export
+  include:
+    - run_summary
+    - metrics_history
+    - artifacts
+    - system_metrics
+    - config
+
+  # Format
+  formats:
+    - json
+    - csv
+
+# Integration with experiment spec
+experiment_spec:
+  file: "docs/experiments/exp-001-spec.md"
+  hypothesis: "Standard transformer achieves 85% accuracy on ImageNet"
+  baseline: "ResNet-50"
+  expected_improvement: "±2%"
+  success_criteria: "Accuracy >= 83%"
+
+# Contact and metadata
+metadata:
+  researcher: "Your Name"
+  institution: "Your University"
+  supervisor: "Prof. Name"
+  funding: "Grant XYZ-123"
+  start_date: "2025-01-15"
+  expected_duration_days: 3
