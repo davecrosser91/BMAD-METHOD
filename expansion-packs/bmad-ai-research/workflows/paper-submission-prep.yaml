@@ -1,0 +1,360 @@
+# <!-- Powered by BMAD™ Core -->
+workflow:
+  id: paper-submission-prep
+  name: Paper Submission Preparation & Reformatting
+  description: >-
+    Reformat completed paper for specific journal/conference submission.
+    Handle different LaTeX templates, citation styles, page limits, figure requirements,
+    anonymization, and supplementary materials. Run this workflow for each submission venue.
+  type: publication-phase
+  repeatable: true
+  trigger: manual
+  trigger_when: paper_ready_for_submission
+
+  sequence:
+    # STEP 1: Analyze Target Venue Requirements
+    - agent: research-writer
+      name: Dr. Gatsby Sarihuela
+      action: analyze_venue_requirements
+      command: "*analyze-venue"
+      input: venue_name (e.g., "NeurIPS 2025", "ICML 2025", "JMLR", "IEEE TPAMI")
+      creates: docs/submission/venue-requirements.md
+      notes: |
+        Research Writer analyzes submission guidelines:
+        - *analyze-venue "NeurIPS 2025"
+        - Fetch guidelines from venue website or knowledge base
+        - Parse requirements:
+          * LaTeX template/document class
+          * Page limit (e.g., 8 pages + unlimited appendix)
+          * Citation style (e.g., natbib, biblatex)
+          * Anonymization required? (double-blind)
+          * Figure/table requirements
+          * Supplementary material policies
+          * File format requirements (PDF, source files)
+          * Submission deadlines
+
+        Creates structured requirements document for reference.
+
+    # STEP 2: Create Submission Branch
+    - agent: research-writer
+      action: create_submission_branch
+      command: "git checkout -b submission/{venue-name}"
+      requires: venue-requirements.md
+      notes: |
+        Create dedicated git branch for submission:
+        - Keep main branch with current format
+        - Submission branch for venue-specific formatting
+        - Allows maintaining multiple submissions simultaneously
+
+        Example: git checkout -b submission/neurips-2025
+
+    # STEP 3: Backup Current Paper
+    - agent: research-writer
+      action: backup_current_version
+      command: "*backup-paper"
+      creates: research-paper/backups/pre-{venue}-{date}.tar.gz
+      notes: |
+        Create backup before major reformatting:
+        - Compress current research-paper/ folder
+        - Tag with venue name and date
+        - Store in backups/ folder
+        - Easy rollback if needed
+
+    # STEP 4: Switch LaTeX Template
+    - agent: research-writer
+      action: reformat_latex_template
+      command: "*reformat-template"
+      input: venue_template (e.g., "neurips_2025", "icml2025", "iclr2025")
+      modifies: research-paper/main.tex
+      notes: |
+        Replace LaTeX document class and packages:
+        - Download venue template if needed
+        - Update \documentclass{}
+        - Adjust package imports
+        - Update margins, fonts, spacing
+        - Test compilation
+
+        Common templates:
+        - NeurIPS: \documentclass{article} with neurips_2025.sty
+        - ICML: \documentclass{article} with icml2025.sty
+        - ICLR: \documentclass{article} with iclr2025.sty
+        - IEEE: \documentclass[conference]{IEEEtran}
+        - ACM: \documentclass[sigconf]{acmart}
+        - JMLR: \documentclass{jmlr}
+        - Springer: \documentclass{llncs}
+
+    # STEP 5: Adjust Content for Page Limit
+    - agent: research-writer
+      action: trim_to_page_limit
+      command: "*trim-to-limit"
+      input: page_limit (e.g., "8 pages")
+      requires: venue-requirements.md
+      modifies: research-paper/sections/*.tex
+      notes: |
+        Adjust content to meet page constraints:
+        - Compile current version, check page count
+        - If over limit:
+          * Move detailed methods to appendix
+          * Move extra results to appendix
+          * Move detailed related work to appendix
+          * Condense verbose sections
+          * Reduce figure sizes slightly
+          * Use more compact citations if allowed
+        - If under limit:
+          * Can expand key sections
+          * Add more experimental details
+
+        Strategy:
+        - Main paper: Core contribution, key results
+        - Appendix: Supporting details, extra experiments
+
+        Creates appendix.tex if needed.
+
+    # STEP 6: Reformat Figures and Tables
+    - agent: data-analyst
+      name: Dr. Maya Patel
+      action: reformat_figures_for_venue
+      command: "*reformat-figures"
+      input: venue_requirements.md
+      modifies: research-paper/figures/
+      notes: |
+        Adjust figures and tables for venue template:
+        - Resize figures to fit column width
+        - Check figure quality (300 DPI minimum)
+        - Adjust font sizes in plots (match paper font size)
+        - Reformat tables to fit page width
+        - Convert to required format (PDF, PNG, EPS)
+        - Update \includegraphics{} width parameters
+
+        Common adjustments:
+        - Single column: \linewidth or \columnwidth
+        - Double column: 0.48\textwidth for side-by-side
+        - Full width: \textwidth (for double-column papers)
+
+    # STEP 7: Apply Citation Style
+    - agent: research-writer
+      action: convert_citation_style
+      command: "*convert-citations"
+      input: citation_style (e.g., "natbib", "biblatex", "numeric", "author-year")
+      modifies: research-paper/main.tex, research-paper/references.bib
+      notes: |
+        Switch bibliography style:
+        - Update \bibliographystyle{} command
+        - Adjust \usepackage{natbib} or \usepackage{biblatex}
+        - Convert \cite{} commands if needed
+        - Verify all citations compile correctly
+        - Check in-text citation format matches requirements
+
+        Common styles:
+        - NeurIPS/ICML/ICLR: natbib with \citep{} and \citet{}
+        - IEEE: IEEEtran bibliography style (numeric)
+        - ACM: ACM-Reference-Format
+        - Springer: splncs04 (numeric)
+
+    # STEP 8: Anonymize Paper (if required)
+    - agent: research-writer
+      action: anonymize_for_review
+      command: "*anonymize"
+      input: anonymization_required (boolean from venue-requirements)
+      modifies: research-paper/sections/*.tex
+      creates: research-paper/sections/author_info_BACKUP.tex
+      notes: |
+        For double-blind review, remove identifying information:
+        - Comment out \author{} and \affiliation{}
+        - Replace with "Anonymous Authors" and "Anonymous Institution"
+        - Remove acknowledgments mentioning grants/institutions
+        - Anonymize self-citations:
+          * "Our previous work [X]" → "Prior work [X]"
+          * "As shown in [Author et al.]" → "As shown in [X]"
+        - Remove GitHub links or make anonymous
+        - Backup original author info for de-anonymization later
+
+        Create anonymized version while preserving original.
+
+    # STEP 9: Prepare Supplementary Materials
+    - agent: reproducibility-engineer
+      name: Sam Rodriguez
+      action: create_supplementary_package
+      command: "*prepare-supplementary"
+      input: venue_requirements.md
+      creates: research-paper/supplementary/
+      notes: |
+        Organize supplementary materials:
+        - Appendix PDF (if separate from main paper)
+        - Code release:
+          * Clean codebase/ folder
+          * Remove debug code, commented code
+          * Add README with setup instructions
+          * Create requirements.txt or environment.yml
+          * Add usage examples
+        - Dataset information (or link to public dataset)
+        - Additional experimental results
+        - Proofs or derivations (if theoretical paper)
+        - Checklist compliance (e.g., NeurIPS checklist)
+
+        Structure:
+        supplementary/
+        ├── appendix.pdf
+        ├── code/
+        │   ├── README.md
+        │   ├── requirements.txt
+        │   └── src/
+        ├── data/
+        │   └── dataset_info.md
+        └── extra_results/
+            └── additional_experiments.pdf
+
+    # STEP 10: Compile and Verify
+    - agent: research-writer
+      action: compile_submission_version
+      command: "*compile-submission"
+      creates: research-paper/submission-{venue}.pdf
+      notes: |
+        Final compilation and verification:
+        - Clean build (remove .aux, .bbl, etc.)
+        - Compile LaTeX → PDF
+        - Verify PDF compiles without errors
+        - Check page count meets limit
+        - Verify all figures appear correctly
+        - Check all citations resolve
+        - Verify anonymization (if required)
+        - Run spell check
+        - Check PDF metadata (remove author info if anonymized)
+
+        LaTeX compilation:
+        ```bash
+        cd research-paper/
+        pdflatex main.tex
+        bibtex main
+        pdflatex main.tex
+        pdflatex main.tex
+        mv main.pdf submission-neurips-2025.pdf
+        ```
+
+    # STEP 11: Create Submission Checklist
+    - agent: research-writer
+      action: generate_submission_checklist
+      command: "*create-checklist"
+      input: venue-requirements.md
+      creates: docs/submission/{venue}-checklist.md
+      uses: submission-checklist-tmpl.yaml
+      notes: |
+        Generate venue-specific submission checklist:
+        - All formatting requirements met
+        - Page limit satisfied
+        - Figures/tables properly formatted
+        - Citations complete and correctly styled
+        - Anonymization complete (if required)
+        - Supplementary materials prepared
+        - PDF compiles without errors
+        - File naming conventions followed
+        - Copyright forms completed (if required)
+        - Conflicts of interest declared
+
+        Walk through checklist before submission.
+
+    # STEP 12: Package Submission Files
+    - agent: research-writer
+      action: create_submission_package
+      command: "*package-submission"
+      creates: submissions/{venue}-{date}.zip
+      notes: |
+        Create final submission package:
+        - Main paper PDF
+        - LaTeX source files (main.tex, sections/, figures/)
+        - Bibliography file (references.bib)
+        - Style files (.sty, .cls if custom)
+        - Supplementary materials (if separate)
+        - README with file descriptions
+
+        Zip structure:
+        neurips-2025-submission.zip
+        ├── main.tex
+        ├── sections/
+        ├── figures/
+        ├── references.bib
+        ├── neurips_2025.sty
+        └── supplementary/
+
+        Ready for upload to submission system.
+
+  # ALTERNATE PATH: Rebuttal / Revision Workflow
+  revision_sequence:
+    # After reviews received
+    - agent: research-writer
+      action: process_reviewer_comments
+      command: "*process-reviews"
+      input: reviews.txt
+      creates: docs/submission/review-responses.md
+      notes: |
+        Process reviewer feedback:
+        - Parse reviewer comments into structured format
+        - Categorize: major concerns, minor issues, suggestions
+        - Draft response strategy for each point
+        - Identify changes needed in paper
+        - Create revision task list
+
+    - agent: research-writer
+      action: update_paper_from_reviews
+      command: "*apply-revisions"
+      input: review-responses.md
+      modifies: research-paper/sections/*.tex
+      notes: |
+        Apply changes based on reviewer feedback:
+        - Address major concerns first
+        - Make requested clarifications
+        - Add requested experiments (coordinate with ML Engineer)
+        - Improve explanations
+        - Fix errors pointed out
+        - Track all changes (use \textcolor{blue}{} for highlighting changes)
+
+    - agent: research-writer
+      action: write_rebuttal_response
+      command: "*write-rebuttal"
+      creates: docs/submission/rebuttal.pdf
+      notes: |
+        Write rebuttal response to reviewers:
+        - Thank reviewers for feedback
+        - Address each point systematically
+        - Point to changes in revised paper
+        - Provide additional evidence/experiments if needed
+        - Maintain professional, respectful tone
+        - Format per venue requirements
+
+outputs:
+  primary:
+    - research-paper/submission-{venue}.pdf
+    - submissions/{venue}-{date}.zip
+    - docs/submission/venue-requirements.md
+    - docs/submission/{venue}-checklist.md
+
+  optional:
+    - research-paper/supplementary/
+    - docs/submission/review-responses.md (for revisions)
+    - docs/submission/rebuttal.pdf (for revisions)
+
+metadata:
+  typical_duration: "4-8 hours (depending on venue differences)"
+  can_run_in_parallel: true # Can prepare for multiple venues simultaneously
+  requires_manual_review: true # User should verify before submission
+  preserves_original: true # Uses git branches, doesn't modify main
+
+common_venues:
+  ml_conferences:
+    - NeurIPS (December deadline, June results)
+    - ICML (January deadline, May results)
+    - ICLR (October deadline, January results)
+    - AAAI (August deadline, November results)
+    - CVPR (November deadline, February results)
+
+  ml_journals:
+    - JMLR (rolling submission)
+    - TMLR (rolling submission)
+    - IEEE TPAMI (rolling submission)
+    - Neural Networks (rolling submission)
+
+  templates_location:
+    - NeurIPS: https://neurips.cc/Conferences/2025/PaperInformation/StyleFiles
+    - ICML: https://icml.cc/Conferences/2025/StyleFiles
+    - ICLR: https://iclr.cc/Conferences/2025/CallForPapers
+    - IEEE: https://www.ieee.org/conferences/publishing/templates.html

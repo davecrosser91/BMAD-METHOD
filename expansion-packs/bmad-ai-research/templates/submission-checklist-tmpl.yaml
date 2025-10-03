@@ -1,0 +1,458 @@
+# <!-- Powered by BMAD™ Core -->
+# Submission Checklist Template
+#
+# This template generates venue-specific submission checklists.
+# Research Writer uses this when executing *create-checklist command.
+#
+# Usage: Fill in venue-specific details and generate checklist markdown
+
+metadata:
+  template_version: "1.0.0"
+  template_type: "submission-checklist"
+  description: "Comprehensive submission checklist for academic paper submissions"
+
+venue_info:
+  name: "[VENUE_NAME]" # e.g., "NeurIPS 2025", "IEEE TPAMI", "JMLR"
+  submission_system: "[SYSTEM]" # e.g., "OpenReview", "CMT", "EasyChair"
+  deadline: "[DEADLINE]" # e.g., "May 15, 2025 23:59 AoE"
+  notification_date: "[NOTIFICATION]" # e.g., "September 15, 2025"
+  conference_date: "[CONFERENCE_DATE]" # e.g., "December 2025" (if applicable)
+
+# Core formatting requirements
+formatting:
+  template_file: "[TEMPLATE_FILE]" # e.g., "neurips_2025.sty", "IEEEtran.cls"
+  document_class: "[DOC_CLASS]" # e.g., "\\documentclass{article}"
+  page_limit: "[PAGE_LIMIT]" # e.g., "8 pages (main) + unlimited appendix"
+  font_size: "[FONT]" # e.g., "10pt"
+  column_format: "[COLUMNS]" # e.g., "single-column", "double-column"
+  citation_style: "[CITATION]" # e.g., "natbib (author-year)", "numeric", "IEEE"
+  anonymization: "[ANON_REQUIRED]" # e.g., "Required (double-blind)", "Not required"
+
+# File requirements
+file_requirements:
+  main_paper:
+    format: "PDF"
+    max_size: "[SIZE]" # e.g., "10 MB"
+    naming: "[NAMING]" # e.g., "Paper1234.pdf"
+
+  supplementary:
+    allowed: "[YES/NO]"
+    format: "[FORMAT]" # e.g., "ZIP, PDF"
+    max_size: "[SIZE]" # e.g., "100 MB"
+    naming: "[NAMING]" # e.g., "Paper1234-supp.zip"
+
+  source_files:
+    required: "[YES/NO]"
+    format: "[FORMAT]" # e.g., "LaTeX source + figures"
+    naming: "[NAMING]" # e.g., "Paper1234-source.zip"
+
+# Checklist sections
+checklist:
+  # 1. Pre-Submission Technical Checks
+  technical:
+    title: "Technical Requirements"
+    items:
+      - id: "tech-01"
+        item: "PDF compiles without errors or warnings"
+        critical: true
+
+      - id: "tech-02"
+        item: "All fonts embedded in PDF (verify with: pdffonts main.pdf)"
+        critical: true
+
+      - id: "tech-03"
+        item: "PDF opens correctly in Adobe Reader"
+        critical: true
+
+      - id: "tech-04"
+        item: "File size within limit: [SIZE_LIMIT]"
+        critical: true
+
+      - id: "tech-05"
+        item: "Page count meets requirement: [PAGE_LIMIT]"
+        critical: true
+
+      - id: "tech-06"
+        item: "All figures display correctly (no missing images)"
+        critical: true
+
+      - id: "tech-07"
+        item: "All citations resolve (no [?] marks in PDF)"
+        critical: true
+
+      - id: "tech-08"
+        item: "All cross-references work (sections, figures, tables, equations)"
+        critical: false
+
+      - id: "tech-09"
+        item: "LaTeX source compiles from clean directory"
+        critical: false
+
+  # 2. Content Requirements
+  content:
+    title: "Content Requirements"
+    items:
+      - id: "content-01"
+        item: "Title matches submission form exactly"
+        critical: true
+
+      - id: "content-02"
+        item: "Abstract matches submission form exactly"
+        critical: true
+
+      - id: "content-03"
+        item: "Keywords/subject areas match submission form"
+        critical: true
+
+      - id: "content-04"
+        item: "Author list correct (or properly anonymized if required)"
+        critical: true
+
+      - id: "content-05"
+        item: "All figures have captions and are referenced in text"
+        critical: false
+
+      - id: "content-06"
+        item: "All tables have captions and are referenced in text"
+        critical: false
+
+      - id: "content-07"
+        item: "All equations numbered (if referenced)"
+        critical: false
+
+      - id: "content-08"
+        item: "References complete and formatted correctly"
+        critical: true
+
+      - id: "content-09"
+        item: "Spell check completed (no obvious typos)"
+        critical: false
+
+      - id: "content-10"
+        item: "Grammar check completed"
+        critical: false
+
+  # 3. Anonymization (if required)
+  anonymization:
+    title: "Anonymization (if required: [ANON_REQUIRED])"
+    items:
+      - id: "anon-01"
+        item: "Author names removed from paper"
+        critical: true
+        condition: "anonymization_required"
+
+      - id: "anon-02"
+        item: "Author affiliations removed"
+        critical: true
+        condition: "anonymization_required"
+
+      - id: "anon-03"
+        item: "Acknowledgments removed or anonymized"
+        critical: true
+        condition: "anonymization_required"
+
+      - id: "anon-04"
+        item: "Self-citations anonymized (no 'our previous work [X]')"
+        critical: true
+        condition: "anonymization_required"
+
+      - id: "anon-05"
+        item: "Code/dataset links anonymized or removed"
+        critical: true
+        condition: "anonymization_required"
+
+      - id: "anon-06"
+        item: "PDF metadata checked (no author info leaked)"
+        critical: true
+        condition: "anonymization_required"
+
+      - id: "anon-07"
+        item: "Institution-identifying information removed"
+        critical: true
+        condition: "anonymization_required"
+
+  # 4. Supplementary Materials
+  supplementary:
+    title: "Supplementary Materials (if applicable)"
+    items:
+      - id: "supp-01"
+        item: "Code includes README with setup instructions"
+        critical: false
+
+      - id: "supp-02"
+        item: "Code includes requirements.txt or environment.yml"
+        critical: false
+
+      - id: "supp-03"
+        item: "Code tested in clean environment"
+        critical: false
+
+      - id: "supp-04"
+        item: "Dataset information provided (or links to public datasets)"
+        critical: false
+
+      - id: "supp-05"
+        item: "Appendix referenced from main paper"
+        critical: false
+
+      - id: "supp-06"
+        item: "All supplementary figures have captions"
+        critical: false
+
+      - id: "supp-07"
+        item: "Supplementary materials ZIP extracts correctly"
+        critical: true
+
+      - id: "supp-08"
+        item: "Supplementary README.txt included describing contents"
+        critical: false
+
+  # 5. Administrative Requirements
+  administrative:
+    title: "Administrative Requirements"
+    items:
+      - id: "admin-01"
+        item: "Conflicts of interest declared on submission form"
+        critical: true
+
+      - id: "admin-02"
+        item: "Ethics statement included (if required by venue)"
+        critical: true
+
+      - id: "admin-03"
+        item: "Funding sources acknowledged (if required and not anonymous)"
+        critical: false
+
+      - id: "admin-04"
+        item: "Author contributions specified (if required)"
+        critical: false
+
+      - id: "admin-05"
+        item: "Copyright/license form completed (if required)"
+        critical: true
+
+      - id: "admin-06"
+        item: "Subject area / track selected correctly"
+        critical: true
+
+      - id: "admin-07"
+        item: "Preferred reviewers suggested (if allowed)"
+        critical: false
+
+      - id: "admin-08"
+        item: "Reviewer exclusions listed (if allowed)"
+        critical: false
+
+  # 6. Venue-Specific Requirements
+  venue_specific:
+    title: "Venue-Specific Requirements"
+    items:
+      # NeurIPS-specific
+      - id: "venue-neurips-01"
+        item: "NeurIPS checklist included in paper (before \\end{document})"
+        critical: true
+        venue: "neurips"
+
+      - id: "venue-neurips-02"
+        item: "Broader impact statement included (if applicable)"
+        critical: false
+        venue: "neurips"
+
+      # IEEE-specific
+      - id: "venue-ieee-01"
+        item: "IEEE copyright form signed and uploaded"
+        critical: true
+        venue: "ieee"
+
+      - id: "venue-ieee-02"
+        item: "IEEE PDF eXpress check passed"
+        critical: true
+        venue: "ieee"
+
+      # ACM-specific
+      - id: "venue-acm-01"
+        item: "ACM Computing Classification (CCS) concepts included"
+        critical: true
+        venue: "acm"
+
+      - id: "venue-acm-02"
+        item: "ACM rights management statement included"
+        critical: true
+        venue: "acm"
+
+      # ICML/ICLR-specific
+      - id: "venue-icml-01"
+        item: "Running title fits within header space"
+        critical: false
+        venue: "icml"
+
+      # JMLR-specific
+      - id: "venue-jmlr-01"
+        item: "JMLR style file version correct"
+        critical: true
+        venue: "jmlr"
+
+  # 7. Final Pre-Upload Verification
+  final_verification:
+    title: "Final Pre-Upload Verification"
+    items:
+      - id: "final-01"
+        item: "Preview uploaded PDF in submission system looks correct"
+        critical: true
+
+      - id: "final-02"
+        item: "All metadata fields on submission form completed"
+        critical: true
+
+      - id: "final-03"
+        item: "Supplementary files uploaded successfully"
+        critical: true
+
+      - id: "final-04"
+        item: "All required checkboxes/agreements accepted"
+        critical: true
+
+      - id: "final-05"
+        item: "Backup of submission package created"
+        critical: true
+
+      - id: "final-06"
+        item: "Submission confirmation email received"
+        critical: true
+
+      - id: "final-07"
+        item: "Submission ID/number recorded"
+        critical: true
+
+      - id: "final-08"
+        item: "Co-authors notified of submission"
+        critical: false
+
+# Output template
+output:
+  format: "markdown"
+
+  header: |
+    # Submission Checklist: [VENUE_NAME]
+
+    **Deadline**: [DEADLINE]
+    **Submission System**: [SYSTEM]
+    **Paper ID**: [PAPER_ID] (if assigned)
+
+    **Key Requirements**:
+    - Page limit: [PAGE_LIMIT]
+    - File size limit: [SIZE_LIMIT]
+    - Anonymization: [ANON_REQUIRED]
+    - Citation style: [CITATION_STYLE]
+
+    ---
+
+    ## Instructions
+
+    - ✅ = Completed
+    - ⚠️ = Critical item (must be done)
+    - 🔍 = Review recommended
+
+    Work through each section systematically before submission.
+
+    ---
+
+  section_template: |
+    ## [SECTION_NUMBER]. [SECTION_TITLE]
+
+    [SECTION_ITEMS]
+
+  item_template_critical: |
+    - [ ] ⚠️ **[ITEM_TEXT]**
+
+  item_template_normal: |
+    - [ ] [ITEM_TEXT]
+
+  footer: |
+    ---
+
+    ## Submission Summary
+
+    **Total Checks**: [TOTAL_CHECKS]
+    **Critical Items**: [CRITICAL_COUNT]
+    **Completed**: [COMPLETED_COUNT] / [TOTAL_CHECKS]
+
+    ---
+
+    ## After Submission
+
+    - [ ] Save submission confirmation email
+    - [ ] Create git tag: `git tag submission-[VENUE]-[DATE]`
+    - [ ] Update calendar with review notification date
+    - [ ] Prepare rebuttal response template (if applicable)
+
+    ---
+
+    **Generated**: [GENERATION_DATE]
+    **Template Version**: 1.0.0
+
+# Venue presets (Research Writer can auto-fill based on venue)
+presets:
+  neurips:
+    name: "NeurIPS 2025"
+    submission_system: "OpenReview"
+    page_limit: "8 pages (main) + unlimited appendix"
+    font_size: "10pt"
+    column_format: "single-column"
+    citation_style: "natbib (author-year)"
+    anonymization: "Required (double-blind)"
+    main_paper_size: "10 MB"
+    supplementary_size: "100 MB"
+
+  icml:
+    name: "ICML 2025"
+    submission_system: "OpenReview"
+    page_limit: "8 pages (main) + unlimited appendix"
+    font_size: "10pt"
+    column_format: "two-column"
+    citation_style: "natbib (author-year)"
+    anonymization: "Required (double-blind)"
+    main_paper_size: "10 MB"
+    supplementary_size: "100 MB"
+
+  iclr:
+    name: "ICLR 2025"
+    submission_system: "OpenReview"
+    page_limit: "8 pages (main) + unlimited appendix"
+    font_size: "10pt"
+    column_format: "single-column"
+    citation_style: "natbib (author-year)"
+    anonymization: "Required (double-blind)"
+    main_paper_size: "10 MB"
+    supplementary_size: "100 MB"
+
+  ieee:
+    name: "IEEE Conference"
+    submission_system: "CMT or PaperPlaza"
+    page_limit: "Varies by conference (typically 6-8 pages)"
+    font_size: "10pt"
+    column_format: "two-column"
+    citation_style: "IEEE (numeric)"
+    anonymization: "Varies by conference"
+    main_paper_size: "30 MB"
+
+  acm:
+    name: "ACM Conference"
+    submission_system: "EasyChair or HotCRP"
+    page_limit: "Varies by conference"
+    font_size: "9pt"
+    column_format: "two-column"
+    citation_style: "ACM Reference Format"
+    anonymization: "Varies by conference"
+    main_paper_size: "50 MB"
+    supplementary_size: "200 MB"
+
+  jmlr:
+    name: "JMLR"
+    submission_system: "JMLR submission system"
+    page_limit: "No strict limit"
+    font_size: "11pt"
+    column_format: "single-column"
+    citation_style: "natbib (author-year)"
+    anonymization: "Not required"
+    main_paper_size: "No strict limit"

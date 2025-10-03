@@ -340,9 +340,11 @@ experiments        creates figs           incorporates
 - LaTeX editing and formatting
 - Git/Overleaf synchronization
 - Incorporates results/ into paper
+- **Venue-specific reformatting:** NeurIPS, ICML, IEEE, ACM, JMLR templates
+- **Submission preparation:** Anonymization, supplementary materials, packaging
 - **Primary workspace:** research-paper/
 - **Tools:** LaTeX, git
-- **Commands:** `*create-paper`, `*draft-abstract`, `*draft-introduction`, `*prepare-submission`
+- **Commands:** `*create-paper`, `*draft-abstract`, `*prepare-submission`, `*reformat-template`, `*anonymize`, `*package-submission`
 
 **🔁 Reproducibility Engineer (Sam Rodriguez)** - @reproducibility-engineer
 
@@ -746,6 +748,142 @@ Research Writer (research-paper/)
 - Paper lives in: `research-paper/`
 - Reads figures from: `results/`
 - Git syncs with: Overleaf
+
+### Phase 4: Publication & Submission
+
+**🔁 REPEATABLE:** Run for each venue you submit to (NeurIPS, ICML, IEEE, etc.)
+
+**🤖 Automated Execution:** Let Research Writer handle venue-specific reformatting!
+
+```bash
+@research-writer
+*prepare-submission "NeurIPS 2025"
+# Research Writer will:
+# 1. Read workflows/paper-submission-prep.yaml
+# 2. Analyze venue requirements
+# 3. Reformat LaTeX template
+# 4. Adjust content for page limits
+# 5. Prepare supplementary materials
+# 6. Create submission package
+```
+
+**📋 Or use the workflow as a guide:** [paper-submission-prep.yaml](workflows/paper-submission-prep.yaml)
+
+**What This Phase Handles:**
+
+- **Venue-specific formatting:** Switch LaTeX templates (NeurIPS, ICML, IEEE, ACM, JMLR)
+- **Page limit adjustment:** Move content to appendix, condense sections
+- **Citation style conversion:** natbib, IEEE numeric, ACM format
+- **Anonymization:** Remove author info for double-blind review
+- **Supplementary materials:** Package code, data, extra results
+- **Submission packaging:** Create final PDFs, source files, supplementary ZIP
+- **Verification:** Compilation checks, submission checklists
+
+**Manual Invocation:**
+
+```bash
+# Step 1: Analyze target venue
+@research-writer
+*analyze-venue "NeurIPS 2025"
+# Creates: docs/submission/venue-requirements.md
+
+# Step 2: Create submission branch
+git checkout -b submission/neurips-2025
+
+# Step 3: Reformat for venue
+@research-writer
+*reformat-template "neurips_2025"
+*trim-to-limit "8 pages"
+*convert-citations "natbib"
+*anonymize  # If required
+
+# Step 4: Prepare supplementary materials
+@reproducibility-engineer
+*prepare-release  # Clean and package code
+
+@research-writer
+*prepare-supplementary
+
+# Step 5: Final compilation and packaging
+@research-writer
+*compile-submission
+*create-checklist "NeurIPS 2025"
+*package-submission
+```
+
+**Workflow:**
+
+```
+Research Writer
+   │
+   ├─→ Analyze Venue Requirements
+   │   └─→ Create docs/submission/venue-requirements.md
+   │
+   ├─→ Create Submission Branch (git)
+   │
+   ├─→ Switch LaTeX Template
+   │   ├─→ NeurIPS: neurips_2025.sty
+   │   ├─→ ICML: icml2025.sty
+   │   ├─→ IEEE: IEEEtran.cls
+   │   └─→ ACM: acmart.cls
+   │
+   ├─→ Adjust Content for Page Limit
+   │   ├─→ Move methods to appendix
+   │   ├─→ Move extra results to appendix
+   │   └─→ Condense verbose sections
+   │
+   ├─→ Reformat Figures & Tables
+   │   └─→ Data Analyst: Adjust sizes for venue
+   │
+   ├─→ Convert Citation Style
+   │
+   ├─→ Anonymize (if required)
+   │   ├─→ Remove author names
+   │   ├─→ Remove affiliations
+   │   └─→ Anonymize self-citations
+   │
+   ├─→ Prepare Supplementary Materials
+   │   ├─→ Code package (Reproducibility Engineer)
+   │   ├─→ Appendix PDF
+   │   ├─→ Extra results
+   │   └─→ Dataset information
+   │
+   ├─→ Final Compilation & Verification
+   │   ├─→ Clean LaTeX build
+   │   ├─→ Check page count
+   │   ├─→ Verify all figures
+   │   └─→ Check PDF metadata
+   │
+   ├─→ Generate Submission Checklist
+   │   └─→ docs/submission/neurips-2025-checklist.md
+   │
+   └─→ Create Submission Package
+       ├─→ Paper1234.pdf (main paper)
+       ├─→ Paper1234-source.zip (LaTeX source)
+       └─→ Paper1234-supp.zip (supplementary)
+```
+
+**Supported Venues:**
+
+- **ML Conferences:** NeurIPS, ICML, ICLR, AAAI, CVPR
+- **Journals:** JMLR, TMLR, IEEE TPAMI
+- **IEEE Conferences:** Template-based formatting
+- **ACM Conferences:** sigconf template
+
+**Outputs:**
+
+- `submissions/{venue}-{date}/` - Complete submission package
+- `docs/submission/venue-requirements.md` - Venue analysis
+- `docs/submission/{venue}-checklist.md` - Pre-submission verification
+
+**Revision & Rebuttal Workflow** (after reviews):
+
+```bash
+@research-writer
+*process-reviews  # Parse reviewer comments
+*apply-revisions  # Update paper based on feedback
+*write-rebuttal   # Draft response to reviewers
+```
 
 **Outputs:**
 
