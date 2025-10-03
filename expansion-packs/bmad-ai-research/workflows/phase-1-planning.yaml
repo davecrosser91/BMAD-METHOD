@@ -68,6 +68,56 @@ workflow:
     Timeline: 1-2 weeks
 
   sequence:
+    # STEP 0: Project Setup & Folder Initialization (RECOMMENDED FIRST STEP)
+    - agent: research-lead
+      action: initialize_project_structure
+      command: "*init-folders"
+      input: project_root_directory
+      creates:
+        - codebase/ folder structure
+        - data/ folder structure
+        - results/ folder structure
+        - research-paper/ folder structure
+        - old_code/ (if existing code found)
+        - scripts/ folder structure
+      uses: init-research-folders.md
+      condition: new_project_or_reorganization
+      notes: |
+        **CRITICAL FIRST STEP** - Initialize project folder structure before starting research:
+
+        @research-lead
+        *init-folders
+
+        This creates:
+        - codebase/ (for ML implementation by @ml-engineer)
+        - data/ (raw/, processed/, external/)
+        - results/ (experiments/, figures/, tables/, analysis/)
+        - research-paper/ (drafts/, figures/, bibliography/, submission/)
+        - old_code/ (archives existing code with timestamp)
+        - scripts/ (setup/, preprocessing/, analysis/)
+
+        The task will:
+        1. Verify you're in the correct directory
+        2. Check for existing code
+        3. Archive old code to old_code/YYYY-MM-DD_HH-MM-SS/
+        4. Create complete folder hierarchy
+        5. Generate README.md in each folder
+        6. Create .gitignore for research projects
+        7. Create experiment template (exp001)
+
+        **When to run:**
+        - Starting a new research project (recommended)
+        - Migrating existing research to BMAD
+        - Reorganizing legacy research code
+
+        **When to skip:**
+        - Folders already properly set up
+        - Working in existing BMAD research project
+
+        Decision point: "Initialize folder structure now? (yes/no)"
+        - yes → Run *init-folders
+        - no → Proceed to brainstorming (assumes folders exist)
+
     # STEP 1: Initial Brainstorming
     - agent: research-lead
       action: brainstorm_research_questions
@@ -269,6 +319,7 @@ workflow:
 
   outputs:
     primary:
+      - Complete folder structure (codebase/, data/, results/, research-paper/, scripts/)
       - research-brainstorming-session-results.md (refined through iterations)
       - literature-synthesis.md (from three specialists)
       - research-proposal.md
