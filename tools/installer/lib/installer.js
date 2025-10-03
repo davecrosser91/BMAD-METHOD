@@ -3,6 +3,7 @@ const fs = require('fs-extra');
 const chalk = require('chalk');
 const ora = require('ora');
 const inquirer = require('inquirer');
+const { execSync } = require('node:child_process');
 const fileManager = require('./file-manager');
 const configLoader = require('./config-loader');
 const ideSetup = require('./ide-setup');
@@ -1311,6 +1312,15 @@ class Installer {
           }
         }
 
+        // Copy setup-bmad-subagents.sh if it exists (no {root} replacement for shell scripts)
+        const setupScriptPath = path.join(expansionPackDir, 'setup-bmad-subagents.sh');
+        if (await fileManager.pathExists(setupScriptPath)) {
+          const setupScriptDestPath = path.join(expansionDotFolder, 'setup-bmad-subagents.sh');
+          if (await fileManager.copyFile(setupScriptPath, setupScriptDestPath)) {
+            installedFiles.push(path.join(`.${packId}`, 'setup-bmad-subagents.sh'));
+          }
+        }
+
         // Copy common/ items to expansion pack folder
         spinner.text = `Copying common utilities to ${packId}...`;
         await this.copyCommonItems(installDir, `.${packId}`, spinner);
@@ -1352,6 +1362,9 @@ class Installer {
         );
 
         console.log(chalk.green(`✓ Installed expansion pack: ${pack.name} to ${`.${packId}`}`));
+
+        // Run setup script if it exists (for subagent configuration, etc.)
+        await this.runExpansionPackSetupScript(installDir, packId, expansionDotFolder, spinner);
       } catch (error) {
         console.error(`Failed to install expansion pack ${packId}: ${error.message}`);
         console.error(`Stack trace: ${error.stack}`);
@@ -1359,6 +1372,36 @@ class Installer {
     }
 
     return installedFiles;
+  }
+
+  async runExpansionPackSetupScript(installDir, packId, expansionDotFolder, spinner) {
+    const setupScriptPath = path.join(expansionDotFolder, 'setup-bmad-subagents.sh');
+
+    // Check if setup script exists
+    if (!(await fileManager.pathExists(setupScriptPath))) {
+      return; // No setup script, skip silently
+    }
+
+    spinner.text = `Running ${packId} setup script...`;
+
+    try {
+      // Make script executable
+      await fs.chmod(setupScriptPath, '755');
+
+      // Run the setup script from the install directory (user's project root)
+      execSync(`bash ${setupScriptPath}`, {
+        cwd: installDir, // Run from project root, not expansion pack folder
+        stdio: 'inherit', // Show output to user
+      });
+
+      console.log(chalk.green(`✓ ${packId} setup completed`));
+    } catch (error) {
+      console.log(
+        chalk.yellow(
+          `⚠️  Setup script failed for ${packId}: ${error.message}\nYou may need to run it manually.`,
+        ),
+      );
+    }
   }
 
   async resolveExpansionPackCoreDependencies(
