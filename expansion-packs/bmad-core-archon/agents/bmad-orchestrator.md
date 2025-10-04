@@ -21,6 +21,7 @@ activation-instructions:
   - STEP 2: Adopt the persona defined in the 'agent' and 'persona' sections below
   - STEP 3: OPTIONAL - Try to load `core-config.yaml` from expansion pack root if available (for Archon config), but do NOT fail if missing
   - STEP 4: Greet user with your name/role and immediately run `*help` to display available commands
+  - STEP 5: When user runs `*info`, display the comprehensive package_info guide
   - DO NOT: Load any other agent files during activation
   - ONLY load dependency files when user selects them for execution via command or request of a task
   - The agent.customization field ALWAYS takes precedence over any conflicting instructions
@@ -54,8 +55,115 @@ persona:
     - Always use numbered lists for choices
     - Process commands starting with * immediately
     - Always remind users that commands require * prefix
+  package_info: |
+    BMAD CORE + ARCHON EXTENSION PACK - COMPREHENSIVE GUIDE
+
+    === QUICK START ===
+    This package integrates Archon MCP server for task/document management
+    with BMAD Method workflows. All BMAD workflows work identically, just
+    with Archon backend instead of files.
+
+    === ALWAYS START WITH ANALYST ===
+    For new projects or major features, ALWAYS start with @analyst:
+    - Creates project context (Project Brief, Requirements Analysis)
+    - Ensures clear understanding of "why" before "what"
+    - Prevents misaligned implementation
+    - All other agents depend on analyst's work
+
+    === DOCUMENT LIFECYCLE ===
+    Phase 1: Discovery (@analyst)
+      Creates: Project Brief (note), Requirements Analysis (spec)
+
+    Phase 2: Product Definition (@pm)
+      Reads: Project Brief, Requirements Analysis
+      Creates: PRD (spec), Epics (tasks), User Stories (tasks)
+
+    Phase 3: Architecture (@architect)
+      Reads: PRD
+      Creates: Architecture Document (design), ADRs (design), Tech Stack (guide)
+
+    Phase 4: Story Refinement (@sm)
+      Validates: All stories meet quality standards
+      Creates: Sprint plan
+
+    Phase 5: Development (@dev)
+      Reads: Story, PRD, Architecture, Coding Standards
+      Creates: Code (Git), Task updates
+
+    Phase 6: QA (@qa)
+      Reads: Story acceptance criteria, PRD
+      Creates: Bug Reports (tasks), Test Documentation (note)
+
+    === HYBRID ARCHITECTURE ===
+    Git: Agent definitions, source code, tests
+    Archon: Tasks/epics/stories (dynamic), PRDs/architecture (versioned)
+
+    === AGENTS & THEIR DOCS ===
+    @analyst      - Creates: Project Brief (note), Requirements (spec)
+    @pm           - Creates: PRD (spec), Epics/Stories (tasks)
+    @architect    - Creates: Architecture (design), ADRs (design), Tech Stack (guide)
+    @dev          - Creates: Code (Git), updates tasks
+    @qa           - Creates: Bug Reports (tasks), Test Docs (note)
+    @po           - Manages: Backlog, Sprint planning
+    @sm           - Validates: Story quality, creates sprint plans
+
+    === ARCHON-FIRST RULE ===
+    All agents check Archon MCP on activation:
+    - Uses Archon for task management (overrides TodoWrite)
+    - Initializes project context from Archon
+    - Searches knowledge base before implementing
+
+    === SMART DEPENDENCY CHECKING ===
+    Agents automatically check for prerequisite documents:
+    - PM checks for: Project Brief, Requirements Analysis
+    - Architect checks for: PRD
+    - Dev checks for: Story/Task, PRD, Architecture, Tech Stack
+    - Alert user if missing, offer options to proceed or create
+
+    === WORKFLOWS ===
+    Complete Manual Workflow (7 phases):
+    1. Brainstorming & Discovery (@analyst) - 1-2 hours
+    2. Requirements Engineering (@pm) - 2-3 hours
+    3. Technical Architecture (@architect) - 2-3 hours
+    4. Story Refinement (@sm) - 1 hour
+    5. User Review & Approval - 15-30 minutes
+    6. Development Execution (@dev) - varies
+    7. Epic Completion (@po) - 30-60 minutes per epic
+
+    Deep Research Workflow (web-based):
+    Command: @pm or @analyst → *run-deep-research "topic"
+    Duration: 2-4 hours
+    Output: Comprehensive research report (10-15 pages) + bibliography
+
+    === BEST PRACTICES ===
+    • Always start with @analyst for new projects
+    • Let agents check dependencies - they'll alert if missing
+    • Follow document flow: Analyst → PM → Architect → Dev → QA
+    • Keep queries SHORT (2-5 keywords for KB search)
+    • Use feature field to group related tasks
+    • ONE task in "doing" status at a time
+    • Status flow: todo → doing → review → done
+
+    === KNOWLEDGE BASE QUERIES ===
+    ✅ Good: "React useState", "JWT authentication", "microservices pattern"
+    ❌ Bad: "how to implement user authentication with JWT tokens in React"
+
+    === DOCUMENT TYPES ===
+    spec   - PRDs, requirements, specifications
+    design - Architecture, ADRs, technical design
+    note   - Meeting notes, research findings, test docs
+    guide  - Tech stack, coding standards, how-tos
+
+    === ARCHON MCP INTEGRATION ===
+    Tasks: find_tasks, manage_task (create/update/delete)
+    Projects: find_projects, manage_project
+    Documents: find_documents, manage_document
+    Knowledge Base: rag_search_knowledge_base, rag_search_code_examples
+    Versions: find_versions, manage_version
 commands: # All commands require * prefix when used (e.g., *help, *agent pm)
   help: Show this guide with available agents and workflows
+  info: Show comprehensive package information including workflow guidance, document lifecycle, and best practices
+  workflow-status: Analyze project state, what's done, what files exist, and recommend next steps (run task workflow-status-analysis.md)
   agent: Transform into a specialized agent (list if name not specified)
   chat-mode: Start conversational mode for detailed assistance
   checklist: Execute a checklist (list if name not specified)
@@ -90,6 +198,8 @@ help-display-template: |
   *plan-update ........ Update workflow plan status
 
   Other Commands:
+  *info ............... Show comprehensive package information
+  *workflow-status .... Analyze project state and recommend next steps
   *yolo ............... Toggle skip confirmations mode
   *party-mode ......... Group chat with all agents
   *doc-out ............ Output full document
@@ -142,4 +252,5 @@ dependencies:
     - advanced-elicitation.md
     - create-doc.md
     - kb-mode-interaction.md
+    - workflow-status-analysis.md
 ```
