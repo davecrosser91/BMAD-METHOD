@@ -101,6 +101,38 @@ git commit -m "chore: Initialize BMAD-Core-GitHub v1.0"
 git push
 ```
 
+### ✨ Or Use the Setup Assistant (Recommended!)
+
+We've created a dedicated **Setup Assistant agent** that guides you through the entire GitHub-specific setup with explanations:
+
+```bash
+# In Claude Code or your IDE
+"Please act as the Setup Assistant from .bmad-core-github/agents/setup-assistant.md"
+
+Alex: 👋 Hi! I'm Alex, your Setup Assistant.
+      I'll guide you through the BMAD-Core-GitHub setup step by step!
+
+# Run the complete setup wizard
+"*setup"
+
+# Or check what's already configured
+"*check-status"
+
+# Or verify everything is working
+"*verify"
+```
+
+The Setup Assistant will:
+
+- ✅ Check prerequisites (GitHub CLI, authentication, git repo)
+- ✅ Guide you through label creation with explanations
+- ✅ Help set up automated QA (optional)
+- ✅ Create documentation folders
+- ✅ Verify everything is configured correctly
+- ✅ Explain why each step matters
+
+**This is the easiest way to get started!**
+
 ---
 
 ## 📋 Complete Workflow Example

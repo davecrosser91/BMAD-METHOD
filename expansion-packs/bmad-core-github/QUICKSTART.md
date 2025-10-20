@@ -2,6 +2,22 @@
 
 **Get up and running in 10 minutes!**
 
+## 💡 Easiest Method: Use the Setup Assistant
+
+After installation, activate the **Setup Assistant** for guided setup with explanations:
+
+```bash
+# In Claude Code or your IDE
+"Please act as the Setup Assistant from .bmad-core-github/agents/setup-assistant.md"
+
+# Run the complete setup wizard
+"*setup"
+```
+
+The Setup Assistant will walk you through everything step-by-step with explanations of why each step matters!
+
+**Or follow the manual steps below:**
+
 ---
 
 ## Prerequisites Checklist

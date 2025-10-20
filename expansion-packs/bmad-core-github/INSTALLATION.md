@@ -4,6 +4,27 @@
 
 This guide explains how to install and use the **bmad-core-github** expansion pack, which provides a complete GitHub-native implementation of the BMAD Method using GitHub Issues, Milestones, Labels, and Pull Requests for task management.
 
+## 🎯 Quick Start (Recommended)
+
+**After installing, use the Setup Assistant for guided setup:**
+
+```bash
+# In Claude Code or your IDE
+"Please act as the Setup Assistant from .bmad-core-github/agents/setup-assistant.md"
+
+# Then run:
+"*setup"
+```
+
+The Setup Assistant will guide you through:
+
+- ✅ GitHub CLI installation and authentication
+- ✅ Label creation with explanations
+- ✅ Automated QA setup (optional)
+- ✅ Verification and troubleshooting
+
+**This is the easiest way to get started!** Or continue reading for detailed manual installation steps.
+
 ---
 
 ## Installation Methods
