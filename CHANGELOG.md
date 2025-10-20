@@ -1,3 +1,44 @@
+## [3.6.0](https://github.com/davidkreuzer/bmad-method-ai-research/compare/v3.5.1...v3.6.0) (2025-10-20)
+
+### Features
+
+#### 🎉 New Expansion Pack: bmad-core-github v1.0.0
+
+Added complete GitHub-native implementation of the BMAD Method using GitHub Issues, Milestones, and native GitHub workflows.
+
+**What's Included:**
+
+- **10 Specialized Agents**: Analyst, PM, Architect, Dev, QA, SM, PO, Dev Team Lead, UX Expert, BMad Master
+- **GitHub-Native Task Management**:
+  - Milestones = Epics
+  - Issues = User Stories
+  - Labels = Status tracking (backlog, todo, doing, review, done)
+  - Pull Requests = Implementation + Code Review
+- **Automated QA**: AI-powered code review via GitHub Actions using Claude Sonnet 4
+- **Wave-Based Parallel Execution**: 3-5x faster development with dependency-aware orchestration
+- **Complete Documentation**: README (8,500+ words), QUICKSTART (10-min setup), INSTALLATION guide, CHANGELOG
+- **No External Dependencies**: Just GitHub + Git + GitHub CLI
+
+**Key Features:**
+
+- Complete status flow with review loops (QA can send back to doing/todo)
+- Automated PR ↔ Issue linking and status transitions
+- Status label enforcement (single status per issue)
+- Dependency validation for task management
+- Documents stored as markdown in Git with frontmatter
+- Setup scripts for labels and configuration
+- GitHub Actions workflows for automation
+
+**Installation:**
+
+```bash
+npx @dkreuzer/bmad-method-ai-research install -e bmad-core-github
+```
+
+See `expansion-packs/bmad-core-github/README.md` for complete documentation.
+
+---
+
 ## [3.0.1](https://github.com/davidkreuzer/bmad-method-ai-research/compare/v3.0.0...v3.0.1) (2025-10-01)
 
 ### Bug Fixes
