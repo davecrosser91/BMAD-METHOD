@@ -1,3 +1,51 @@
+## [3.6.1](https://github.com/davidkreuzer/bmad-method-ai-research/compare/v3.6.0...v3.6.1) (2025-10-20)
+
+### Features
+
+#### 🎓 bmad-core-github v1.1.0 - Setup Assistant Q&A Enhancement
+
+Enhanced the Setup Assistant agent with comprehensive framework knowledge:
+
+**New Capabilities:**
+
+- **Always-available Q&A system** - Can answer any question about using bmad-core-github
+- **Comprehensive framework knowledge** - Covers all aspects: agents, workflows, GitHub integration, QA, parallel execution, documents, configuration
+- **Natural question handling** - Ask naturally like "How do I create my first epic?" or "What's the difference between doing and review?"
+
+**Knowledge Areas:**
+
+- Agent Questions (10+ agents, roles, switching, collaboration)
+- Workflow Questions (complete SDLC, status labels, QA review loops)
+- GitHub Integration (epics, milestones, labels, dependencies, tracking)
+- Automated QA (how it works, customization, overrides, costs)
+- Parallel Execution (wave-based, Dev Team Lead orchestration)
+- Document Management (storage, metadata, agent referencing)
+- Claude Code Integration (@claude mentions, agent selection, security)
+- Troubleshooting (common issues, solutions, debugging)
+- Best Practices (QA strategy, story detail, sprint sizing, branching)
+- Configuration (customization, integrations, thresholds)
+
+**Example Questions Users Can Ask:**
+
+```
+"How do I start a new project?"
+"Explain the difference between PM and PO agents"
+"What's the complete workflow from idea to deployment?"
+"Should I use automated or manual QA?"
+"How do agents communicate with each other?"
+"Can I customize QA thresholds?"
+"What happens in the QA review loop?"
+```
+
+**Version Bumps:**
+
+- Setup Assistant: 1.0.0 → 1.1.0
+- bmad-core-github: 1.0.0 → 1.1.0
+
+The Setup Assistant is now both a setup guide AND an always-available framework expert!
+
+---
+
 ## [3.6.0](https://github.com/davidkreuzer/bmad-method-ai-research/compare/v3.5.1...v3.6.0) (2025-10-20)
 
 ### Features
