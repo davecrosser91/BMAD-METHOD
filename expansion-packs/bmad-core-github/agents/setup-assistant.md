@@ -31,6 +31,7 @@ Let me walk you through each step with explanations!
 - `*setup-gh-cli` - Guide through GitHub CLI installation and authentication
 - `*setup-labels` - Guide through GitHub labels creation
 - `*setup-actions` - Guide through GitHub Actions setup (optional)
+- `*setup-claude-integration` - Guide through Claude Code GitHub integration (optional)
 - `*setup-templates` - Guide through issue templates setup (optional)
 - `*verify` - Verify all setup is complete and working
 - `*help` - Show this help message
@@ -239,7 +240,44 @@ If yes, let's set it up:
 
 **If you skip this step:** You can still use manual QA with the QA agent. Automated QA is a nice-to-have that saves time.
 
-### Step 5: Setup Issue Templates (Optional)
+### Step 5: Setup Claude Code GitHub Integration (Optional - Powerful!)
+
+Do you want to trigger Claude directly from GitHub issues and PRs by mentioning `@claude`?
+
+**Benefits:**
+
+- Work with Claude directly from GitHub (no IDE needed)
+- Perfect for remote collaboration
+- Quick fixes from mobile or web
+- Team members can request Claude's help on issues
+
+If yes:
+
+```bash
+mkdir -p .github/workflows
+cp {root}/expansion-packs/bmad-core-github/workflows/claude-code-integration.yml .github/workflows/
+```
+
+**Configure permissions** (important):
+
+1. Run: `gh repo view --web`
+2. Go to **Settings** → **Actions** → **General**
+3. Select: **Read and write permissions**
+4. Check: **Allow GitHub Actions to create and approve pull requests**
+5. Click **Save**
+
+**Test it:**
+
+```bash
+gh issue create --title "Test: @claude integration" --body "@claude Say hello!"
+# Check Actions tab to see Claude respond
+```
+
+For complete setup guide, run: `*setup-claude-integration`
+
+**If you skip this step:** You can still use BMAD agents from your IDE (Claude Code, Cursor, etc.). This integration is for triggering Claude from GitHub itself.
+
+### Step 6: Setup Issue Templates (Optional)
 
 Issue templates make it easier to create well-formatted epics and user stories in GitHub.
 
@@ -628,7 +666,265 @@ When you create a pull request:
 
 ---
 
-## \*setup-templates - Issue Templates Setup
+## \*setup-claude-integration - Claude Code GitHub Integration
+
+Let me help you set up Claude Code integration with GitHub so you can trigger Claude directly from issues and PRs!
+
+### What This Enables
+
+With Claude Code GitHub integration, you can:
+
+- **Comment `@claude` on issues** to have Claude help implement the feature
+- **Comment `@claude` on PRs** to have Claude review or fix code
+- **Trigger BMAD agents** directly from GitHub without leaving your browser
+
+This is perfect for:
+
+- Remote team collaboration
+- Working from GitHub mobile
+- Quick fixes without opening your IDE
+- Getting Claude's help on specific issues
+
+### Prerequisites
+
+You should have already completed:
+
+- ✅ `*setup-actions` (ANTHROPIC_API_KEY secret configured)
+
+If not, run `*setup-actions` first.
+
+### Step 1: Copy Claude Code Integration Workflow
+
+```bash
+mkdir -p .github/workflows
+cp {root}/expansion-packs/bmad-core-github/workflows/claude-code-integration.yml .github/workflows/
+```
+
+**What this workflow does:**
+
+- Listens for comments on issues and PRs
+- Triggers when you mention `@claude` in a comment
+- Runs Claude Code with access to your repository
+- Posts responses back as comments
+- Can commit changes if instructed
+
+### Step 2: Configure Permissions (Important!)
+
+The workflow needs specific permissions. Let's check your repository settings:
+
+```bash
+# Open repository settings in browser
+gh repo view --web
+```
+
+Then navigate to:
+
+1. **Settings** → **Actions** → **General**
+2. Scroll to **Workflow permissions**
+3. Select: **Read and write permissions**
+4. Check: **Allow GitHub Actions to create and approve pull requests**
+5. Click **Save**
+
+**Why this matters:** Without these permissions, Claude Code can't commit changes or create PRs on your behalf.
+
+### Step 3: Optional - Configure Agent Selection
+
+You can configure which BMAD agent Claude uses based on context.
+
+Edit `.github/workflows/claude-code-integration.yml`:
+
+```yaml
+# Default: Claude chooses agent automatically
+- name: Run Claude Code
+  uses: anthropics/claude-code-action@v1
+  with:
+    anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+
+# Or: Specify a specific agent
+- name: Run Claude Code
+  uses: anthropics/claude-code-action@v1
+  with:
+    anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+    agent-file: .bmad-core-github/agents/dev.md # Always use Dev agent
+```
+
+**Agent Selection Strategies:**
+
+**Option 1: Auto-select (Recommended)**
+
+```yaml
+# Let Claude choose based on context
+# - Issues labeled "type:bug" → QA agent
+# - Issues labeled "type:story" → Dev agent
+# - PR reviews → QA agent
+```
+
+**Option 2: Fixed agent per workflow**
+
+```yaml
+# Create multiple workflows for different contexts
+# claude-code-dev.yml → uses dev.md
+# claude-code-qa.yml → uses qa.md
+```
+
+**Option 3: Label-based selection**
+
+```yaml
+# Use GitHub labels to specify agent
+# Comment: "@claude" on issue with label "agent:dev" → Dev agent
+# Comment: "@claude" on issue with label "agent:qa" → QA agent
+```
+
+### Step 4: Commit and Push
+
+```bash
+git add .github/workflows/claude-code-integration.yml
+git commit -m "feat: Add Claude Code GitHub integration
+
+Enables @claude mentions in issues and PRs to trigger Claude Code
+directly from GitHub without opening IDE."
+git push
+```
+
+### Step 5: Test the Integration
+
+Let's create a test issue to verify it works:
+
+```bash
+# Create a test issue
+gh issue create \
+  --title "Test: Claude Code Integration" \
+  --body "This is a test issue to verify Claude Code integration.
+
+@claude Please confirm you can see this issue and respond with a greeting."
+```
+
+**Expected result:**
+
+Within 1-2 minutes, you should see:
+
+1. GitHub Actions workflow starts (check Actions tab)
+2. Claude posts a comment on the issue confirming it works
+3. Workflow completes successfully
+
+**If it doesn't work:**
+
+- Check Actions tab for error messages
+- Verify ANTHROPIC_API_KEY is set: `gh secret list`
+- Verify workflow permissions (Settings → Actions → General)
+- Check workflow file syntax
+
+### Usage Examples
+
+Once set up, you can use Claude directly from GitHub:
+
+**Example 1: Implement a feature**
+
+```
+Comment on issue #123:
+
+@claude Please implement this user story following the acceptance criteria.
+Use the Dev agent and create a PR when done.
+```
+
+**Example 2: Review a PR**
+
+```
+Comment on PR #45:
+
+@claude Please review this PR using the QA agent.
+Check for code quality, tests, and security issues.
+```
+
+**Example 3: Fix a bug**
+
+```
+Comment on issue #67 (labeled type:bug):
+
+@claude This bug is causing login failures.
+Please investigate and create a PR with a fix.
+```
+
+**Example 4: Update documentation**
+
+```
+Comment on issue #89:
+
+@claude Please update the README to include installation instructions
+for the new database setup.
+```
+
+### How It Works
+
+1. **You comment** `@claude <your request>` on an issue or PR
+2. **GitHub Actions triggers** the claude-code-integration workflow
+3. **Claude Code runs** with context from the issue/PR and repository
+4. **Claude responds** as a comment and/or creates commits/PRs
+5. **Workflow completes** and you get notified
+
+### Cost Considerations
+
+Each `@claude` invocation costs approximately:
+
+- **Simple query/response**: $0.01-0.05
+- **Code implementation**: $0.10-0.50
+- **Large refactoring**: $0.50-2.00
+
+(Based on Claude Sonnet 4 pricing and typical prompt sizes)
+
+**Tip:** Use specific instructions to minimize back-and-forth and reduce costs.
+
+### Security Considerations
+
+**What Claude can do:**
+
+- ✅ Read your repository code
+- ✅ Create commits on branches
+- ✅ Create pull requests
+- ✅ Comment on issues/PRs
+- ✅ Update issue labels and status
+
+**What Claude cannot do:**
+
+- ❌ Merge PRs without approval (requires workflow approval settings)
+- ❌ Delete branches or force push (unless explicitly configured)
+- ❌ Access secrets beyond ANTHROPIC_API_KEY and GITHUB_TOKEN
+- ❌ Modify GitHub repository settings
+
+**Best practices:**
+
+- Review all PRs created by Claude before merging
+- Use branch protection rules on main/master
+- Monitor Actions usage and costs
+- Set up notifications for Claude-created PRs
+
+### Limitations
+
+- **Rate limits**: GitHub Actions has concurrent job limits
+- **Timeout**: Workflows timeout after 6 hours (usually completes in minutes)
+- **Context size**: Very large repositories may hit context limits
+- **Branch restrictions**: Cannot push to protected branches without approval
+
+### Disable Integration
+
+To disable Claude Code integration:
+
+```bash
+# Remove the workflow file
+rm .github/workflows/claude-code-integration.yml
+git commit -am "chore: Disable Claude Code GitHub integration"
+git push
+```
+
+Or disable specific workflow in GitHub:
+
+1. Go to **Actions** tab
+2. Click workflow name
+3. Click **⋮** → **Disable workflow**
+
+---
 
 Let me help you set up GitHub issue templates:
 
@@ -849,6 +1145,7 @@ fi
 - `*setup-gh-cli` - Install and configure GitHub CLI
 - `*setup-labels` - Create GitHub labels for task management
 - `*setup-actions` - Set up automated QA with GitHub Actions
+- `*setup-claude-integration` - Enable @claude mentions in GitHub issues/PRs
 - `*setup-templates` - Add issue templates to GitHub
 
 **Need help?** Just ask! For example:

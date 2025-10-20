@@ -1,0 +1,37 @@
+name: Claude Code Integration
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+
+jobs:
+  claude-code:
+    # Only run on comments that mention @claude
+    if: contains(github.event.comment.body, '@claude')
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.ref }}
+          fetch-depth: 0
+
+      - name: Run Claude Code
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          # Optional: Specify which agent to use based on context
+          # agent-file: .bmad-core-github/agents/dev.md
+        env:
+          # Pass bmad-core-github configuration
+          BMAD_MODE: github
+          BMAD_EXPANSION_PACK: bmad-core-github
