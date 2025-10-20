@@ -1,3 +1,38 @@
+## [3.6.2](https://github.com/davidkreuzer/bmad-method-ai-research/compare/v3.6.1...v3.6.2) (2025-10-20)
+
+### Features
+
+#### 🔧 bmad-core-github v1.2.0 - Native Claude Code GitHub Integration
+
+Updated Setup Assistant to use Claude Code's native `/install-github-app` command instead of manual GitHub Actions setup:
+
+**What Changed:**
+
+- **Recommended approach:** Now recommends using `/install-github-app` command for GitHub integration
+- **Easier setup:** One command instead of manual workflow copying and permissions configuration
+- **Better maintenance:** Leverages Claude Code's built-in GitHub integration that stays updated
+- **Clearer documentation:** Manual setup is now clearly marked as "Alternative - Advanced"
+
+**Benefits of `/install-github-app`:**
+
+- ✅ Installs Claude GitHub App (github.com/apps/claude) to your repository
+- ✅ Creates PR with workflow file automatically
+- ✅ Guides through repository selection and permissions
+- ✅ Uses GitHub App authentication (more secure)
+- ✅ Better error handling and troubleshooting
+- ✅ Always up-to-date with latest Claude Code features
+
+**Version Bumps:**
+
+- Setup Assistant: 1.1.0 → 1.2.0
+- bmad-core-github: 1.1.0 → 1.2.0
+
+Users can still use manual setup if needed, but `/install-github-app` is now the recommended approach.
+
+**Note:** Requires GitHub CLI with workflow permissions (`gh auth refresh -h github.com -s workflow`) and repository admin access.
+
+---
+
 ## [3.6.1](https://github.com/davidkreuzer/bmad-method-ai-research/compare/v3.6.0...v3.6.1) (2025-10-20)
 
 ### Features

@@ -6,7 +6,7 @@ agent:
   role: Setup Assistant & Framework Guide
   title: BMAD-Core-GitHub Setup & Q&A
   icon: 🔧
-  version: 1.1.0
+  version: 1.2.0
   whenToUse: |
     Use this agent for:
     1. Initial setup after installing bmad-core-github
@@ -268,20 +268,43 @@ Do you want to trigger Claude directly from GitHub issues and PRs by mentioning 
 - Quick fixes from mobile or web
 - Team members can request Claude's help on issues
 
-If yes:
+**Recommended approach - Use Claude Code's native command:**
+
+In Claude Code terminal, run:
 
 ```bash
-mkdir -p .github/workflows
-cp {root}/expansion-packs/bmad-core-github/workflows/claude-code-integration.yml .github/workflows/
+/install-github-app
 ```
 
-**Configure permissions** (important):
+This automatically:
 
-1. Run: `gh repo view --web`
-2. Go to **Settings** → **Actions** → **General**
-3. Select: **Read and write permissions**
-4. Check: **Allow GitHub Actions to create and approve pull requests**
-5. Click **Save**
+- ✅ Installs the Claude GitHub App to your repository
+- ✅ Creates a PR with the workflow file (.github/workflows/claude.yml)
+- ✅ Guides you through repository selection and permissions
+- ✅ Sets up the integration correctly
+
+**Prerequisites for `/install-github-app`:**
+
+- GitHub CLI (`gh`) must be installed and authenticated
+- You must be a repository admin
+- Your `gh` auth token needs workflow permissions (run `gh auth refresh -h github.com -s workflow` if needed)
+- Only available for direct Claude API users (not AWS Bedrock/Google Vertex AI)
+
+**Alternative - Manual setup:**
+
+If you prefer manual control or `/install-github-app` doesn't work:
+
+```bash
+# 1. Copy workflow file
+mkdir -p .github/workflows
+cp {root}/expansion-packs/bmad-core-github/workflows/claude-code-integration.yml .github/workflows/
+
+# 2. Set API key
+gh secret set ANTHROPIC_API_KEY
+
+# 3. Configure permissions (run: gh repo view --web)
+# Settings → Actions → General → "Read and write permissions"
+```
 
 **Test it:**
 
@@ -290,9 +313,9 @@ gh issue create --title "Test: @claude integration" --body "@claude Say hello!"
 # Check Actions tab to see Claude respond
 ```
 
-For complete setup guide, run: `*setup-claude-integration`
+For detailed setup guide, run: `*setup-claude-integration`
 
-**If you skip this step:** You can still use BMAD agents from your IDE (Claude Code, Cursor, etc.). This integration is for triggering Claude from GitHub itself.
+**If you skip this step:** You can still use BMAD agents from your IDE. This integration is for triggering Claude from GitHub itself.
 
 ### Step 6: Setup Issue Templates (Optional)
 
@@ -702,110 +725,111 @@ This is perfect for:
 - Quick fixes without opening your IDE
 - Getting Claude's help on specific issues
 
-### Prerequisites
+### Step 1: Use Claude Code's Native GitHub Integration (Recommended)
 
-You should have already completed:
+**The easiest way to set this up is using Claude Code's built-in command:**
 
-- ✅ `*setup-actions` (ANTHROPIC_API_KEY secret configured)
-
-If not, run `*setup-actions` first.
-
-### Step 1: Copy Claude Code Integration Workflow
+In Claude Code terminal, run:
 
 ```bash
-mkdir -p .github/workflows
-cp {root}/expansion-packs/bmad-core-github/workflows/claude-code-integration.yml .github/workflows/
+/install-github-app
 ```
 
-**What this workflow does:**
+This single command will:
 
-- Listens for comments on issues and PRs
-- Triggers when you mention `@claude` in a comment
-- Runs Claude Code with access to your repository
-- Posts responses back as comments
-- Can commit changes if instructed
+- ✅ Install the Claude GitHub App (github.com/apps/claude) to your repository
+- ✅ Create a PR with the workflow file (.github/workflows/claude.yml)
+- ✅ Guide you through repository selection and authorization
+- ✅ Set up GitHub Actions integration automatically
 
-### Step 2: Configure Permissions (Important!)
+**Prerequisites for `/install-github-app`:**
 
-The workflow needs specific permissions. Let's check your repository settings:
+- GitHub CLI (`gh`) must be installed and authenticated
+- You must be a repository admin
+- Your `gh` auth token needs workflow permissions:
+  ```bash
+  gh auth refresh -h github.com -s workflow
+  ```
+- Only available for direct Claude API users (not AWS Bedrock/Google Vertex AI)
 
-```bash
-# Open repository settings in browser
-gh repo view --web
-```
+**Why use `/install-github-app`?**
 
-Then navigate to:
+Claude Code's native GitHub App:
 
-1. **Settings** → **Actions** → **General**
-2. Scroll to **Workflow permissions**
-3. Select: **Read and write permissions**
-4. Check: **Allow GitHub Actions to create and approve pull requests**
-5. Click **Save**
+- Handles all configuration automatically with best practices
+- Stays updated with latest Claude Code features
+- Provides better error handling and troubleshooting
+- Integrates seamlessly with BMAD agents
+- Uses GitHub App authentication (more secure than GitHub Actions)
 
-**Why this matters:** Without these permissions, Claude Code can't commit changes or create PRs on your behalf.
+**After running `/install-github-app`, skip to Step 3 below to test the integration.**
 
-### Step 3: Optional - Configure Agent Selection
+---
 
-You can configure which BMAD agent Claude uses based on context.
+### Step 2: Alternative - Manual Setup (Advanced)
 
-Edit `.github/workflows/claude-code-integration.yml`:
+**Only use this if `/github install` doesn't work for your setup.**
+
+If you need manual control, you can set up the integration yourself:
+
+1. **Add ANTHROPIC_API_KEY to GitHub secrets:**
+
+   ```bash
+   gh secret set ANTHROPIC_API_KEY
+   # Paste your API key from https://console.anthropic.com/settings/keys
+   ```
+
+2. **Copy the workflow file:**
+
+   ```bash
+   mkdir -p .github/workflows
+   cp {root}/expansion-packs/bmad-core-github/workflows/claude-code-integration.yml .github/workflows/
+   ```
+
+3. **Configure workflow permissions:**
+
+   ```bash
+   # Open repo settings
+   gh repo view --web
+   ```
+
+   Navigate to: Settings → Actions → General → Workflow permissions
+   - Select: "Read and write permissions"
+   - Check: "Allow GitHub Actions to create and approve pull requests"
+   - Click "Save"
+
+4. **Commit and push:**
+
+   ```bash
+   git add .github/workflows/claude-code-integration.yml
+   git commit -m "feat: Add Claude Code GitHub integration"
+   git push
+   ```
+
+**Optional: Configure Agent Selection**
+
+You can customize which BMAD agent Claude uses by editing `.github/workflows/claude-code-integration.yml`:
 
 ```yaml
-# Default: Claude chooses agent automatically
+# Option 1: Auto-select (default - recommended)
 - name: Run Claude Code
   uses: anthropics/claude-code-action@v1
   with:
     anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
     github-token: ${{ secrets.GITHUB_TOKEN }}
 
-# Or: Specify a specific agent
+# Option 2: Always use specific agent
 - name: Run Claude Code
   uses: anthropics/claude-code-action@v1
   with:
     anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
     github-token: ${{ secrets.GITHUB_TOKEN }}
-    agent-file: .bmad-core-github/agents/dev.md # Always use Dev agent
+    agent-file: .bmad-core-github/agents/dev.md
 ```
 
-**Agent Selection Strategies:**
+---
 
-**Option 1: Auto-select (Recommended)**
-
-```yaml
-# Let Claude choose based on context
-# - Issues labeled "type:bug" → QA agent
-# - Issues labeled "type:story" → Dev agent
-# - PR reviews → QA agent
-```
-
-**Option 2: Fixed agent per workflow**
-
-```yaml
-# Create multiple workflows for different contexts
-# claude-code-dev.yml → uses dev.md
-# claude-code-qa.yml → uses qa.md
-```
-
-**Option 3: Label-based selection**
-
-```yaml
-# Use GitHub labels to specify agent
-# Comment: "@claude" on issue with label "agent:dev" → Dev agent
-# Comment: "@claude" on issue with label "agent:qa" → QA agent
-```
-
-### Step 4: Commit and Push
-
-```bash
-git add .github/workflows/claude-code-integration.yml
-git commit -m "feat: Add Claude Code GitHub integration
-
-Enables @claude mentions in issues and PRs to trigger Claude Code
-directly from GitHub without opening IDE."
-git push
-```
-
-### Step 5: Test the Integration
+### Step 3: Test the Integration
 
 Let's create a test issue to verify it works:
 
@@ -832,6 +856,32 @@ Within 1-2 minutes, you should see:
 - Verify ANTHROPIC_API_KEY is set: `gh secret list`
 - Verify workflow permissions (Settings → Actions → General)
 - Check workflow file syntax
+
+### Alternative: Manual Setup (Advanced)
+
+If you prefer manual control or `/github install` isn't working, you can set up manually:
+
+1. **Add API key to GitHub secrets:**
+
+   ```bash
+   gh secret set ANTHROPIC_API_KEY
+   # Paste your key from https://console.anthropic.com/settings/keys
+   ```
+
+2. **Copy workflow file:**
+
+   ```bash
+   mkdir -p .github/workflows
+   cp .bmad-core-github/workflows/claude-code-integration.yml .github/workflows/
+   git add .github/workflows/claude-code-integration.yml
+   git commit -m "feat: Add Claude Code GitHub integration"
+   git push
+   ```
+
+3. **Set workflow permissions:**
+   - Go to Settings → Actions → General
+   - Under "Workflow permissions", select "Read and write permissions"
+   - Save
 
 ### Usage Examples
 
@@ -876,8 +926,8 @@ for the new database setup.
 ### How It Works
 
 1. **You comment** `@claude <your request>` on an issue or PR
-2. **GitHub Actions triggers** the claude-code-integration workflow
-3. **Claude Code runs** with context from the issue/PR and repository
+2. **GitHub Actions triggers** the Claude Code workflow
+3. **Claude Code runs** with full context from issue/PR and repository
 4. **Claude responds** as a comment and/or creates commits/PRs
 5. **Workflow completes** and you get notified
 
