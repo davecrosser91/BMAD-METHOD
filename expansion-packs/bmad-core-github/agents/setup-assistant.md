@@ -6,7 +6,7 @@ agent:
   role: Setup Assistant & Framework Guide
   title: BMAD-Core-GitHub Setup & Q&A
   icon: 🔧
-  version: 1.2.0
+  version: 1.3.0
   whenToUse: |
     Use this agent for:
     1. Initial setup after installing bmad-core-github
@@ -257,18 +257,48 @@ If yes, let's set it up:
 
 **If you skip this step:** You can still use manual QA with the QA agent. Automated QA is a nice-to-have that saves time.
 
-### Step 5: Setup Claude Code GitHub Integration (Optional - Powerful!)
+### Step 5: Claude Code GitHub Integration (Optional - Skip This!)
 
-Do you want to trigger Claude directly from GitHub issues and PRs by mentioning `@claude`?
+⚠️ **IMPORTANT COST WARNING - Read This First!**
 
-**Benefits:**
+**Recommended: Skip this step and use Claude Code in your IDE instead!**
 
-- Work with Claude directly from GitHub (no IDE needed)
-- Perfect for remote collaboration
-- Quick fixes from mobile or web
-- Team members can request Claude's help on issues
+**Why skip GitHub integration?**
 
-**Recommended approach - Use Claude Code's native command:**
+GitHub Actions integration uses **Anthropic API credits** (pay-per-use), which is **much more expensive** than using your Claude subscription in your IDE:
+
+📊 **Cost Comparison:**
+
+| Approach                       | Cost Model                  | Typical Monthly Cost                 |
+| ------------------------------ | --------------------------- | ------------------------------------ |
+| **IDE Workflow (Recommended)** | Claude Pro/Max subscription | $20-200/month (unlimited BMAD usage) |
+| **GitHub Actions**             | API credits (pay-per-use)   | $50-500+/month (depending on usage)  |
+
+**Example:**
+
+- Implementing 10 user stories via @claude mentions in GitHub: ~$20-50 in API costs
+- Same 10 stories in IDE with Pro subscription: $0 additional (included in subscription)
+
+**✅ Recommended Workflow (No Extra Cost):**
+
+1. Open GitHub issue in your IDE
+2. Ask Claude Code to implement it using BMAD agents
+3. Claude creates PR automatically
+4. Review and merge
+
+**When to use GitHub integration anyway:**
+
+Only set this up if you specifically need:
+
+- Remote team members without IDE access
+- Quick responses from GitHub mobile
+- You're already on API billing (not subscription)
+- Company pays for API usage
+
+**If you still want to set it up:**
+
+<details>
+<summary>Click to expand GitHub integration setup (costs API credits)</summary>
 
 In Claude Code terminal, run:
 
@@ -287,7 +317,8 @@ This automatically:
 
 - GitHub CLI (`gh`) must be installed and authenticated
 - You must be a repository admin
-- Your `gh` auth token needs workflow permissions (run `gh auth refresh -h github.com -s workflow` if needed)
+- Your `gh` auth token needs workflow permissions: `gh auth refresh -h github.com -s workflow`
+- **Anthropic API key with billing setup** (separate from subscription)
 - Only available for direct Claude API users (not AWS Bedrock/Google Vertex AI)
 
 **Alternative - Manual setup:**
@@ -299,7 +330,7 @@ If you prefer manual control or `/install-github-app` doesn't work:
 mkdir -p .github/workflows
 cp {root}/expansion-packs/bmad-core-github/workflows/claude-code-integration.yml .github/workflows/
 
-# 2. Set API key
+# 2. Set API key (get from https://console.anthropic.com/settings/keys)
 gh secret set ANTHROPIC_API_KEY
 
 # 3. Configure permissions (run: gh repo view --web)
@@ -315,7 +346,9 @@ gh issue create --title "Test: @claude integration" --body "@claude Say hello!"
 
 For detailed setup guide, run: `*setup-claude-integration`
 
-**If you skip this step:** You can still use BMAD agents from your IDE. This integration is for triggering Claude from GitHub itself.
+</details>
+
+**Most users should skip to Step 6 →**
 
 ### Step 6: Setup Issue Templates (Optional)
 
@@ -708,7 +741,47 @@ When you create a pull request:
 
 ## \*setup-claude-integration - Claude Code GitHub Integration
 
-Let me help you set up Claude Code integration with GitHub so you can trigger Claude directly from issues and PRs!
+⚠️ **IMPORTANT: Read the cost implications before proceeding!**
+
+### Cost Warning - Is This Right For You?
+
+**GitHub Actions integration uses Anthropic API credits (pay-per-use), NOT your Claude subscription.**
+
+📊 **Cost Comparison:**
+
+| Approach                       | Cost Model                  | Typical Monthly Cost                 |
+| ------------------------------ | --------------------------- | ------------------------------------ |
+| **IDE Workflow (Recommended)** | Claude Pro/Max subscription | $20-200/month (unlimited BMAD usage) |
+| **GitHub @claude mentions**    | API credits (pay-per-use)   | $50-500+/month (depending on usage)  |
+
+**Example Costs:**
+
+- Simple @claude query: $0.01-0.05
+- Implementing a user story: $0.10-0.50
+- Large refactoring: $0.50-2.00
+- **10 user stories/month via @claude: ~$20-50 in API costs**
+- **Same work in IDE with subscription: $0 additional**
+
+### ✅ Recommended: Use IDE Instead
+
+**Most users should NOT set up GitHub integration.** Instead:
+
+1. Open GitHub issue in your IDE
+2. Ask Claude Code to implement using BMAD agents
+3. Claude creates PR automatically
+4. Review and merge
+
+This uses your subscription (no extra cost) and provides the same functionality.
+
+### When To Use GitHub Integration Anyway
+
+Only proceed with setup if you specifically need:
+
+- ✅ Remote team members without IDE access
+- ✅ Quick responses from GitHub mobile/web
+- ✅ You're already on API billing (not subscription)
+- ✅ Company pays for API usage separately
+- ✅ Public repo where contributors need Claude access
 
 ### What This Enables
 
@@ -718,12 +791,11 @@ With Claude Code GitHub integration, you can:
 - **Comment `@claude` on PRs** to have Claude review or fix code
 - **Trigger BMAD agents** directly from GitHub without leaving your browser
 
-This is perfect for:
+**Requirements:**
 
-- Remote team collaboration
-- Working from GitHub mobile
-- Quick fixes without opening your IDE
-- Getting Claude's help on specific issues
+- **Anthropic API key** with billing setup (get from https://console.anthropic.com/settings/keys)
+- **API credits purchased** (separate from Claude Pro/Max subscription)
+- You understand you'll be charged per API call
 
 ### Step 1: Use Claude Code's Native GitHub Integration (Recommended)
 

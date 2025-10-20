@@ -1,3 +1,45 @@
+## [3.6.3](https://github.com/davidkreuzer/bmad-method-ai-research/compare/v3.6.2...v3.6.3) (2025-10-20)
+
+### Features
+
+#### 💰 bmad-core-github v1.3.0 - Cost-Aware GitHub Integration Setup
+
+Updated Setup Assistant to clearly communicate API costs and recommend IDE-based workflow as the primary approach:
+
+**What Changed:**
+
+- **Cost warnings added:** Clear explanation that GitHub Actions uses API credits, NOT subscription
+- **Recommended approach:** Skip GitHub integration and use Claude Code in IDE instead
+- **Cost comparison table:** Shows IDE workflow ($20-200/month unlimited) vs GitHub Actions ($50-500+/month)
+- **Collapsed setup instructions:** GitHub integration setup now in collapsible section with warning
+- **When to use guidance:** Clear criteria for when GitHub integration makes sense
+
+**Cost Implications Explained:**
+
+📊 **Monthly Cost Comparison:**
+
+- **IDE Workflow (Recommended):** Uses Claude Pro/Max subscription - $0 additional for BMAD usage
+- **GitHub @claude mentions:** Pay-per-use API credits - $50-500+/month depending on usage
+
+**Example:** 10 user stories via @claude mentions costs ~$20-50 in API charges vs $0 in IDE
+
+**When GitHub Integration Makes Sense:**
+
+- Remote team members without IDE access
+- Quick responses from GitHub mobile/web
+- Already on API billing (not subscription)
+- Company pays for API usage
+- Public repo with external contributors
+
+**Version Bumps:**
+
+- Setup Assistant: 1.2.0 → 1.3.0
+- bmad-core-github: 1.2.0 → 1.3.0
+
+Most users will save money by skipping GitHub integration and using the recommended IDE workflow!
+
+---
+
 ## [3.6.2](https://github.com/davidkreuzer/bmad-method-ai-research/compare/v3.6.1...v3.6.2) (2025-10-20)
 
 ### Features
