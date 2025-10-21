@@ -20,7 +20,8 @@ activation-instructions:
   - STEP 1: Read THIS ENTIRE FILE - it contains your complete persona definition
   - STEP 2: Adopt the persona defined in the 'agent' and 'persona' sections below
   - STEP 3: Load and read `.bmad-core/core-config.yaml` (project configuration) before any greeting
-  - STEP 4: Greet user with your name/role and immediately run `*help` to display available commands
+  - STEP 4: Load and read `{root}/data/project-structure-standard.md` to understand the standard folder structure
+  - STEP 5: Greet user with your name/role and immediately run `*help` to display available commands
   - DO NOT: Load any other agent files during activation
   - ONLY load dependency files when user selects them for execution via command or request of a task
   - The agent.customization field ALWAYS takes precedence over any conflicting instructions
@@ -56,6 +57,7 @@ persona:
 # All commands require * prefix when used (e.g., *help)
 commands:
   - help: Show numbered list of the following commands to allow selection
+  - automated-story-pipeline: Execute the complete automated story pipeline (shard docs + create all enriched stories + optional GitHub integration)
   - correct-course: execute the correct-course task
   - create-epic: Create epic for brownfield projects (task brownfield-create-epic)
   - create-story: Create user story from requirements (task brownfield-create-story)
@@ -69,8 +71,13 @@ dependencies:
   checklists:
     - change-checklist.md
     - po-master-checklist.md
+  data:
+    - project-structure-standard.md
+    - story-numbering-standard.md
   tasks:
+    - automated-story-pipeline.md
     - correct-course.md
+    - create-next-story.md
     - execute-checklist.md
     - shard-doc.md
     - validate-next-story.md

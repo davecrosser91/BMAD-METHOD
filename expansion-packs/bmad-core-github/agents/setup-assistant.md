@@ -191,6 +191,7 @@ Create the folder structure for your project documentation:
 
 ```bash
 mkdir -p docs/{prd,architecture,specs,guides,notes}
+mkdir -p .bmad-stories
 ```
 
 **What each folder is for:**
@@ -200,8 +201,11 @@ mkdir -p docs/{prd,architecture,specs,guides,notes}
 - `docs/specs/` - Detailed specifications and designs
 - `docs/guides/` - User guides, developer guides
 - `docs/notes/` - Project briefs, meeting notes, brainstorming (created by Analyst agent)
+- `.bmad-stories/` - Enriched story files for AI development (created by SM agent)
 
 **Why this matters:** BMAD agents create markdown documents in these folders. The PM creates PRDs, the Architect creates architecture docs, etc. These documents are version-controlled in Git.
+
+**Note:** All agents reference `{root}/data/project-structure-standard.md` for the complete folder structure standard. This ensures consistency across all agents.
 
 ### Step 4: Setup GitHub Actions (Optional - Recommended)
 
@@ -388,8 +392,9 @@ git add .
 git commit -m "chore: Complete BMAD-Core-GitHub setup
 
 - Initialized docs folder structure
-- Added GitHub labels for task management
-- Configured GitHub Actions for automated QA
+- Created .bmad-stories folder for enriched stories
+- Added GitHub labels for task management (18 labels)
+- Configured GitHub Actions for automated QA (optional)
 - Added issue templates
 
 Setup completed with BMAD Setup Assistant"
@@ -502,6 +507,15 @@ if [ -d "docs" ]; then
 else
     echo "   ❌ docs/ folder not found"
     echo "   Run: mkdir -p docs/{prd,architecture,specs,guides,notes}"
+fi
+
+echo ""
+echo "5. Story Files Folder:"
+if [ -d ".bmad-stories" ]; then
+    echo "   ✅ .bmad-stories/ folder exists"
+else
+    echo "   ⚠️  .bmad-stories/ folder missing"
+    echo "   Run: mkdir -p .bmad-stories"
 fi
 
 # Check GitHub Actions
@@ -1199,6 +1213,15 @@ if [ "$ALL_FOLDERS_EXIST" = true ]; then
 else
     echo "⚠️  Some documentation folders missing"
     echo "   Run: mkdir -p docs/{prd,architecture,specs,guides,notes}"
+    WARNINGS=$((WARNINGS + 1))
+fi
+
+# Check .bmad-stories folder
+if [ -d ".bmad-stories" ]; then
+    echo "✅ Story files folder: .bmad-stories/"
+else
+    echo "⚠️  Story files folder missing"
+    echo "   Run: mkdir -p .bmad-stories"
     WARNINGS=$((WARNINGS + 1))
 fi
 

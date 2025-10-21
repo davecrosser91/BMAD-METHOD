@@ -16,17 +16,31 @@ To identify the next logical story based on project progress and epic definition
 
 ### 1. Identify Next Story for Preparation
 
-#### 1.1 Locate Epic Files and Review Existing Stories
+#### 1.1 Story Numbering Format (v3.0)
+
+**CRITICAL:** Stories use Epic.Major.Minor numbering format:
+
+- **Pattern:** `{epic}.{major}.{minor}.story.md`
+- **Epic:** Milestone number (1, 2, 3, ...)
+- **Major:** Feature within epic (0, 1, 2, ...)
+- **Minor:** Iteration within feature (0, 1, 2, ...)
+- **Example:** `1.0.0.story.md`, `1.0.1.story.md`, `1.1.0.story.md`
+- **Reference:** See `{root}/data/story-numbering-standard.md` for complete guidelines
+
+#### 1.2 Locate Epic Files and Review Existing Stories
 
 - Based on `prdSharded` from config, locate epic files (sharded location/pattern or monolithic PRD sections)
-- If `devStoryLocation` has story files, load the highest `{epicNum}.{storyNum}.story.md` file
+- If `devStoryLocation` has story files, load the highest `{epic}.{major}.{minor}.story.md` file
 - **If highest story exists:**
-  - Verify status is 'Done'. If not, alert user: "ALERT: Found incomplete story! File: {lastEpicNum}.{lastStoryNum}.story.md Status: [current status] You should fix this story first, but would you like to accept risk & override to create the next story in draft?"
-  - If proceeding, select next sequential story in the current epic
-  - If epic is complete, prompt user: "Epic {epicNum} Complete: All stories in Epic {epicNum} have been completed. Would you like to: 1) Begin Epic {epicNum + 1} with story 1 2) Select a specific story to work on 3) Cancel story creation"
+  - Verify status is 'Done'. If not, alert user: "ALERT: Found incomplete story! File: {epic}.{major}.{minor}.story.md Status: [current status] You should fix this story first, but would you like to accept risk & override to create the next story in draft?"
+  - If proceeding, determine next story number:
+    - **Same feature continuation:** Increment minor (e.g., 1.0.0 → 1.0.1)
+    - **New feature in epic:** Increment major, reset minor (e.g., 1.0.3 → 1.1.0)
+    - Prompt user if ambiguous: "Next story options: 1) {epic}.{major}.{minor+1} - Continue current feature 2) {epic}.{major+1}.0 - Start new feature. Which numbering? (1/2)"
+  - If epic is complete, prompt user: "Epic {epic} Complete: All stories completed. Would you like to: 1) Begin Epic {epic+1} starting at {epic+1}.0.0 2) Select a specific story 3) Cancel story creation"
   - **CRITICAL**: NEVER automatically skip to another epic. User MUST explicitly instruct which story to create.
-- **If no story files exist:** The next story is ALWAYS 1.1 (first story of first epic)
-- Announce the identified story to the user: "Identified next story for preparation: {epicNum}.{storyNum} - {Story Title}"
+- **If no story files exist:** The next story is ALWAYS 1.0.0 (first story of first epic, first feature)
+- Announce the identified story to the user: "Identified next story for preparation: {epic}.{major}.{minor} - {Story Title}"
 
 ### 2. Gather Story Requirements and Previous Story Context
 
@@ -77,7 +91,7 @@ ALWAYS cite source documents: `[Source: architecture/{filename}.md#{section}]`
 
 ### 5. Populate Story Template with Full Context
 
-- Create new story file: `{devStoryLocation}/{epicNum}.{storyNum}.story.md` using Story Template
+- Create new story file: `{devStoryLocation}/{epic}.{major}.{minor}.story.md` using Story Template (v3.0 format)
 - Fill in basic story information: Title, Status (Draft), Story statement, Acceptance Criteria from Epic
 - **`Dev Notes` section (CRITICAL):**
   - CRITICAL: This section MUST contain ONLY information extracted from architecture documents. NEVER invent or assume technical details.

@@ -1,12 +1,23 @@
 # <!-- Powered by BMAD™ Core -->
 template:
-  id: story-template-v2
+  id: story-template-v3
   name: Story Document
-  version: 2.0
+  version: 3.0
   output:
     format: markdown
-    filename: docs/stories/{{epic_num}}.{{story_num}}.{{story_title_short}}.md
-    title: "Story {{epic_num}}.{{story_num}}: {{story_title_short}}"
+    filename: docs/stories/{{epic_num}}.{{major_num}}.{{minor_num}}.{{story_title_short}}.md
+    title: "Story {{epic_num}}.{{major_num}}.{{minor_num}}: {{story_title_short}}"
+  numbering:
+    format: "Epic.Major.Minor"
+    description: "Stories numbered as Epic.Major.Minor (e.g., 1.0.0, 1.0.1, 1.1.0)"
+    epic_num: "Epic number (1, 2, 3, ...)"
+    major_num: "Major feature within epic (0, 1, 2, ...) - increments for significant feature changes"
+    minor_num: "Minor iteration within major (0, 1, 2, ...) - increments for small changes/fixes"
+    examples:
+      - "1.0.0 - Epic 1, first story"
+      - "1.0.1 - Epic 1, second story (same feature as 1.0.0)"
+      - "1.1.0 - Epic 1, new major feature"
+      - "2.0.0 - Epic 2, first story"
 
 workflow:
   mode: interactive

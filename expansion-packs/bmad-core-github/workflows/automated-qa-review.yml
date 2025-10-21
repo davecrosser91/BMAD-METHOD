@@ -1,0 +1,253 @@
+name: Automated QA Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+      - develop
+
+jobs:
+  qa-review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get PR details
+        id: pr
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            return {
+              number: pr.number,
+              title: pr.title,
+              body: pr.body,
+              head: pr.head.sha,
+              base: pr.base.sha,
+              linked_issue: pr.body?.match(/#(\d+)/)?.[1] || null
+            };
+
+      - name: Get changed files
+        id: files
+        run: |
+          git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} > changed_files.txt
+          echo "files<<EOF" >> $GITHUB_OUTPUT
+          cat changed_files.txt >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Run automated QA review
+        id: qa
+        uses: actions/github-script@v7
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        with:
+          script: |
+            const https = require('https');
+
+            // Get diff
+            const diff = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              mediaType: {
+                format: 'diff'
+              }
+            });
+
+            // Prepare QA prompt
+            const prompt = `You are a senior QA engineer reviewing a pull request.
+
+            PR Title: ${context.payload.pull_request.title}
+            PR Description: ${context.payload.pull_request.body || 'No description'}
+
+            Changed Files:
+            ${process.env.CHANGED_FILES}
+
+            Code Diff:
+            ${diff.data}
+
+            Review this PR for:
+            1. Code quality and best practices
+            2. Potential bugs or issues
+            3. Test coverage
+            4. Security concerns
+            5. Performance implications
+            6. Acceptance criteria met (if linked to issue)
+
+            Provide:
+            - Overall verdict: PASS, FAIL_MINOR, or FAIL_MAJOR
+            - List of issues found (if any)
+            - Recommendations for improvement
+            - Test coverage assessment
+
+            Format your response as:
+            VERDICT: [PASS|FAIL_MINOR|FAIL_MAJOR]
+
+            ## Issues Found
+            [List issues or "None"]
+
+            ## Recommendations
+            [List recommendations]
+
+            ## Test Coverage
+            [Assessment of test coverage]
+
+            ## Summary
+            [Brief summary of review]`;
+
+            // Call Claude API
+            const data = JSON.stringify({
+              model: "claude-sonnet-4-20250514",
+              max_tokens: 4096,
+              messages: [{
+                role: "user",
+                content: prompt
+              }]
+            });
+
+            const options = {
+              hostname: 'api.anthropic.com',
+              path: '/v1/messages',
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': process.env.ANTHROPIC_API_KEY,
+                'anthropic-version': '2023-06-01',
+                'Content-Length': data.length
+              }
+            };
+
+            const response = await new Promise((resolve, reject) => {
+              const req = https.request(options, (res) => {
+                let body = '';
+                res.on('data', (chunk) => { body += chunk; });
+                res.on('end', () => {
+                  try {
+                    resolve(JSON.parse(body));
+                  } catch (e) {
+                    reject(e);
+                  }
+                });
+              });
+              req.on('error', reject);
+              req.write(data);
+              req.end();
+            });
+
+            const review = response.content[0].text;
+
+            // Extract verdict
+            const verdictMatch = review.match(/VERDICT:\s*(PASS|FAIL_MINOR|FAIL_MAJOR)/);
+            const verdict = verdictMatch ? verdictMatch[1] : 'FAIL_MAJOR';
+
+            core.setOutput('verdict', verdict);
+            core.setOutput('review', review);
+
+            return { verdict, review };
+
+      - name: Post review comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const verdict = '${{ steps.qa.outputs.verdict }}';
+            const review = `${{ steps.qa.outputs.review }}`;
+
+            const emoji = verdict === 'PASS' ? '✅' : verdict === 'FAIL_MINOR' ? '⚠️' : '❌';
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: `## ${emoji} Automated QA Review
+
+${review}
+
+---
+🤖 *Automated review by BMAD QA Agent using Claude Sonnet 4*`
+            });
+
+      - name: Update linked issue labels
+        if: steps.pr.outputs.result.linked_issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const verdict = '${{ steps.qa.outputs.verdict }}';
+            const issueNumber = JSON.parse('${{ steps.pr.outputs.result }}').linked_issue;
+
+            if (!issueNumber) return;
+
+            // Remove old status labels
+            const issue = await github.rest.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber
+            });
+
+            const labelsToRemove = issue.data.labels
+              .map(l => l.name)
+              .filter(name => name.startsWith('status:'));
+
+            for (const label of labelsToRemove) {
+              await github.rest.issues.removeLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                name: label
+              }).catch(() => {}); // Ignore if label doesn't exist
+            }
+
+            // Add new status label based on verdict
+            let newLabel;
+            if (verdict === 'PASS') {
+              newLabel = 'status:done';
+            } else if (verdict === 'FAIL_MINOR') {
+              newLabel = 'status:review'; // Keep in review for minor issues
+            } else {
+              newLabel = 'status:doing'; // Send back to doing for major issues
+            }
+
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              labels: [newLabel]
+            });
+
+      - name: Set PR status
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const verdict = '${{ steps.qa.outputs.verdict }}';
+
+            if (verdict === 'PASS') {
+              core.setOutput('conclusion', 'success');
+            } else if (verdict === 'FAIL_MINOR') {
+              core.setOutput('conclusion', 'neutral');
+            } else {
+              core.setOutput('conclusion', 'failure');
+            }
+
+      - name: QA Result
+        if: steps.qa.outputs.verdict == 'FAIL_MAJOR'
+        run: |
+          echo "❌ QA Review failed with major issues"
+          exit 1
+
+      - name: QA Warning
+        if: steps.qa.outputs.verdict == 'FAIL_MINOR'
+        run: |
+          echo "⚠️ QA Review passed with minor issues to address"
+
+      - name: QA Success
+        if: steps.qa.outputs.verdict == 'PASS'
+        run: |
+          echo "✅ QA Review passed!"
