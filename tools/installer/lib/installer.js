@@ -1285,6 +1285,7 @@ class Installer {
         // Copy core-config.yaml if it exists with {root} replacement
         const coreConfigPath = path.join(expansionPackDir, 'core-config.yaml');
         if (await fileManager.pathExists(coreConfigPath)) {
+          // Copy to expansion pack folder
           const coreConfigDestinationPath = path.join(expansionDotFolder, 'core-config.yaml');
           if (
             await fileManager.copyFileWithRootReplacement(
@@ -1294,6 +1295,20 @@ class Installer {
             )
           ) {
             installedFiles.push(path.join(`.${packId}`, 'core-config.yaml'));
+          }
+
+          // ALSO copy to main .bmad-core folder if it doesn't exist
+          // This ensures agents can find core-config.yaml at .bmad-core/core-config.yaml
+          const mainCoreConfigPath = path.join(installDir, '.bmad-core', 'core-config.yaml');
+          if (
+            !(await fileManager.pathExists(mainCoreConfigPath)) &&
+            (await fileManager.copyFileWithRootReplacement(
+              coreConfigPath,
+              mainCoreConfigPath,
+              '.bmad-core',
+            ))
+          ) {
+            installedFiles.push('.bmad-core/core-config.yaml');
           }
         }
 
