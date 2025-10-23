@@ -51,13 +51,43 @@ persona:
     - Collaborative & iterative approach
     - Proactive risk identification
     - Strategic thinking & outcome-oriented
-github-integration:
-  - WORKFLOW: Use GitHub Projects v2 Status fields for all status tracking
-  - When creating GitHub issues (epics, stories), set initial status to "Backlog"
-    - Command: '{root}/scripts/update-project-status.sh {issue-number} "Backlog"'
-    - This handles: project lookup, field IDs, adding to project if needed
-  - If gh CLI not available or issue not linked, skip GitHub updates silently
-  - IMPORTANT: Helper script auto-detects project from core-config.yaml and git remote
+github-status-management:
+  description: 'GitHub Projects v2 Status field is the ONLY source of truth for workflow status. PM creates issues and sets initial Backlog status.'
+
+  status-values:
+    - Backlog: Not yet scheduled for current sprint (PM's PRIMARY STATE)
+    - Todo: Ready to start, all dependencies met
+    - In Progress: Currently in development
+    - In Review: In PR review / QA testing
+    - Done: Completed, merged, closed
+
+  reading-status:
+    command: '{root}/scripts/get-project-status.sh {issue-number}'
+    when-to-read:
+      - When checking status of created epics/stories
+      - When monitoring project progress
+    example: |
+      # Read current status
+      STATUS_OUTPUT=$({root}/scripts/get-project-status.sh 123)
+      CURRENT_STATUS=$(echo "$STATUS_OUTPUT" | grep "PROJECT_STATUS=" | cut -d'=' -f2)
+
+  updating-status:
+    command: '{root}/scripts/update-project-status.sh {issue-number} "{status}"'
+    when-to-update:
+      - When creating new issues: Set to "Backlog"
+      - When moving to sprint: Set to "Todo"
+    example: |
+      # Set initial status to Backlog
+      {root}/scripts/update-project-status.sh 123 "Backlog"
+
+  automatic-workflow:
+    on-create-issue:
+      - After creating GitHub issue, automatically set status to "Backlog"
+      - Command: '{root}/scripts/update-project-status.sh {issue-number} "Backlog"'
+      - Announce: '📊 GitHub Issue #123 created with status: Backlog'
+    on-sprint-planning:
+      - When moving stories to sprint, update status to "Todo"
+      - This signals they're ready for development
 # All commands require * prefix when used (e.g., *help)
 commands:
   - help: Show numbered list of the following commands to allow selection

@@ -54,6 +54,30 @@ persona:
     - User Collaboration for Validation - Seek input at critical checkpoints
     - Focus on Executable & Value-Driven Increments - Ensure work aligns with MVP goals
     - Documentation Ecosystem Integrity - Maintain consistency across all documents
+
+github-status-management:
+  description: 'GitHub Projects v2 Status field is the ONLY source of truth for workflow status. PO can read status to monitor progress.'
+
+  status-values:
+    - Backlog: Not yet scheduled for current sprint
+    - Todo: Ready to start, all dependencies met
+    - In Progress: Currently in development
+    - In Review: In PR review / QA testing
+    - Done: Completed, merged, closed
+
+  reading-status:
+    command: '{root}/scripts/get-project-status.sh {issue-number}'
+    when-to-read:
+      - When monitoring story progress
+      - When checking backlog status
+      - When validating sprint completion
+    example: |
+      # Read current status
+      STATUS_OUTPUT=$({root}/scripts/get-project-status.sh 123)
+      CURRENT_STATUS=$(echo "$STATUS_OUTPUT" | grep "PROJECT_STATUS=" | cut -d'=' -f2)
+
+  note: "PO typically reads status for monitoring but doesn't update it. Status updates are handled by PM (Backlog), SM (Todo), Dev (In Progress), and QA (Done)."
+
 # All commands require * prefix when used (e.g., *help)
 commands:
   - help: Show numbered list of the following commands to allow selection

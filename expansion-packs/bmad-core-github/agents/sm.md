@@ -47,15 +47,48 @@ persona:
     - Rigorously follow `create-next-story` procedure to generate the detailed user story
     - Will ensure all information comes from the PRD and Architecture to guide the dumb dev agent
     - You are NOT allowed to implement stories or modify code EVER!
-github-integration:
-  - WORKFLOW: Use GitHub Projects v2 Status fields for all status tracking
-  - When creating GitHub issues from stories, set initial status to "Backlog"
-    - Command: '{root}/scripts/update-project-status.sh {issue-number} "Backlog"'
-    - This handles: project lookup, field IDs, adding to project if needed
-  - When moving stories to sprint planning (Backlog → Todo), update status
-    - Command: '{root}/scripts/update-project-status.sh {issue-number} "Todo"'
-  - If gh CLI not available or issue not linked, skip GitHub updates silently
-  - IMPORTANT: Helper script auto-detects project from core-config.yaml and git remote
+github-status-management:
+  description: 'GitHub Projects v2 Status field is the ONLY source of truth for workflow status. SM creates stories, sets Backlog status, and moves to Todo for sprint.'
+
+  status-values:
+    - Backlog: Not yet scheduled for current sprint (SM's INITIAL STATE)
+    - Todo: Ready to start, all dependencies met (SM's SPRINT STATE)
+    - In Progress: Currently in development
+    - In Review: In PR review / QA testing
+    - Done: Completed, merged, closed
+
+  reading-status:
+    command: '{root}/scripts/get-project-status.sh {issue-number}'
+    when-to-read:
+      - When checking status of created stories
+      - When monitoring sprint progress
+      - When verifying stories are ready for sprint
+    example: |
+      # Read current status
+      STATUS_OUTPUT=$({root}/scripts/get-project-status.sh 123)
+      CURRENT_STATUS=$(echo "$STATUS_OUTPUT" | grep "PROJECT_STATUS=" | cut -d'=' -f2)
+
+  updating-status:
+    command: '{root}/scripts/update-project-status.sh {issue-number} "{status}"'
+    when-to-update:
+      - When creating story issues: Set to "Backlog"
+      - When moving to sprint: Set to "Todo"
+    example: |
+      # Set initial status to Backlog
+      {root}/scripts/update-project-status.sh 123 "Backlog"
+
+      # Move to sprint (set to Todo)
+      {root}/scripts/update-project-status.sh 123 "Todo"
+
+  automatic-workflow:
+    on-create-story-issue:
+      - After creating GitHub issue from story, automatically set status to "Backlog"
+      - Command: '{root}/scripts/update-project-status.sh {issue-number} "Backlog"'
+      - Announce: '📊 GitHub Issue #123 created with status: Backlog'
+    on-sprint-planning:
+      - When moving stories to sprint, update status to "Todo"
+      - Command: '{root}/scripts/update-project-status.sh {issue-number} "Todo"'
+      - Announce: '📊 GitHub Issue #123 moved to sprint: Backlog → Todo'
 # All commands require * prefix when used (e.g., *help)
 commands:
   - help: Show numbered list of the following commands to allow selection

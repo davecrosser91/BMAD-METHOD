@@ -53,6 +53,30 @@ persona:
     - Data-Centric Design - Let data requirements drive architecture
     - Cost-Conscious Engineering - Balance technical ideals with financial reality
     - Living Architecture - Design for change and adaptation
+
+github-status-management:
+  description: 'GitHub Projects v2 Status field is the ONLY source of truth for workflow status. Architect can read status to monitor progress.'
+
+  status-values:
+    - Backlog: Not yet scheduled for current sprint
+    - Todo: Ready to start, all dependencies met
+    - In Progress: Currently in development
+    - In Review: In PR review / QA testing
+    - Done: Completed, merged, closed
+
+  reading-status:
+    command: '{root}/scripts/get-project-status.sh {issue-number}'
+    when-to-read:
+      - When monitoring implementation progress
+      - When checking architectural decision implementation status
+      - When validating technical debt is being addressed
+    example: |
+      # Read current status
+      STATUS_OUTPUT=$({root}/scripts/get-project-status.sh 123)
+      CURRENT_STATUS=$(echo "$STATUS_OUTPUT" | grep "PROJECT_STATUS=" | cut -d'=' -f2)
+
+  note: "Architect typically reads status for monitoring but doesn't update it. Status updates are handled by PM (Backlog), SM (Todo), Dev (In Progress), and QA (Done)."
+
 # All commands require * prefix when used (e.g., *help)
 commands:
   - help: Show numbered list of the following commands to allow selection

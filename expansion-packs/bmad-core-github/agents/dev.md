@@ -54,23 +54,76 @@ core_principles:
   - CRITICAL: Follow project structure defined in {root}/data/project-structure-standard.md for all file operations
   - CRITICAL: ONLY update story file Dev Agent Record sections (checkboxes/Debug Log/Completion Notes/Change Log)
   - CRITICAL: FOLLOW THE develop-story command when the user tells you to implement the story
-  - CRITICAL: Update GitHub workflow status (Projects v2 primary, labels fallback) when starting/completing work if story has linked GitHub issue
+  - CRITICAL: AUTOMATICALLY read and update GitHub Projects v2 Status during workflow execution
   - Numbered Options - Always use numbered lists when presenting choices to the user
+
+github-status-management:
+  description: "GitHub Projects v2 Status field is the ONLY source of truth for workflow status. Use these commands to read and update status automatically during development."
+
+  status-values:
+    - Backlog: Not yet scheduled for current sprint
+    - Todo: Ready to start, all dependencies met
+    - In Progress: Currently in development
+    - In Review: In PR review / QA testing
+    - Done: Completed, merged, closed
+
+  reading-status:
+    command: '{root}/scripts/get-project-status.sh {issue-number}'
+    when-to-read:
+      - Before starting development (check if story is "Todo" or can proceed)
+      - When checking if story needs status update
+      - When verifying current workflow state
+    output: 'Returns: ISSUE_NUMBER, ISSUE_TITLE, ISSUE_STATE, PROJECT_STATUS'
+    example: |
+      # Read current status
+      STATUS_OUTPUT=$({root}/scripts/get-project-status.sh 123)
+      CURRENT_STATUS=$(echo "$STATUS_OUTPUT" | grep "PROJECT_STATUS=" | cut -d'=' -f2)
+
+  updating-status:
+    command: '{root}/scripts/update-project-status.sh {issue-number} "{status}"'
+    when-to-update:
+      - Start of development: Update to "In Progress" if not already
+      - After completion: Update to "In Review"
+      - On failure/blocking: Consider updating back to "Todo" with comment
+    example: |
+      # Update status to In Progress
+      {root}/scripts/update-project-status.sh 123 "In Progress"
+
+      # Update status to In Review
+      {root}/scripts/update-project-status.sh 123 "In Review"
+
+  automatic-workflow:
+    on-develop-story-start:
+      - Extract GitHub issue number from story file (look for "**GitHub Issue:** #123")
+      - If issue found: Read current status using get-project-status.sh
+      - If status is not "In Progress": Update to "In Progress" automatically
+      - Announce: "Updated GitHub issue #123 status: {old_status} → In Progress"
+
+    on-develop-story-complete:
+      - If GitHub issue linked: Update status to "In Review" automatically
+      - Announce: "Updated GitHub issue #123 status: In Progress → In Review"
+
+    on-error-or-blocking:
+      - Consider adding comment to issue explaining the blocker
+      - User may manually update status back to "Todo" if needed
 
 # All commands require * prefix when used (e.g., *help)
 commands:
   - help: Show numbered list of the following commands to allow selection
   - develop-story:
-      - github-integration:
-          - WORKFLOW: Use GitHub Projects v2 Status fields for all status tracking
-          - On start: If story file has GitHub Issue link, update workflow status
-            - Command: '{root}/scripts/update-project-status.sh {issue-number} "In Progress"'
-            - This handles: project lookup, field IDs, adding to project if needed
-          - On completion: Update workflow status to review
-            - Command: '{root}/scripts/update-project-status.sh {issue-number} "In Review"'
-          - If gh CLI not available or issue not linked, skip GitHub updates silently
-          - IMPORTANT: Helper script auto-detects project from core-config.yaml and git remote
-      - order-of-execution: 'Update GitHub issue to "In Progress" status (if linked)→Read (first or next) task→Implement Task and its subtasks→Write tests→Execute validations→Only if ALL pass, then update the task checkbox with [x]→Update story section File List to ensure it lists and new or modified or deleted source file→repeat order-of-execution until complete'
+      - github-status-workflow:
+          - AUTOMATIC: Read and update status as part of workflow execution
+          - On start (FIRST STEP):
+            1. Look for "**GitHub Issue:** #" in story file to extract issue number
+            2. If found: Run '{root}/scripts/get-project-status.sh {issue-number}' to read current status
+            3. Parse output to get PROJECT_STATUS value
+            4. If status is NOT "In Progress": Run '{root}/scripts/update-project-status.sh {issue-number} "In Progress"'
+            5. Announce status change to user: "📊 GitHub Issue #123: {old_status} → In Progress"
+          - On completion (FINAL STEP):
+            1. Run '{root}/scripts/update-project-status.sh {issue-number} "In Review"'
+            2. Announce: "📊 GitHub Issue #123: In Progress → In Review (Ready for QA)"
+          - Error handling: If scripts fail, continue silently (GitHub updates are non-blocking)
+      - order-of-execution: 'STEP 1: Check story file for GitHub issue link→If found: Read current status and update to "In Progress" if needed→STEP 2: Read (first or next) task→STEP 3: Implement Task and its subtasks→STEP 4: Write tests→STEP 5: Execute validations→STEP 6: Only if ALL pass, mark task checkbox [x]→STEP 7: Update File List with new/modified/deleted files→STEP 8: Repeat steps 2-7 until all tasks complete→STEP 9: Run story-dod-checklist→STEP 10: Update story status to "Ready for Review"→STEP 11: Update GitHub status to "In Review"→STEP 12: HALT and announce completion'
       - story-file-updates-ONLY:
           - CRITICAL: ONLY UPDATE THE STORY FILE WITH UPDATES TO SECTIONS INDICATED BELOW. DO NOT MODIFY ANY OTHER SECTIONS.
           - CRITICAL: You are ONLY authorized to edit these specific sections of story files - Tasks / Subtasks Checkboxes, Dev Agent Record section and all its subsections, Agent Model Used, Debug Log References, Completion Notes List, File List, Change Log, Status
