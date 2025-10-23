@@ -126,3 +126,94 @@ ALWAYS cite source documents: `[Source: architecture/{filename}.md#{section}]`
   - Any deviations or conflicts noted between epic and architecture
   - Checklist Results
   - Next steps: For Complex stories, suggest the user carefully review the story draft and also optionally have the PO run the task `{root}/tasks/validate-next-story`
+
+### 7. Create GitHub Issue from Story (Optional but Recommended)
+
+**Purpose:** Create a GitHub issue with full context for Claude Code integration via `@github #issue` mentions.
+
+**When to create:**
+
+- **Recommended:** Always create GitHub issues for stories to enable Claude Code integration
+- **Required:** If using Claude Code as primary development interface instead of BMAD Dev agent
+- **Optional:** If using only BMAD Dev agent workflow (story files are sufficient)
+
+**How to create:**
+
+#### Option A: Ask User (Recommended)
+
+Ask the user: "Would you like to create a GitHub issue for this story? This enables Claude Code integration via `@github #issue` mentions. (y/n)"
+
+If yes, proceed to Option B.
+
+#### Option B: Create Issue Automatically
+
+```bash
+# Run the helper script
+{root}/scripts/create-github-issue-from-story.sh {devStoryLocation}/{epic}.{major}.{minor}.story.md --milestone "{epicName}"
+```
+
+**What this does:**
+
+1. Extracts all story content (Story, AC, Tasks, Dev Notes, Testing)
+2. Creates a GitHub issue with complete technical context
+3. Adds labels: `type:story`, `size:*`, `priority:*`, `status:backlog`
+4. Links to milestone (epic)
+5. Updates story file with GitHub issue reference
+6. Optionally sets initial Projects v2 status to "Backlog"
+
+**Issue Creation Parameters:**
+
+- **Title:** `[{epic}.{major}.{minor}] {Story Title}`
+- **Labels:** `type:story`, `size:{size}`, `priority:{priority}`, `status:backlog`
+- **Milestone:** Epic name (from story file or PRD)
+- **Body:** Complete story context including:
+  - User story statement
+  - Acceptance criteria
+  - Tasks & subtasks (with checkboxes)
+  - **Dev Notes** (CRITICAL - all architecture context)
+  - Testing requirements
+  - Reference documents
+  - Definition of Done checklist
+
+**After Issue Creation:**
+
+- Story file is automatically updated with GitHub issue reference
+- Issue number added to story header: `**GitHub Issue:** #123`
+- Issue URL added: `**GitHub URL:** https://github.com/...`
+
+**Using the Issue with Claude Code:**
+
+```bash
+# In Claude Code or IDE
+@github #123 please implement this story following all dev notes and acceptance criteria
+```
+
+**Benefits:**
+
+- ✅ Claude Code gets complete context without reading architecture docs
+- ✅ Single source of truth (story content in both file and issue)
+- ✅ Native GitHub integration (comments, labels, Projects v2)
+- ✅ Bidirectional linking (story file ↔ GitHub issue)
+- ✅ Full traceability in GitHub
+
+**Manual Status Updates (if needed):**
+
+```bash
+# Start work
+{root}/scripts/update-project-status.sh {issue-number} "In Progress"
+
+# Mark for review
+{root}/scripts/update-project-status.sh {issue-number} "In Review"
+
+# Complete
+{root}/scripts/update-project-status.sh {issue-number} "Done"
+```
+
+**Provide GitHub Issue Summary (if created):**
+
+- GitHub issue created: #{issue-number}
+- URL: {issue-url}
+- Linked to story file: `{devStoryLocation}/{epic}.{major}.{minor}.story.md`
+- Labels: `type:story`, `{size}`, `{priority}`, `status:backlog`
+- Milestone: {epicName}
+- Ready for Claude Code: `@github #{issue-number} implement this story`

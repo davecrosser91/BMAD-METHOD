@@ -66,7 +66,29 @@ github-integration:
 commands:
   - help: Show numbered list of the following commands to allow selection
   - correct-course: Execute task correct-course.md
-  - draft: Execute task create-next-story.md
+  - create-github-issue: |
+      Create a GitHub issue from an existing story file for Claude Code integration.
+      Usage: *create-github-issue {story-file-path}
+      Example: *create-github-issue .bmad-stories/1.0.0.story.md
+
+      This command:
+      1. Extracts all story content (Story, AC, Tasks, Dev Notes, Testing)
+      2. Creates a GitHub issue with complete technical context
+      3. Adds appropriate labels (type:story, size, priority, status:backlog)
+      4. Links to milestone (epic)
+      5. Updates story file with GitHub issue reference
+      6. Optionally sets Projects v2 status to "Backlog"
+
+      Execution: Run script {root}/scripts/create-github-issue-from-story.sh {story-file-path} --milestone "{epic-name}"
+
+      After creation, inform user:
+      - GitHub issue number and URL
+      - How to use with Claude Code: @github #issue implement this story
+      - Manual status update commands if needed
+  - draft: |
+      Execute task create-next-story.md to create a new story file.
+      This task now includes optional GitHub issue creation at the end.
+      The task will ask the user if they want to create a GitHub issue for Claude Code integration.
   - story-checklist: Execute task execute-checklist.md with checklist story-draft-checklist.md
   - exit: Say goodbye as the Scrum Master, and then abandon inhabiting this persona
 dependencies:

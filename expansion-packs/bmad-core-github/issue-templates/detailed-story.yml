@@ -1,0 +1,365 @@
+name: 📖 Detailed Story (Claude Code Compatible)
+description: Full-context story for Claude Code implementation via @github mentions
+title: "[E.M.m] Story Title"
+labels: ["type:story", "status:backlog"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🎯 Purpose
+        This template provides **complete context** for Claude Code to implement via `@github #issue` without needing to read external architecture documents.
+
+        **CRITICAL:** Fill in the **Dev Notes** section with all technical context from architecture docs!
+
+  - type: input
+    id: story-number
+    attributes:
+      label: Story Number
+      description: "Epic.Major.Minor format (e.g., 1.0.0, 1.2.1)"
+      placeholder: "1.0.0"
+    validations:
+      required: true
+
+  - type: input
+    id: epic-name
+    attributes:
+      label: Epic Name
+      description: "Name of the epic/milestone this story belongs to"
+      placeholder: "Epic 1: Foundation & Core Infrastructure"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: size
+    attributes:
+      label: Story Size
+      description: "Estimated effort"
+      options:
+        - "size:xs (< 1 hour)"
+        - "size:s (1-4 hours)"
+        - "size:m (1 day)"
+        - "size:l (2-3 days)"
+        - "size:xl (> 3 days)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: "Business priority"
+      options:
+        - "priority:p0 (Critical)"
+        - "priority:p1 (High)"
+        - "priority:p2 (Medium)"
+        - "priority:p3 (Low)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: user-story
+    attributes:
+      label: 📖 User Story
+      description: "Standard user story format"
+      placeholder: |
+        **As a** [role],
+        **I want** [action],
+        **so that** [benefit]
+
+      value: |
+        **As a**
+        **I want**
+        **so that**
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: ✅ Acceptance Criteria
+      description: "Numbered list of specific, testable requirements"
+      placeholder: |
+        1. User can enter email and password in the signup form
+        2. System validates email format and password strength
+        3. System creates user account and sends confirmation email
+        4. User is redirected to dashboard after successful signup
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    id: tasks-subtasks
+    attributes:
+      label: 📋 Tasks & Subtasks
+      description: "Detailed breakdown with checkboxes (reference AC numbers where applicable)"
+      placeholder: |
+        - [ ] **Task 1: Create signup form component** (AC: #1)
+          - [ ] Add email input with validation
+          - [ ] Add password input with strength indicator
+          - [ ] Add submit button
+        - [ ] **Task 2: Implement API endpoint** (AC: #2, #3)
+          - [ ] Create POST /api/auth/signup endpoint
+          - [ ] Add email validation logic
+          - [ ] Add password hashing
+          - [ ] Create user in database
+          - [ ] Send confirmation email
+        - [ ] **Task 3: Write Tests** (AC: all)
+          - [ ] Unit tests for signup form validation
+          - [ ] Integration tests for signup API
+          - [ ] E2E test for complete signup flow
+      value: |
+        - [ ] **Task 1:**
+          - [ ]
+        - [ ] **Task 2:**
+          - [ ]
+        - [ ] **Task 3: Write Tests**
+          - [ ] Unit tests
+          - [ ] Integration tests
+    validations:
+      required: true
+
+  - type: textarea
+    id: dev-notes
+    attributes:
+      label: 🛠️ Dev Notes (CRITICAL - Complete Technical Context)
+      description: |
+        **CRITICAL:** This section must contain ALL technical context needed for implementation.
+        Claude Code should NEVER need to read architecture docs if this section is complete.
+
+        Include: Project structure, tech stack, data models, API specs, testing requirements, coding standards, previous story learnings.
+
+        ALWAYS cite sources: [Source: docs/architecture/file.md#section]
+      placeholder: |
+        ### Architecture Context
+
+        **Project Structure:**
+        - New files go in: `src/features/auth/`
+        - Components: `src/features/auth/components/`
+        - API routes: `src/api/auth/`
+        - Tests: `tests/features/auth/`
+        [Source: docs/architecture/unified-project-structure.md#features]
+
+        **Tech Stack:**
+        - Framework: React 18 with TypeScript
+        - State Management: Redux Toolkit
+        - API: Express.js with TypeScript
+        - Database: PostgreSQL with Prisma ORM
+        - Testing: Jest + React Testing Library
+        [Source: docs/architecture/tech-stack.md]
+
+        **Coding Standards:**
+        - Use functional components with hooks
+        - Follow ESLint config at `.eslintrc.js`
+        - Naming: `camelCase` for functions/variables, `PascalCase` for components
+        - File naming: `kebab-case.tsx` for components
+        - Export components as named exports
+        [Source: docs/architecture/coding-standards.md#react]
+
+        ### Data Models
+
+        ```typescript
+        // User model for authentication
+        // [Source: docs/architecture/data-models.md#user-model]
+        interface User {
+          id: string;           // UUID v4
+          email: string;        // Unique, validated
+          passwordHash: string; // bcrypt hashed
+          createdAt: Date;
+          updatedAt: Date;
+        }
+
+        // Signup request DTO
+        interface SignupRequest {
+          email: string;
+          password: string;
+        }
+
+        // Signup response DTO
+        interface SignupResponse {
+          id: string;
+          email: string;
+          token: string; // JWT
+        }
+        ```
+
+        ### API Specifications
+
+        **Endpoint to implement:**
+        - `POST /api/auth/signup`
+          - Request body: `{ email: string, password: string }`
+          - Response: `{ id: string, email: string, token: string }`
+          - Status codes: 201 (created), 400 (validation error), 409 (email exists)
+          - Authentication: None (public endpoint)
+        [Source: docs/architecture/rest-api-spec.md#auth-endpoints]
+
+        ### Component Specifications
+
+        **SignupForm Component:**
+        - Location: `src/features/auth/components/SignupForm.tsx`
+        - Props: `{ onSuccess: (user: User) => void }`
+        - State: form values, validation errors, loading state
+        - Uses `useForm` hook from react-hook-form
+        - Validation: email regex, password min 8 chars, 1 uppercase, 1 number
+        [Source: docs/architecture/components.md#auth-forms]
+
+        ### Testing Requirements
+
+        **Test Location:** `tests/features/auth/signup.test.ts`
+
+        **Coverage Required:** ≥ 80%
+
+        **Test Cases:**
+        1. Unit tests for SignupForm component:
+           - Renders form fields correctly
+           - Validates email format
+           - Validates password strength
+           - Shows error messages
+           - Calls onSuccess on valid submit
+        2. Integration tests for signup API:
+           - Creates user with valid data
+           - Returns 400 for invalid email
+           - Returns 400 for weak password
+           - Returns 409 for duplicate email
+        3. E2E test:
+           - Complete signup flow from form to dashboard redirect
+
+        **Testing Framework:** Jest + React Testing Library
+        **Test Pattern:** AAA (Arrange, Act, Assert)
+        [Source: docs/architecture/testing-strategy.md#unit-testing]
+
+        ### Previous Story Notes
+
+        _(Include learnings from previous story if applicable)_
+        - Story 1.0.0 established the base authentication structure
+        - JWT token generation uses 24h expiry
+        - Email service uses SendGrid with template "welcome-email"
+
+        ### Security Notes
+
+        - NEVER store plain-text passwords
+        - Use bcrypt with salt rounds = 12
+        - Validate and sanitize all user inputs
+        - Rate limit signup endpoint: 5 requests per 15 minutes per IP
+        [Source: docs/architecture/security.md#authentication]
+
+        ### Performance Notes
+
+        - Database query should use connection pooling
+        - Email sending should be async (don't block response)
+        - Consider adding signup to background job queue for high load
+        [Source: docs/architecture/performance.md#async-operations]
+      value: |
+        ### Architecture Context
+
+        **Project Structure:**
+        - New files go in:
+        - Tests go in:
+        [Source: ]
+
+        **Tech Stack:**
+        - Framework:
+        - Testing:
+        [Source: ]
+
+        **Coding Standards:**
+        -
+        [Source: ]
+
+        ### Data Models
+
+        ```typescript
+        // [Source: ]
+
+        ```
+
+        ### API Specifications
+
+        **Endpoints to implement/consume:**
+        -
+        [Source: ]
+
+        ### Testing Requirements
+
+        - **Test Location:**
+        - **Coverage Required:**
+        - **Framework:**
+        [Source: ]
+
+        ### Previous Story Notes
+
+        -
+
+        ### Security/Performance Notes
+
+        -
+    validations:
+      required: true
+
+  - type: textarea
+    id: reference-docs
+    attributes:
+      label: 📚 Reference Documents
+      description: "Links to full architecture docs for deep dive if needed"
+      placeholder: |
+        **Full context available at:**
+        - Architecture: `docs/architecture/`
+        - PRD: `docs/prd/epic-1-foundation.md`
+        - Story File: `.bmad-stories/1.0.0.story.md`
+
+        **Key files to reference if needed:**
+        - `docs/architecture/coding-standards.md` - Full coding conventions
+        - `docs/architecture/tech-stack.md` - Technology decisions
+        - `docs/architecture/unified-project-structure.md` - Project structure
+        - `docs/architecture/rest-api-spec.md` - Complete API documentation
+      value: |
+        **Full context available at:**
+        - Architecture: `docs/architecture/`
+        - PRD: `docs/prd/`
+        - Story File: `.bmad-stories/`
+
+  - type: checkboxes
+    id: definition-of-done
+    attributes:
+      label: ✨ Definition of Done
+      description: "Checklist for completion"
+      options:
+        - label: All tasks completed
+        - label: All acceptance criteria met
+        - label: Tests written and passing (≥80% coverage)
+        - label: Code follows coding standards
+        - label: PR created and linked to this issue
+        - label: Code review completed
+        - label: Merged to main
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+        ## 💡 How to Use with Claude Code
+
+        Once this issue is created, you can use it with Claude Code:
+
+        ```
+        @github #[issue-number] please implement this story following all dev notes and acceptance criteria
+        ```
+
+        Claude Code will read the full issue context and implement without needing external docs!
+
+        ## 🔄 Status Updates
+
+        Update status manually or via Projects v2:
+
+        ```bash
+        # Start work
+        ./expansion-packs/bmad-core-github/scripts/update-project-status.sh [issue-number] "In Progress"
+
+        # Mark for review
+        ./expansion-packs/bmad-core-github/scripts/update-project-status.sh [issue-number] "In Review"
+
+        # Complete
+        ./expansion-packs/bmad-core-github/scripts/update-project-status.sh [issue-number] "Done"
+        ```
