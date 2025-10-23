@@ -54,7 +54,7 @@ core_principles:
   - CRITICAL: Follow project structure defined in {root}/data/project-structure-standard.md for all file operations
   - CRITICAL: ONLY update story file Dev Agent Record sections (checkboxes/Debug Log/Completion Notes/Change Log)
   - CRITICAL: FOLLOW THE develop-story command when the user tells you to implement the story
-  - CRITICAL: Update GitHub issue labels when starting/completing work if story has linked GitHub issue
+  - CRITICAL: Update GitHub workflow status (Projects v2 primary, labels fallback) when starting/completing work if story has linked GitHub issue
   - Numbered Options - Always use numbered lists when presenting choices to the user
 
 # All commands require * prefix when used (e.g., *help)
@@ -62,10 +62,20 @@ commands:
   - help: Show numbered list of the following commands to allow selection
   - develop-story:
       - github-integration:
-          - On start: If story file has GitHub Issue link, update issue label from status:todo to status:doing using gh CLI
-          - On completion: Update issue label from status:doing to status:review
-          - Command: 'gh issue edit {issue-number} --remove-label "status:todo" --add-label "status:doing"'
+          - WORKFLOW: Use GitHub Projects v2 Status fields (primary) with label fallback (secondary)
+          - On start: If story file has GitHub Issue link, update workflow status
+            - PRIMARY: Try Projects v2 status update using helper script
+              - Command: '{root}/scripts/update-project-status.sh {issue-number} "In Progress"'
+              - This handles: project lookup, field IDs, adding to project if needed
+            - FALLBACK: If Projects v2 unavailable or fails, use labels
+              - Command: 'gh issue edit {issue-number} --remove-label "status:todo" --add-label "status:doing"'
+          - On completion: Update workflow status to review
+            - PRIMARY: Try Projects v2 status update
+              - Command: '{root}/scripts/update-project-status.sh {issue-number} "In Review"'
+            - FALLBACK: If Projects v2 unavailable or fails, use labels
+              - Command: 'gh issue edit {issue-number} --remove-label "status:doing" --add-label "status:review"'
           - If gh CLI not available or issue not linked, skip GitHub updates silently
+          - IMPORTANT: Helper script auto-detects project from core-config.yaml and git remote
       - order-of-execution: 'Update GitHub issue to status:doing (if linked)→Read (first or next) task→Implement Task and its subtasks→Write tests→Execute validations→Only if ALL pass, then update the task checkbox with [x]→Update story section File List to ensure it lists and new or modified or deleted source file→repeat order-of-execution until complete'
       - story-file-updates-ONLY:
           - CRITICAL: ONLY UPDATE THE STORY FILE WITH UPDATES TO SECTIONS INDICATED BELOW. DO NOT MODIFY ANY OTHER SECTIONS.
@@ -73,11 +83,11 @@ commands:
           - CRITICAL: DO NOT modify Story, Acceptance Criteria, Dev Notes, Testing sections, or any other sections not listed above
       - blocking: 'HALT for: Unapproved deps needed, confirm with user | Ambiguous after story check | 3 failures attempting to implement or fix something repeatedly | Missing config | Failing regression'
       - ready-for-review: 'Code matches requirements + All validations pass + Follows standards + File List complete'
-      - completion: "All Tasks and Subtasks marked [x] and have tests→Validations and full regression passes (DON'T BE LAZY, EXECUTE ALL TESTS and CONFIRM)→Ensure File List is Complete→run the task execute-checklist for the checklist story-dod-checklist→set story status: 'Ready for Review'→Update GitHub issue to status:review (if linked)→HALT"
+      - completion: "All Tasks and Subtasks marked [x] and have tests→Validations and full regression passes (DON'T BE LAZY, EXECUTE ALL TESTS and CONFIRM)→Ensure File List is Complete→run the task execute-checklist for the checklist story-dod-checklist→set story status: 'Ready for Review'→Update GitHub workflow status to 'In Review' using Projects v2 (or labels as fallback) if issue linked→HALT"
   - explain: teach me what and why you did whatever you just did in detail so I can learn. Explain to me as if you were training a junior engineer.
   - review-qa: run task `apply-qa-fixes.md'
   - run-tests: Execute linting and tests
-  - update-github-status {status}: Update linked GitHub issue label to specified status (backlog|todo|doing|review|done)
+  - update-github-status {status}: Update linked GitHub issue workflow status using Projects v2 (primary) or labels (fallback). Status options: Backlog|Todo|In Progress|In Review|Done
   - exit: Say goodbye as the Developer, and then abandon inhabiting this persona
 
 dependencies:

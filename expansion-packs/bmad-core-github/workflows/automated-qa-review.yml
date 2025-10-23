@@ -175,7 +175,42 @@ ${review}
 🤖 *Automated review by BMAD QA Agent using Claude Sonnet 4*`
             });
 
-      - name: Update linked issue labels
+      - name: Update GitHub Projects v2 status (primary)
+        if: steps.pr.outputs.result.linked_issue
+        continue-on-error: true
+        run: |
+          ISSUE_NUMBER=$(echo '${{ steps.pr.outputs.result }}' | jq -r '.linked_issue')
+          VERDICT="${{ steps.qa.outputs.verdict }}"
+
+          if [ -z "$ISSUE_NUMBER" ] || [ "$ISSUE_NUMBER" = "null" ]; then
+            echo "No linked issue found"
+            exit 0
+          fi
+
+          # Determine target status based on verdict
+          if [ "$VERDICT" = "PASS" ]; then
+            STATUS="Done"
+          elif [ "$VERDICT" = "FAIL_MINOR" ]; then
+            STATUS="In Review"
+          else
+            STATUS="In Progress"
+          fi
+
+          # Try to update Projects v2 status using helper script
+          if [ -f "./expansion-packs/bmad-core-github/scripts/update-project-status.sh" ]; then
+            echo "Attempting to update Projects v2 status to: $STATUS"
+            chmod +x ./expansion-packs/bmad-core-github/scripts/update-project-status.sh
+            ./expansion-packs/bmad-core-github/scripts/update-project-status.sh "$ISSUE_NUMBER" "$STATUS" || {
+              echo "Projects v2 update failed, will fall back to labels"
+              exit 1
+            }
+            echo "✅ Successfully updated Projects v2 status"
+          else
+            echo "Helper script not found, will use label fallback"
+            exit 1
+          fi
+
+      - name: Update linked issue labels (fallback)
         if: steps.pr.outputs.result.linked_issue
         uses: actions/github-script@v7
         with:

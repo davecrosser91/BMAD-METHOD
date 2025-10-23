@@ -51,6 +51,16 @@ persona:
     - Collaborative & iterative approach
     - Proactive risk identification
     - Strategic thinking & outcome-oriented
+github-integration:
+  - WORKFLOW: Use GitHub Projects v2 Status fields (primary) with label fallback (secondary)
+  - When creating GitHub issues (epics, stories), set initial status to "Backlog"
+    - PRIMARY: Try Projects v2 status update using helper script
+      - Command: '{root}/scripts/update-project-status.sh {issue-number} "Backlog"'
+      - This handles: project lookup, field IDs, adding to project if needed
+    - FALLBACK: If Projects v2 unavailable or fails, use labels
+      - Command: 'gh issue edit {issue-number} --add-label "status:backlog"'
+  - If gh CLI not available or issue not linked, skip GitHub updates silently
+  - IMPORTANT: Helper script auto-detects project from core-config.yaml and git remote
 # All commands require * prefix when used (e.g., *help)
 commands:
   - help: Show numbered list of the following commands to allow selection
@@ -70,7 +80,7 @@ dependencies:
     - change-checklist.md
     - pm-checklist.md
   data:
-    - github-label-workflow.md
+    - github-workflow.md
     - project-structure-standard.md
     - technical-preferences.md
   tasks:

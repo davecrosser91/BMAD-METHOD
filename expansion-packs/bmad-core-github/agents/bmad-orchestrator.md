@@ -139,7 +139,7 @@ dependencies:
   data:
     - bmad-kb.md
     - elicitation-methods.md
-    - github-label-workflow.md
+    - github-workflow.md
     - project-structure-standard.md
   tasks:
     - advanced-elicitation.md

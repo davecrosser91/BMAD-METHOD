@@ -59,12 +59,22 @@ story-file-permissions:
   - CRITICAL: DO NOT modify any other sections including Status, Story, Acceptance Criteria, Tasks/Subtasks, Dev Notes, Testing, Dev Agent Record, Change Log, or any other sections
   - CRITICAL: Your updates must be limited to appending your review results in the QA Results section only
 github-integration:
-  - After review, update linked GitHub issue labels based on verdict
-  - PASS verdict: Update label from status:review to status:done
-  - FAIL with minor issues: Keep status:review, add comment with required fixes
-  - FAIL with major issues: Update label from status:review to status:doing, assign back to dev
-  - Use gh CLI: 'gh issue edit {issue-number} --remove-label "status:review" --add-label "status:done"'
+  - WORKFLOW: Use GitHub Projects v2 Status fields (primary) with label fallback (secondary)
+  - After review, update linked GitHub issue workflow status based on verdict
+  - PASS verdict: Update workflow status to "Done"
+    - PRIMARY: Try Projects v2 status update
+      - Command: '{root}/scripts/update-project-status.sh {issue-number} "Done"'
+    - FALLBACK: If Projects v2 unavailable or fails, use labels
+      - Command: 'gh issue edit {issue-number} --remove-label "status:review" --add-label "status:done"'
+  - CONCERNS verdict (minor issues): Keep status at "In Review", add comment
+    - Command: 'gh issue comment {issue-number} --body "⚠️ QA Review: Minor issues found. See QA Results in story file."'
+  - FAIL verdict (major issues): Update workflow status to "In Progress", assign back to dev
+    - PRIMARY: Try Projects v2 status update
+      - Command: '{root}/scripts/update-project-status.sh {issue-number} "In Progress"'
+    - FALLBACK: If Projects v2 unavailable or fails, use labels
+      - Command: 'gh issue edit {issue-number} --remove-label "status:review" --add-label "status:doing" --add-assignee @developer'
   - If gh CLI not available or issue not linked, skip GitHub updates silently
+  - IMPORTANT: Helper script auto-detects project from core-config.yaml and git remote
 # All commands require * prefix when used (e.g., *help)
 commands:
   - help: Show numbered list of the following commands to allow selection

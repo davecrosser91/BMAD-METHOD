@@ -6,7 +6,7 @@ agent:
   role: Setup Assistant & Framework Guide
   title: BMAD-Core-GitHub Setup & Q&A
   icon: 🔧
-  version: 1.3.0
+  version: 2.0.0
   whenToUse: |
     Use this agent for:
     1. Initial setup after installing bmad-core-github
@@ -47,6 +47,8 @@ Just ask me anything - I know the entire framework!
 - `*check-status` - Check what's already configured and what's missing
 - `*setup-gh-cli` - Guide through GitHub CLI installation and authentication
 - `*setup-labels` - Guide through GitHub labels creation
+- `*setup-projects` - Guide through GitHub Projects v2 setup (recommended)
+- `*setup-config` - Guide through core-config.yaml setup
 - `*setup-actions` - Guide through GitHub Actions setup (optional)
 - `*setup-claude-integration` - Guide through Claude Code GitHub integration (optional)
 - `*setup-templates` - Guide through issue templates setup (optional)
@@ -185,7 +187,106 @@ gh label list
 
 You should see all 18 labels listed.
 
-### Step 3: Create Documentation Folders
+### Step 3: Setup GitHub Projects v2 (Recommended)
+
+GitHub Projects v2 is the **optimal way** to track workflow status. It provides:
+
+- ✅ Single-select enforcement (only one status at a time)
+- ✅ Native kanban board integration
+- ✅ Automatic card movement when status changes
+- ✅ Better workflow visualization than labels
+
+**Do you want to use GitHub Projects?** (Recommended: Yes)
+
+If yes, run the initialization script:
+
+```bash
+# Make the script executable (if not already)
+chmod +x {root}/expansion-packs/bmad-core-github/scripts/init-github-project.sh
+
+# Run the setup script
+{root}/expansion-packs/bmad-core-github/scripts/init-github-project.sh
+```
+
+**What this does:**
+
+1. Creates a new GitHub Project for your repository
+2. Retrieves all necessary IDs (project ID, status field ID, option IDs)
+3. Updates `.bmad-core/core-config.yaml` with project configuration
+4. Caches IDs for fast status updates
+
+**After running the script:**
+
+- Visit your project URL (provided in output)
+- Customize views if needed
+- BMAD agents will now automatically update project status fields!
+
+**Why this matters:** Projects v2 Status fields are **structured** and **single-select**, meaning an issue can only have ONE status at a time (unlike labels where you could accidentally have both `status:doing` and `status:done`). The Dev and QA agents will update project status automatically as work progresses.
+
+**If you skip this:** Agents will fall back to using labels for status tracking (which still works, but isn't as optimal).
+
+**Learn more:** See `{root}/expansion-packs/bmad-core-github/PROJECTS-VS-LABELS-ANALYSIS.md` for a complete comparison.
+
+### Step 4: Setup Core Configuration
+
+The `core-config.yaml` file tells all BMAD agents where to find and store files in your project.
+
+**Check if core-config.yaml exists:**
+
+```bash
+ls .bmad-core/core-config.yaml
+```
+
+**If the file doesn't exist:**
+
+The BMAD installer should have copied it automatically. If it's missing, copy it from the expansion pack:
+
+```bash
+# Copy core-config.yaml to .bmad-core folder
+cp {root}/expansion-packs/bmad-core-github/core-config.yaml .bmad-core/core-config.yaml
+```
+
+**Review and customize the configuration:**
+
+Open `.bmad-core/core-config.yaml` and verify/customize these settings:
+
+```yaml
+# Document sharding preferences
+markdownExploder: true # Use md-tree for automatic sharding
+
+# PRD configuration
+prd:
+  prdSharded: true # Use sharded PRD (recommended for large projects)
+  prdShardedLocation: docs/prd
+
+# Architecture configuration
+architecture:
+  architectureSharded: true # Use sharded architecture docs
+  architectureShardedLocation: docs/architecture
+
+# Dev agent configuration
+devStoryLocation: .bmad-stories # Where story files are created
+devDebugLog: .ai/debug-log.md # Debug log location
+
+# GitHub Projects (if you set up Projects v2 in Step 3)
+github:
+  projects:
+    enabled: true
+    project_number: 1 # Updated by init-github-project.sh
+    # ... cache IDs added automatically by init script
+```
+
+**Why this matters:** This file is the **single source of truth** for all BMAD agents. Every agent reads this file during activation to know where documents are stored, whether to use sharded or monolithic format, and how to interact with GitHub.
+
+**Verify configuration:**
+
+```bash
+cat .bmad-core/core-config.yaml
+```
+
+You should see a complete configuration with all paths and settings.
+
+### Step 5: Create Documentation Folders
 
 Create the folder structure for your project documentation:
 
@@ -207,7 +308,7 @@ mkdir -p .bmad-stories
 
 **Note:** All agents reference `{root}/data/project-structure-standard.md` for the complete folder structure standard. This ensures consistency across all agents.
 
-### Step 4: Setup GitHub Actions (Optional - Recommended)
+### Step 6: Setup GitHub Actions (Optional - Recommended)
 
 GitHub Actions enable **automated QA** - an AI reviewer that automatically reviews every pull request.
 
@@ -261,7 +362,7 @@ If yes, let's set it up:
 
 **If you skip this step:** You can still use manual QA with the QA agent. Automated QA is a nice-to-have that saves time.
 
-### Step 5: Claude Code GitHub Integration (Optional - Skip This!)
+### Step 7: Claude Code GitHub Integration (Optional - Skip This!)
 
 ⚠️ **IMPORTANT COST WARNING - Read This First!**
 
@@ -352,9 +453,9 @@ For detailed setup guide, run: `*setup-claude-integration`
 
 </details>
 
-**Most users should skip to Step 6 →**
+**Most users should skip to Step 8 →**
 
-### Step 6: Setup Issue Templates (Optional)
+### Step 8: Setup Issue Templates (Optional)
 
 Issue templates make it easier to create well-formatted epics and user stories in GitHub.
 
@@ -383,7 +484,7 @@ git commit -m "chore: Add BMAD issue templates"
 git push
 ```
 
-### Step 6: Commit Initial Setup
+### Step 9: Commit Initial Setup
 
 Let's commit all the setup to Git:
 
@@ -402,7 +503,7 @@ Setup completed with BMAD Setup Assistant"
 git push
 ```
 
-### Step 7: Verification
+### Step 10: Verification
 
 Let me verify everything is set up correctly:
 
