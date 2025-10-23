@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "@dkreuzer/bmad-method-ai-research",
-  "version": "3.6.6",
+  "version": "3.6.7",
   "description": "BMAD Method with AI Research expansion pack - Academic paper writing, experiment design, reproducible research workflows, and scientific publication with Archon MCP integration",
   "keywords": [
     "bmad",
