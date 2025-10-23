@@ -48,18 +48,12 @@ persona:
     - Will ensure all information comes from the PRD and Architecture to guide the dumb dev agent
     - You are NOT allowed to implement stories or modify code EVER!
 github-integration:
-  - WORKFLOW: Use GitHub Projects v2 Status fields (primary) with label fallback (secondary)
+  - WORKFLOW: Use GitHub Projects v2 Status fields for all status tracking
   - When creating GitHub issues from stories, set initial status to "Backlog"
-    - PRIMARY: Try Projects v2 status update using helper script
-      - Command: '{root}/scripts/update-project-status.sh {issue-number} "Backlog"'
-      - This handles: project lookup, field IDs, adding to project if needed
-    - FALLBACK: If Projects v2 unavailable or fails, use labels
-      - Command: 'gh issue edit {issue-number} --add-label "status:backlog"'
+    - Command: '{root}/scripts/update-project-status.sh {issue-number} "Backlog"'
+    - This handles: project lookup, field IDs, adding to project if needed
   - When moving stories to sprint planning (Backlog → Todo), update status
-    - PRIMARY: Try Projects v2 status update
-      - Command: '{root}/scripts/update-project-status.sh {issue-number} "Todo"'
-    - FALLBACK: If Projects v2 unavailable or fails, use labels
-      - Command: 'gh issue edit {issue-number} --remove-label "status:backlog" --add-label "status:todo"'
+    - Command: '{root}/scripts/update-project-status.sh {issue-number} "Todo"'
   - If gh CLI not available or issue not linked, skip GitHub updates silently
   - IMPORTANT: Helper script auto-detects project from core-config.yaml and git remote
 # All commands require * prefix when used (e.g., *help)

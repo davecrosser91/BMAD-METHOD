@@ -62,21 +62,15 @@ commands:
   - help: Show numbered list of the following commands to allow selection
   - develop-story:
       - github-integration:
-          - WORKFLOW: Use GitHub Projects v2 Status fields (primary) with label fallback (secondary)
+          - WORKFLOW: Use GitHub Projects v2 Status fields for all status tracking
           - On start: If story file has GitHub Issue link, update workflow status
-            - PRIMARY: Try Projects v2 status update using helper script
-              - Command: '{root}/scripts/update-project-status.sh {issue-number} "In Progress"'
-              - This handles: project lookup, field IDs, adding to project if needed
-            - FALLBACK: If Projects v2 unavailable or fails, use labels
-              - Command: 'gh issue edit {issue-number} --remove-label "status:todo" --add-label "status:doing"'
+            - Command: '{root}/scripts/update-project-status.sh {issue-number} "In Progress"'
+            - This handles: project lookup, field IDs, adding to project if needed
           - On completion: Update workflow status to review
-            - PRIMARY: Try Projects v2 status update
-              - Command: '{root}/scripts/update-project-status.sh {issue-number} "In Review"'
-            - FALLBACK: If Projects v2 unavailable or fails, use labels
-              - Command: 'gh issue edit {issue-number} --remove-label "status:doing" --add-label "status:review"'
+            - Command: '{root}/scripts/update-project-status.sh {issue-number} "In Review"'
           - If gh CLI not available or issue not linked, skip GitHub updates silently
           - IMPORTANT: Helper script auto-detects project from core-config.yaml and git remote
-      - order-of-execution: 'Update GitHub issue to status:doing (if linked)→Read (first or next) task→Implement Task and its subtasks→Write tests→Execute validations→Only if ALL pass, then update the task checkbox with [x]→Update story section File List to ensure it lists and new or modified or deleted source file→repeat order-of-execution until complete'
+      - order-of-execution: 'Update GitHub issue to "In Progress" status (if linked)→Read (first or next) task→Implement Task and its subtasks→Write tests→Execute validations→Only if ALL pass, then update the task checkbox with [x]→Update story section File List to ensure it lists and new or modified or deleted source file→repeat order-of-execution until complete'
       - story-file-updates-ONLY:
           - CRITICAL: ONLY UPDATE THE STORY FILE WITH UPDATES TO SECTIONS INDICATED BELOW. DO NOT MODIFY ANY OTHER SECTIONS.
           - CRITICAL: You are ONLY authorized to edit these specific sections of story files - Tasks / Subtasks Checkboxes, Dev Agent Record section and all its subsections, Agent Model Used, Debug Log References, Completion Notes List, File List, Change Log, Status

@@ -82,8 +82,9 @@ The SM agent will run:
     - 🧪 Testing Requirements
     - 📚 Reference Documents
     - ✨ Definition of Done
-  - Labels: `type:story`, `size:m`, `priority:p1`, `status:backlog`
+  - Labels: `type:story`, `size:m`, `priority:p1`
   - Milestone: Epic name
+  - Initial Status: "Backlog" (via Projects v2)
 
 - **Story File Updated** with:
   - `**GitHub Issue:** #123`
@@ -128,12 +129,6 @@ Now you can use Claude Code's native GitHub integration:
 **Option B: Use GitHub Projects v2 Kanban Board**
 
 Drag issue cards between columns to update status automatically.
-
-**Option C: Use Labels (Fallback)**
-
-```bash
-gh issue edit 123 --remove-label "status:backlog" --add-label "status:doing"
-```
 
 ---
 
@@ -307,13 +302,13 @@ Now the template will appear in GitHub's "New Issue" dropdown!
 - ✅ Claude Code gets complete context in issue
 - ✅ No need to read external architecture docs
 - ✅ Native GitHub integration (comments, PRs)
-- ✅ Status updates via Projects v2 or labels
+- ✅ Status updates via Projects v2 Status field
 
 ### **For Traceability:**
 
 - ✅ Bidirectional linking (story file ↔ issue)
 - ✅ Single source of truth (content in both)
-- ✅ Full GitHub workflow (labels, milestones, Projects v2)
+- ✅ Full GitHub workflow (metadata labels, milestones, Projects v2)
 - ✅ Issue comments tracked in GitHub
 
 ---

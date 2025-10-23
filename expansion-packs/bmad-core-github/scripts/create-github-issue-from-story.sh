@@ -233,8 +233,8 @@ echo ""
 # Build gh issue create command
 GH_CMD="gh issue create --title \"$ISSUE_TITLE\" --body \"\$ISSUE_BODY\""
 
-# Add labels
-GH_CMD="$GH_CMD --label \"type:story,$SIZE,$PRIORITY,status:backlog\""
+# Add labels (status is managed via Projects v2, not labels)
+GH_CMD="$GH_CMD --label \"type:story,$SIZE,$PRIORITY\""
 
 # Add milestone if specified
 if [ -n "$MILESTONE" ]; then
@@ -287,7 +287,7 @@ if [ $? -eq 0 ]; then
 
   echo ""
   echo -e "${BLUE}💡 Next Steps:${NC}"
-  echo "1. Set initial status (if using Projects v2):"
+  echo "1. Set initial Projects v2 status:"
   echo "   ./scripts/update-project-status.sh $ISSUE_NUMBER \"Backlog\""
   echo ""
   echo "2. Use with Claude Code:"

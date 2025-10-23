@@ -59,20 +59,15 @@ story-file-permissions:
   - CRITICAL: DO NOT modify any other sections including Status, Story, Acceptance Criteria, Tasks/Subtasks, Dev Notes, Testing, Dev Agent Record, Change Log, or any other sections
   - CRITICAL: Your updates must be limited to appending your review results in the QA Results section only
 github-integration:
-  - WORKFLOW: Use GitHub Projects v2 Status fields (primary) with label fallback (secondary)
+  - WORKFLOW: Use GitHub Projects v2 Status fields for all status tracking
   - After review, update linked GitHub issue workflow status based on verdict
   - PASS verdict: Update workflow status to "Done"
-    - PRIMARY: Try Projects v2 status update
-      - Command: '{root}/scripts/update-project-status.sh {issue-number} "Done"'
-    - FALLBACK: If Projects v2 unavailable or fails, use labels
-      - Command: 'gh issue edit {issue-number} --remove-label "status:review" --add-label "status:done"'
+    - Command: '{root}/scripts/update-project-status.sh {issue-number} "Done"'
   - CONCERNS verdict (minor issues): Keep status at "In Review", add comment
     - Command: 'gh issue comment {issue-number} --body "⚠️ QA Review: Minor issues found. See QA Results in story file."'
   - FAIL verdict (major issues): Update workflow status to "In Progress", assign back to dev
-    - PRIMARY: Try Projects v2 status update
-      - Command: '{root}/scripts/update-project-status.sh {issue-number} "In Progress"'
-    - FALLBACK: If Projects v2 unavailable or fails, use labels
-      - Command: 'gh issue edit {issue-number} --remove-label "status:review" --add-label "status:doing" --add-assignee @developer'
+    - Command: '{root}/scripts/update-project-status.sh {issue-number} "In Progress"'
+    - Command: 'gh issue edit {issue-number} --add-assignee @developer'
   - If gh CLI not available or issue not linked, skip GitHub updates silently
   - IMPORTANT: Helper script auto-detects project from core-config.yaml and git remote
 # All commands require * prefix when used (e.g., *help)

@@ -156,15 +156,16 @@ If yes, proceed to Option B.
 
 1. Extracts all story content (Story, AC, Tasks, Dev Notes, Testing)
 2. Creates a GitHub issue with complete technical context
-3. Adds labels: `type:story`, `size:*`, `priority:*`, `status:backlog`
+3. Adds labels: `type:story`, `size:*`, `priority:*`
 4. Links to milestone (epic)
 5. Updates story file with GitHub issue reference
-6. Optionally sets initial Projects v2 status to "Backlog"
+6. Sets initial Projects v2 status to "Backlog"
 
 **Issue Creation Parameters:**
 
 - **Title:** `[{epic}.{major}.{minor}] {Story Title}`
-- **Labels:** `type:story`, `size:{size}`, `priority:{priority}`, `status:backlog`
+- **Labels:** `type:story`, `size:{size}`, `priority:{priority}`
+- **Initial Status:** "Backlog" (via Projects v2)
 - **Milestone:** Epic name (from story file or PRD)
 - **Body:** Complete story context including:
   - User story statement
@@ -192,7 +193,7 @@ If yes, proceed to Option B.
 
 - ✅ Claude Code gets complete context without reading architecture docs
 - ✅ Single source of truth (story content in both file and issue)
-- ✅ Native GitHub integration (comments, labels, Projects v2)
+- ✅ Native GitHub integration (comments, metadata labels, Projects v2)
 - ✅ Bidirectional linking (story file ↔ GitHub issue)
 - ✅ Full traceability in GitHub
 
@@ -214,6 +215,7 @@ If yes, proceed to Option B.
 - GitHub issue created: #{issue-number}
 - URL: {issue-url}
 - Linked to story file: `{devStoryLocation}/{epic}.{major}.{minor}.story.md`
-- Labels: `type:story`, `{size}`, `{priority}`, `status:backlog`
+- Labels: `type:story`, `{size}`, `{priority}`
+- Initial Status: "Backlog" (Projects v2)
 - Milestone: {epicName}
 - Ready for Claude Code: `@github #{issue-number} implement this story`

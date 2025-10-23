@@ -1,7 +1,8 @@
 name: 📖 Detailed Story (Claude Code Compatible)
 description: Full-context story for Claude Code implementation via @github mentions
 title: "[E.M.m] Story Title"
-labels: ["type:story", "status:backlog"]
+labels: ["type:story"]
+# Note: Status is managed via GitHub Projects v2 Status field, not labels
 body:
   - type: markdown
     attributes:

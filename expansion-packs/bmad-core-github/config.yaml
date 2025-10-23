@@ -1,8 +1,8 @@
 # BMAD Core - GitHub Edition Configuration
-# Version: 2.2.0
+# Version: 2.3.0
 
 name: bmad-core-github
-version: 2.2.0
+version: 2.3.0
 short-title: Core + GitHub Pack
 description: >-
   Complete BMAD Method implementation using GitHub Issues, Milestones, and
@@ -15,23 +15,10 @@ github:
   # Task management via GitHub Issues
   tasks:
     use_milestones_for_epics: true
-    use_labels_for_status: true
-
-    status_flow:
-      - backlog # Not yet scheduled for current sprint
-      - todo # Ready to start, all dependencies met
-      - doing # Currently in development
-      - review # In PR review / QA testing
-      - done # Completed, merged, closed
 
     # Label conventions (auto-created by setup-labels.sh)
+    # Note: Status is managed via Projects v2 Status field, not labels
     labels:
-      status:
-        - status:backlog
-        - status:todo
-        - status:doing
-        - status:review
-        - status:done
       types:
         - type:epic
         - type:story
@@ -52,14 +39,12 @@ github:
     # Automation
     auto_link_pr_to_issue: true
     auto_close_on_merge: true
-    enforce_single_status_label: true
     validate_dependencies: true
 
   # Projects v2
   projects:
     use_projects_v2: true
     default_view: "board"
-    auto_move_on_label_change: true
 
   # Pull requests
   pull_requests:
