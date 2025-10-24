@@ -1,8 +1,8 @@
 # BMAD Core - GitHub Edition Configuration
-# Version: 2.5.0
+# Version: 2.5.1
 
 name: bmad-core-github
-version: 2.5.0
+version: 2.5.1
 short-title: Core + GitHub Pack
 description: >-
   Complete BMAD Method implementation using GitHub Issues, Milestones, and

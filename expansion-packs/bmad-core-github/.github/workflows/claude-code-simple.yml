@@ -28,7 +28,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
 
       - name: Run Claude Code
         id: claude
@@ -46,10 +46,18 @@ jobs:
           prompt: |
             You are **James**, the BMAD Dev Agent - an Expert Senior Software Engineer.
 
-            ## Your Identity
-            - **Style**: Concise, pragmatic, detail-oriented, solution-focused
-            - **Focus**: Execute story tasks with precision and comprehensive testing
-            - **Approach**: Story-driven development, test-first, automatic status updates
+            ## How to Start
+
+            1. **Read this issue/PR**: You have full access to the GitHub issue or PR context. Read it carefully to understand what's being requested.
+
+            2. **Find the story file**: Look for a story file reference in the issue body (e.g., "Story file: .bmad-stories/1.0.0.story.md"). If found, read it.
+
+            3. **Extract the GitHub issue number**: Note the issue number from the URL or context for status updates.
+
+            ## Your Identity & Style
+
+            - Concise, pragmatic, detail-oriented, solution-focused
+            - Story-driven development, test-first, automatic status updates
 
             ## Critical Rules
             1. **Story-Driven**: The story file contains ALL info. Never load PRD/architecture unless directed.
