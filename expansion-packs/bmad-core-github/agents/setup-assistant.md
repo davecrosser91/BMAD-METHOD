@@ -786,9 +786,96 @@ gh label list
 
 ## \*setup-actions - GitHub Actions Setup
 
-Let me help you set up automated QA with GitHub Actions:
+Let me help you set up BMAD GitHub Actions! You have **three options**:
 
-### Step 1: Get Anthropic API Key
+### Option 1: Agent Actions - @dev and @qa (Recommended) 🌟
+
+**Use Claude Code to trigger Dev and QA agents via @mentions in GitHub issues.**
+
+**Best for:** Teams using Claude Pro/Max subscription who want agents triggered by GitHub comments
+
+**Advantages:**
+
+- ✅ Uses your Claude subscription (no per-use API costs)
+- ✅ Full Dev and QA agent functionality
+- ✅ Trigger via `@dev` or `@qa` mentions in issues/PRs
+- ✅ Automatic GitHub Projects v2 status updates
+
+#### Setup Steps:
+
+**Step 1: Get Claude Code OAuth Token**
+
+1. Visit: https://claude.ai/settings/developer
+2. Generate OAuth token for Claude Code
+3. Copy the token
+
+**Step 2: Add Token to GitHub Secrets**
+
+```bash
+gh secret set CLAUDE_CODE_OAUTH_TOKEN
+# Paste your token when prompted
+```
+
+**Verify the secret:**
+
+```bash
+gh secret list
+# Should show: CLAUDE_CODE_OAUTH_TOKEN
+```
+
+**Step 3: Copy Agent Action Workflows**
+
+```bash
+mkdir -p .github/workflows
+
+# Copy Dev Agent action (@dev trigger)
+cp {root}/expansion-packs/bmad-core-github/workflows/dev-agent-action.yml .github/workflows/
+
+# Copy QA Agent action (@qa trigger)
+cp {root}/expansion-packs/bmad-core-github/workflows/qa-agent-action.yml .github/workflows/
+```
+
+**Step 4: Commit and Push**
+
+```bash
+git add .github/workflows/dev-agent-action.yml
+git add .github/workflows/qa-agent-action.yml
+git commit -m "chore: Add BMAD @dev and @qa agent actions"
+git push
+```
+
+**How It Works:**
+
+**@dev Agent:**
+
+- Comment `@dev please implement this story` on any issue
+- Dev agent reads story file, implements code, writes tests
+- Automatically updates status: Todo → In Progress → In Review
+- Creates PR when complete
+
+**@qa Agent:**
+
+- Comment `@qa please review this story` on any issue or PR
+- QA agent performs comprehensive review
+- Automatically updates status based on verdict:
+  - PASS: In Review → Done
+  - FAIL: In Review → In Progress
+  - CONCERNS: Stays at In Review + adds comment
+- Posts detailed review findings
+
+---
+
+### Option 2: Automated QA Review (API-based)
+
+**Automatically review every PR using Anthropic API (pay-per-use).**
+
+**Best for:** Teams with budget for API costs who want fully automatic PR reviews
+
+**Cost:** ~$0.01-0.05 per PR review
+
+#### Setup Steps:
+
+**Step 1: Get Anthropic API Key**
 
 1. Visit: https://console.anthropic.com/
 2. Sign up or log in
@@ -797,32 +884,21 @@ Let me help you set up automated QA with GitHub Actions:
 5. Give it a name like "BMAD QA Agent"
 6. Copy the key (starts with `sk-ant-...`)
 
-**Keep this key safe!** You'll need it in the next step.
-
-### Step 2: Add API Key to GitHub Secrets
+**Step 2: Add API Key to GitHub Secrets**
 
 ```bash
 gh secret set ANTHROPIC_API_KEY
 # Paste your API key when prompted
 ```
 
-**Verify the secret:**
-
-```bash
-gh secret list
-# Should show: ANTHROPIC_API_KEY
-```
-
-**Why secrets?** The API key needs to be accessible to GitHub Actions but should never be committed to your repository for security.
-
-### Step 3: Copy GitHub Actions Workflow
+**Step 3: Copy Automated QA Workflow**
 
 ```bash
 mkdir -p .github/workflows
 cp {root}/expansion-packs/bmad-core-github/workflows/automated-qa-review.yml .github/workflows/
 ```
 
-### Step 4: Commit and Push
+**Step 4: Commit and Push**
 
 ```bash
 git add .github/workflows/automated-qa-review.yml
@@ -830,27 +906,62 @@ git commit -m "chore: Add BMAD automated QA workflow"
 git push
 ```
 
-### How Automated QA Works
+**How It Works:**
 
 When you create a pull request:
 
-1. **GitHub Actions triggers** the automated-qa-review workflow
-2. **QA Agent analyzes** the code changes using Claude Sonnet 4
-3. **Reviews for**:
-   - Code quality and best practices
-   - Potential bugs or issues
-   - Test coverage
-   - Code complexity
-   - Security concerns
-4. **Posts verdict**:
-   - `PASS` - Code looks good, ready to merge
-   - `FAIL_MINOR` - Minor issues, send back to doing for quick fixes
-   - `FAIL_MAJOR` - Major issues, send back to todo for rework
-5. **Updates issue status** automatically based on verdict
+1. GitHub Actions triggers automatically
+2. QA Agent analyzes code changes using Claude Sonnet 4
+3. Reviews for quality, bugs, tests, complexity, security
+4. Posts verdict: PASS / FAIL_MINOR / FAIL_MAJOR
+5. Updates issue status automatically
 
-**Cost:** Approximately $0.01-0.05 per PR review (Claude Sonnet 4 pricing)
+---
 
-**You can still do manual QA** by using the QA agent directly if you prefer not to use automated QA.
+### Option 3: Both (Full Automation)
+
+**Use @dev/@qa agents AND automated PR reviews.**
+
+**Best for:** Teams who want maximum flexibility
+
+**Setup:** Follow steps for both Option 1 and Option 2
+
+**Result:**
+
+- Use `@dev` mentions for on-demand development
+- Use `@qa` mentions for on-demand reviews
+- Get automatic PR reviews on every PR
+- Choose which approach to use per story
+
+---
+
+### Comparison
+
+| Feature       | @dev/@qa Actions (Option 1) | Automated QA (Option 2)      | Both (Option 3)         |
+| ------------- | --------------------------- | ---------------------------- | ----------------------- |
+| **Trigger**   | @dev or @qa mention         | Automatic on PR              | Both                    |
+| **Cost**      | Claude subscription         | API per-use (~$0.01-0.05/PR) | Both                    |
+| **Dev Agent** | ✅ On-demand                | ❌ No                        | ✅ On-demand            |
+| **QA Agent**  | ✅ On-demand                | ✅ Automatic                 | ✅ Both                 |
+| **Control**   | High (manual trigger)       | Low (always runs)            | High (choose per story) |
+| **Best For**  | Using Claude Pro/Max        | Budget for API costs         | Maximum flexibility     |
+
+---
+
+### Recommended Setup
+
+**Most users should use Option 1** (@dev and @qa agent actions):
+
+- ✅ No per-use costs (uses your Claude subscription)
+- ✅ Full agent functionality
+- ✅ Flexible triggering
+- ✅ Complete control over when agents run
+
+**Use Option 2** (Automated QA) only if:
+
+- You have budget for API costs
+- You want every PR automatically reviewed
+- You don't want to manually trigger QA reviews
 
 ---
 

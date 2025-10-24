@@ -8,12 +8,14 @@
 
 ### ✅ **Agents That Work With GitHub Issues Automatically**
 
-| Agent            | GitHub Integration | What It Does                                      | Automatic? |
-| ---------------- | ------------------ | ------------------------------------------------- | ---------- |
-| **PM**           | ✅ Full            | Creates issues and milestones from PRD            | On command |
-| **Dev**          | ✅ Full            | Updates issue labels during development           | Automatic  |
-| **QA**           | ✅ Full            | Updates issue labels after review                 | Automatic  |
-| **Automated QA** | ✅ Full            | Reviews PRs and updates labels via GitHub Actions | Automatic  |
+| Agent                  | GitHub Integration | What It Does                                          | Automatic? |
+| ---------------------- | ------------------ | ----------------------------------------------------- | ---------- |
+| **PM**                 | ✅ Full            | Creates issues and milestones, sets Backlog status    | On command |
+| **SM**                 | ✅ Full            | Creates story issues, moves to Todo for sprint        | On command |
+| **Dev**                | ✅ Full            | Updates Projects v2 status during development         | Automatic  |
+| **QA**                 | ✅ Full            | Updates Projects v2 status after review               | Automatic  |
+| **Automated QA**       | ✅ Full            | Reviews PRs and updates status via GitHub Actions     | Automatic  |
+| **Claude Code Action** | ✅ Full            | Acts as Dev agent via GitHub Actions @claude mentions | Automatic  |
 
 ### 📚 **Agents That Know Project Structure**
 
@@ -496,5 +498,77 @@ dependencies:
 4. Dev implements and updates GitHub automatically
 5. QA reviews and updates GitHub automatically
 6. GitHub Actions provides automated QA (optional)
+7. **NEW: Claude Code Action** provides Dev agent in GitHub via @claude mentions
 
 **The workflow is now seamless from idea to deployment! 🎯**
+
+---
+
+## 🤖 **Claude Code GitHub Action (New!)**
+
+### **What It Does**
+
+The Claude Code GitHub Action transforms Claude into the **BMAD Dev Agent** directly within GitHub issues and PRs.
+
+### **How to Use**
+
+1. **In Issues**: Comment `@claude please implement this story` on any issue
+2. **In PRs**: Comment `@claude please add tests for X` on any PR review
+3. **New Issues**: Include `@claude` in issue title/body when creating
+
+### **Behavior**
+
+Claude will behave **exactly like the local Dev agent**:
+
+- ✅ Story-driven development (reads story file from issue)
+- ✅ Automatic Projects v2 status updates (Todo → In Progress → In Review)
+- ✅ Test-driven development (writes and runs tests)
+- ✅ Follows project structure standards
+- ✅ Limited story file permissions (only Dev Agent Record sections)
+- ✅ Complete develop-story workflow (STEP 1-12)
+
+### **Example Workflow**
+
+```
+User: Creates issue #123 with body:
+      "Story file: .bmad-stories/1.0.0.story.md
+       @claude please implement this story"
+      ↓
+Claude Action triggers automatically
+      ↓
+Claude reads story file
+      ↓
+Updates GitHub status: Todo → In Progress
+      ↓
+Implements all tasks with tests
+      ↓
+Updates GitHub status: In Progress → In Review
+      ↓
+Commits changes and creates PR
+      ↓
+Posts completion comment
+```
+
+### **Setup**
+
+See: `CLAUDE-CODE-ACTION-DEV-AGENT.md` for complete setup instructions.
+
+**Quick setup:**
+
+1. Copy workflow file to `.github/workflows/claude-code-dev-agent.yml`
+2. Add secret `CLAUDE_CODE_OAUTH_TOKEN` in repository settings
+3. Ensure status scripts exist in `./scripts/`
+4. Test with `@claude` mention in an issue
+
+### **Comparison: Local vs GitHub Action**
+
+| Feature            | Local Dev Agent                | Claude Code Action             |
+| ------------------ | ------------------------------ | ------------------------------ |
+| **Trigger**        | `@dev` in Claude Code CLI      | `@claude` in GitHub issue/PR   |
+| **Environment**    | Your local machine             | GitHub Actions (Ubuntu)        |
+| **Status Updates** | Automatic (local scripts)      | Automatic (GitHub scripts)     |
+| **Workflow**       | develop-story (STEP 1-12)      | develop-story (STEP 1-12)      |
+| **Persona**        | James (Expert Senior Engineer) | James (Expert Senior Engineer) |
+| **Permissions**    | Same story file restrictions   | Same story file restrictions   |
+
+**Both are identical in behavior - just different execution environments!**

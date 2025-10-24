@@ -29,7 +29,6 @@ Thumbs.db
 # IDE and editor configs
 .windsurf/
 .trae/
-.bmad*/
 .cursor/
 
 # AI assistant files
@@ -39,7 +38,7 @@ CLAUDE.md
 .gemini
 .iflow
 
-# Project-specific
+# Project-specific (but keep .bmad-stories/ in repo for GitHub Actions access)
 .bmad-core
 .bmad-creator-tools
 test-project-install/*

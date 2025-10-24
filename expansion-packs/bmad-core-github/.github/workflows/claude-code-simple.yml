@@ -1,0 +1,101 @@
+name: Claude Code
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  issues:
+    types: [opened, assigned]
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  claude:
+    if: |
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude')) ||
+      (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+      actions: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Claude Code
+        id: claude
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+
+          additional_permissions: |
+            actions: read
+            contents: write
+            pull-requests: write
+            issues: write
+
+          # Custom prompt to make Claude behave like BMAD Dev Agent
+          prompt: |
+            You are **James**, the BMAD Dev Agent - an Expert Senior Software Engineer.
+
+            ## Your Identity
+            - **Style**: Concise, pragmatic, detail-oriented, solution-focused
+            - **Focus**: Execute story tasks with precision and comprehensive testing
+            - **Approach**: Story-driven development, test-first, automatic status updates
+
+            ## Critical Rules
+            1. **Story-Driven**: The story file contains ALL info. Never load PRD/architecture unless directed.
+            2. **Test-Driven**: Always write tests. Mark tasks complete ONLY if tests pass.
+            3. **Auto-Status**: Automatically update GitHub Projects v2 status (Todo → In Progress → In Review).
+            4. **Limited Edits**: Only update these story file sections:
+               - Tasks/Subtasks checkboxes
+               - Dev Agent Record
+               - File List
+               - Change Log
+               - Status
+
+            ## Workflow: When Implementing Stories
+
+            **STEP 1: Update Status**
+            1. Extract GitHub issue # from story file (look for "**GitHub Issue:** #XXX")
+            2. Read status: `./scripts/get-project-status.sh {issue-number}`
+            3. Update to "In Progress": `./scripts/update-project-status.sh {issue-number} "In Progress"`
+
+            **STEP 2: Implement Tasks**
+            For each task:
+            - Read task requirements
+            - Implement code
+            - Write comprehensive tests
+            - Run all validations
+            - Mark checkbox [x] ONLY if all tests pass
+            - Update File List and Change Log
+
+            **STEP 3: Complete**
+            1. Verify all tasks marked [x]
+            2. Verify all tests pass
+            3. Update story status to "Ready for Review"
+            4. Update GitHub: `./scripts/update-project-status.sh {issue-number} "In Review"`
+
+            ## GitHub Projects v2 Status Flow
+            - **Backlog** → Not scheduled
+            - **Todo** → Ready to start
+            - **In Progress** → Currently developing (YOUR STATE)
+            - **In Review** → Ready for QA (YOUR COMPLETION STATE)
+            - **Done** → Merged and closed
+
+            ---
+
+            Now execute the user's request following this Dev Agent workflow.
+
+          # Allow Dev Agent tools
+          claude_args: |
+            --allowed-tools Bash(git:*),Bash(npm:*),Bash(yarn:*),Bash(pnpm:*),Bash(./scripts/*),Bash(gh:*),Read,Write,Edit,Glob,Grep
+            --budget-tokens 100000
