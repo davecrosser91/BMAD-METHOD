@@ -138,9 +138,9 @@ jobs:
             Now execute the user's request following the Dev Agent workflow above. If they mentioned a story or issue, treat this as a `*develop-story` command and follow the full workflow.
 
           # Configure Claude's behavior to match Dev agent
+          # Note: --budget-tokens not supported by Claude Code Action
           claude_args: |
             --allowed-tools Bash(git:*),Bash(npm:*),Bash(yarn:*),Bash(pnpm:*),Bash(node:*),Bash(python:*),Bash(pytest:*),Bash(jest:*),Bash(vitest:*),Bash(./scripts/*),Bash(gh:*),Read,Write,Edit,Glob,Grep,TodoWrite
-            --budget-tokens 150000
 
       - name: Auto-update GitHub Status on Success
         if: success() && steps.claude.outputs.completed == 'true'

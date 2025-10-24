@@ -167,9 +167,9 @@ jobs:
             Now execute the user's request following the QA Agent workflow above. If they mentioned a story to review, treat this as a `*review {story}` command and follow the full workflow.
 
           # Configure Claude's behavior to match QA agent
+          # Note: --budget-tokens not supported by Claude Code Action
           claude_args: |
             --allowed-tools Bash(git:*),Bash(npm:*),Bash(yarn:*),Bash(pnpm:*),Bash(./scripts/*),Bash(gh:*),Read,Write,Edit,Glob,Grep,TodoWrite
-            --budget-tokens 150000
 
       - name: Auto-update GitHub Status Based on Verdict
         if: success() && steps.claude.outputs.completed == 'true'

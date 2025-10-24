@@ -96,6 +96,6 @@ jobs:
             Now execute the user's request following this Dev Agent workflow.
 
           # Allow Dev Agent tools
+          # Note: --budget-tokens not supported by Claude Code Action
           claude_args: |
             --allowed-tools Bash(git:*),Bash(npm:*),Bash(yarn:*),Bash(pnpm:*),Bash(./scripts/*),Bash(gh:*),Read,Write,Edit,Glob,Grep
-            --budget-tokens 100000
