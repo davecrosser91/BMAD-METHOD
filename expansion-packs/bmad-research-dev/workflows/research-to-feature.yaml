@@ -1,0 +1,500 @@
+name: Research-to-Feature Conversion
+version: 1.0.0
+description: Convert successful research experiment into production feature
+
+# This is the KEY HYBRID WORKFLOW that bridges research and product development
+# Duration: 2-6 weeks depending on experiment complexity
+
+prerequisites:
+  - Successful experiment with validated results
+  - Experiment issue closed with positive outcome
+  - Results demonstrate business value
+  - Technical feasibility confirmed
+
+# ============================================================================
+# PHASE 1: Assessment & Planning (2-5 days)
+# ============================================================================
+phases:
+  - name: assessment
+    description: "Evaluate experiment for productionization"
+    duration: "2-5 days"
+    agents:
+      - enhanced-analyst
+      - pm
+      - architect
+
+    steps:
+      - step: create_productionization_brief
+        agent: enhanced-analyst
+        description: "Create business case for productionization"
+        inputs:
+          - results/experiments/{exp-id}/
+          - docs/research/experiments/experiment-{exp-id}.md
+          - docs/research/analysis/analysis-{exp-id}.md
+        outputs:
+          - docs/notes/productionize-exp-{exp-id}.md
+        questions_to_answer:
+          - What business value does this provide?
+          - What are the performance characteristics?
+          - What are the resource requirements?
+          - What are the risks?
+          - What's the ROI?
+        success_criteria:
+          - Clear business justification
+          - Quantified benefits
+          - Risks identified
+
+      - step: create_prd
+        agent: pm
+        command: "*create-prd"
+        description: "Create PRD for feature based on experiment"
+        inputs:
+          - docs/notes/productionize-exp-{exp-id}.md
+          - results/experiments/{exp-id}/
+        outputs:
+          - docs/prd/prd-{feature-name}.md
+        includes:
+          - Link to original experiment issue
+          - Performance requirements from experiment
+          - User stories
+          - Acceptance criteria
+        success_criteria:
+          - Requirements clear
+          - Acceptance criteria measurable
+          - Linked to experiment
+
+      - step: create_epic
+        agent: pm
+        command: "*create-productionization-epic"
+        description: "Create GitHub milestone for productionization"
+        outputs:
+          - GitHub Milestone
+        milestone_format: "Feature: {name} (from Experiment #{exp-issue})"
+        success_criteria:
+          - Milestone created
+          - Description links to experiment
+          - Timeline estimated
+
+      - step: design_production_architecture
+        agent: architect
+        description: "Design production architecture from experiment code"
+        inputs:
+          - experiments/{exp-id}/
+          - docs/research/experiments/experiment-{exp-id}.md
+        outputs:
+          - docs/architecture/production-{feature-name}.md
+        design_considerations:
+          - Scale requirements
+          - Error handling
+          - Monitoring and logging
+          - Performance optimization
+          - API design
+          - Testing strategy
+        success_criteria:
+          - Architecture documented
+          - Differs from experiment (production-grade)
+          - Non-functional requirements addressed
+
+  # ============================================================================
+  # PHASE 2: Story Creation (1-2 days)
+  # ============================================================================
+  - name: story_breakdown
+    description: "Break down feature into implementable stories"
+    duration: "1-2 days"
+    agents:
+      - pm
+      - architect
+
+    steps:
+      - step: create_refactoring_stories
+        agent: pm
+        command: "*create-refactoring-stories"
+        description: "Create stories for code refactoring"
+        outputs:
+          - GitHub Issues (multiple)
+        story_types:
+          - story: "Extract core algorithm from experiment"
+            description: "Refactor experiments/{exp-id}/ code into reusable library"
+            location: "src/lib/"
+            labels: [type:refactoring, size:m]
+
+          - story: "Add production error handling"
+            description: "Add comprehensive error handling to algorithm"
+            labels: [type:enhancement, size:s]
+
+          - story: "Implement monitoring and logging"
+            description: "Add metrics collection and logging"
+            labels: [type:enhancement, size:s]
+
+          - story: "Create API endpoint"
+            description: "Expose functionality via API"
+            location: "src/app/api/"
+            labels: [type:feature, size:m]
+
+          - story: "Add integration tests"
+            description: "Test integrated feature end-to-end"
+            labels: [type:testing, size:m]
+
+          - story: "Performance optimization"
+            description: "Optimize for production scale"
+            labels: [type:optimization, size:l]
+
+        success_criteria:
+          - All stories created
+          - Assigned to milestone
+          - Dependencies mapped
+          - Size estimated
+
+  # ============================================================================
+  # PHASE 3: Implementation (2-4 weeks)
+  # ============================================================================
+  - name: implementation
+    description: "Implement productionized feature"
+    duration: "2-4 weeks"
+    agents:
+      - dev
+      - qa
+
+    steps:
+      - step: refactor_core_algorithm
+        agent: dev
+        description: "Extract and refactor core algorithm"
+        process: |
+          1. Create src/lib/{feature-name}/
+          2. Copy relevant code from experiments/{exp-id}/
+          3. Refactor for production:
+             - Remove experiment-specific code
+             - Add type hints/interfaces
+             - Add error handling
+             - Add input validation
+             - Optimize performance
+             - Add docstrings
+          4. Create unit tests
+        inputs:
+          - experiments/{exp-id}/novel_method.py
+        outputs:
+          - src/lib/{feature-name}/algorithm.py
+          - src/lib/{feature-name}/tests/
+        success_criteria:
+          - Code production-quality
+          - Test coverage > 80%
+          - Performance benchmarked
+          - Documentation complete
+
+      - step: implement_api
+        agent: dev
+        description: "Create API endpoint for feature"
+        outputs:
+          - src/app/api/{feature-name}.py
+          - src/app/api/tests/test_{feature-name}.py
+        success_criteria:
+          - API documented (OpenAPI/Swagger)
+          - Input validation
+          - Error responses defined
+          - Rate limiting (if needed)
+
+      - step: add_monitoring
+        agent: dev
+        description: "Add monitoring and logging"
+        outputs:
+          - Metrics collection code
+          - Log statements
+          - Dashboard config (if applicable)
+        success_criteria:
+          - Key metrics logged
+          - Errors tracked
+          - Performance monitored
+
+      - step: code_review
+        agent: qa
+        command: "*review-code"
+        description: "Review production code quality"
+        review_criteria:
+          - Production standards met
+          - Error handling complete
+          - Tests comprehensive
+          - Performance acceptable
+          - Security reviewed
+          - Documentation complete
+        success_criteria:
+          - QA verdict: PASS or FAIL_MINOR
+
+      - step: integration_testing
+        agent: dev
+        description: "Test integrated feature end-to-end"
+        test_types:
+          - Unit tests
+          - Integration tests
+          - Performance tests
+          - Load tests (if applicable)
+        success_criteria:
+          - All tests pass
+          - Performance meets requirements
+          - No regressions
+
+  # ============================================================================
+  # PHASE 4: Deployment (1 week)
+  # ============================================================================
+  - name: deployment
+    description: "Deploy feature to production"
+    duration: "1 week"
+    agents:
+      - dev
+      - qa
+      - pm
+
+    steps:
+      - step: create_pr
+        agent: dev
+        command: "*create-pr"
+        description: "Create pull request for feature"
+        pr_contents:
+          - Refactored code in src/
+          - Tests
+          - Documentation
+          - Original experiment kept in experiments/ for reference
+        success_criteria:
+          - PR created
+          - Linked to issues
+          - CI passing
+
+      - step: final_qa
+        agent: qa
+        command: "*review-pr {pr-number}"
+        description: "Final QA review before merge"
+        success_criteria:
+          - Code review approved
+          - Tests passing
+          - Documentation reviewed
+
+      - step: merge_and_deploy
+        agent: dev
+        description: "Merge and deploy to production"
+        process: |
+          1. Merge PR to main
+          2. Deploy to staging
+          3. Smoke tests
+          4. Deploy to production
+          5. Monitor
+        success_criteria:
+          - Deployed successfully
+          - Monitoring shows healthy
+          - No errors
+
+      - step: close_epic
+        agent: pm
+        description: "Close productionization epic"
+        actions:
+          - Close all stories
+          - Update milestone
+          - Document outcomes
+          - Link to experiment
+        success_criteria:
+          - All stories closed
+          - Epic completed
+          - Documented
+
+  # ============================================================================
+  # PHASE 5: Documentation & Handoff (2-3 days)
+  # ============================================================================
+  - name: documentation
+    description: "Document production feature"
+    duration: "2-3 days"
+    agents:
+      - doc-writer
+      - pm
+
+    steps:
+      - step: create_api_docs
+        agent: doc-writer
+        command: "*create-api-docs {feature-name}"
+        description: "Document API endpoints"
+        outputs:
+          - docs/api/{feature-name}.md
+        success_criteria:
+          - All endpoints documented
+          - Examples provided
+          - Error codes listed
+
+      - step: update_architecture_docs
+        agent: doc-writer
+        command: "*update-architecture"
+        description: "Update architecture documentation"
+        outputs:
+          - docs/architecture/ (updated)
+        success_criteria:
+          - New component documented
+          - Diagrams updated
+
+      - step: create_user_guide
+        agent: doc-writer
+        description: "Create user/developer guide"
+        outputs:
+          - docs/guides/{feature-name}.md
+        success_criteria:
+          - Usage examples
+          - Common tasks documented
+          - Troubleshooting guide
+
+# ============================================================================
+# Workflow Outputs
+# ============================================================================
+outputs:
+  code:
+    - src/lib/{feature-name}/ - Core algorithm (refactored from experiment)
+    - src/app/api/{feature-name}.py - API endpoint
+    - tests/ - Comprehensive test suite
+
+  documentation:
+    - docs/prd/prd-{feature-name}.md - Product requirements
+    - docs/architecture/production-{feature-name}.md - Architecture design
+    - docs/api/{feature-name}.md - API documentation
+    - docs/guides/{feature-name}.md - User guide
+
+  github:
+    - Closed milestone (epic)
+    - Closed stories
+    - Merged PR
+    - Updated issues
+
+  original_experiment:
+    - experiments/{exp-id}/ - Preserved for reference
+    - Linked in documentation
+
+# ============================================================================
+# Success Criteria
+# ============================================================================
+success_criteria:
+  technical:
+    - Feature deployed to production
+    - All tests passing
+    - Performance meets requirements
+    - Monitoring in place
+
+  business:
+    - Business value realized
+    - User adoption (if applicable)
+    - ROI positive
+
+  quality:
+    - Production code standards met
+    - Documentation complete
+    - QA approved
+
+# ============================================================================
+# Key Differences: Experiment vs. Production
+# ============================================================================
+experiment_vs_production:
+  code_location:
+    experiment: experiments/{exp-id}/
+    production: src/lib/{feature-name}/
+
+  quality_standards:
+    experiment: "Research-quality (reproducible, documented)"
+    production: "Production-quality (error handling, monitoring, tests)"
+
+  error_handling:
+    experiment: "Basic (fail fast OK)"
+    production: "Comprehensive (graceful degradation)"
+
+  testing:
+    experiment: "Basic validation"
+    production: "Full test suite (unit, integration, performance)"
+
+  documentation:
+    experiment: "README + experiment spec"
+    production: "API docs + architecture + user guide"
+
+  performance:
+    experiment: "Research accuracy focus"
+    production: "Optimized for scale"
+
+  monitoring:
+    experiment: "Metrics logged to file"
+    production: "Real-time monitoring, alerting"
+
+# ============================================================================
+# Preservation of Research
+# ============================================================================
+research_preservation:
+  keep_experiment_code:
+    location: experiments/{exp-id}/
+    reason: "Reference, reproducibility, comparison"
+    do_not: "Delete or move"
+
+  link_everywhere:
+    - PRD references experiment issue
+    - Architecture docs reference experiment
+    - API docs reference research paper (if published)
+    - README mentions experiment origin
+
+  citation:
+    - If paper published, cite in code comments
+    - If internal research, link to experiment spec
+
+# ============================================================================
+# Common Pitfalls & Solutions
+# ============================================================================
+pitfalls:
+  over_engineering:
+    problem: "Adding features not in experiment"
+    solution: "Stick to experiment scope for v1"
+
+  under_engineering:
+    problem: "Production code still research-quality"
+    solution: "Use production code review checklist"
+
+  performance_regression:
+    problem: "Production slower than experiment"
+    solution: "Benchmark and optimize, accept tradeoffs"
+
+  losing_context:
+    problem: "Forgetting why decisions were made"
+    solution: "Link to experiment everywhere"
+
+# ============================================================================
+# Usage Example
+# ============================================================================
+usage_example: |
+  # Scenario: Experiment exp-001 (Novel Optimizer) was successful
+  # Results show 2x faster convergence
+  # Now productionize it
+
+  # Phase 1: Assessment
+  @enhanced-analyst
+  *create-project-brief
+
+  @pm
+  *create-prd
+  *create-productionization-epic
+
+  @architect
+  # Create architecture doc
+
+  # Phase 2: Stories
+  @pm
+  *create-refactoring-stories
+
+  # Phase 3: Implementation
+  @dev
+  # Implement story 1: Refactor core algorithm
+  # Implement story 2: Add error handling
+  # ... etc
+
+  @qa
+  *review-code
+
+  # Phase 4: Deployment
+  @dev
+  *create-pr
+
+  @qa
+  *review-pr 123
+
+  @dev
+  # Merge and deploy
+
+  # Phase 5: Documentation
+  @doc-writer
+  *create-api-docs optimizer
+  *update-architecture

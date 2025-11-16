@@ -1,0 +1,420 @@
+name: Research Experiment Cycle
+version: 1.0.0
+description: Complete workflow for conducting a research experiment from question formulation to results analysis
+
+# This workflow coordinates multiple agents through a full experiment lifecycle
+# Duration: 2-4 weeks per experiment (highly variable)
+
+phases:
+  # ============================================================================
+  # PHASE 1: Question Formulation & Planning (1-3 days)
+  # ============================================================================
+  - name: question_formulation
+    description: "Identify research gap and formulate hypothesis"
+    duration: "1-3 days"
+    agents:
+      - enhanced-analyst
+      - pm
+
+    steps:
+      - step: literature_search
+        agent: enhanced-analyst
+        command: "*literature-search {topic}"
+        description: "Conduct multi-source literature search"
+        outputs:
+          - docs/research/literature-reviews/review-{topic-slug}.md
+        success_criteria:
+          - At least 10 relevant sources found
+          - Both academic and industry sources included
+          - Gap analysis completed
+
+      - step: identify_gaps
+        agent: enhanced-analyst
+        command: "*identify-gaps"
+        description: "Identify technical and market gaps"
+        outputs:
+          - Section in literature review
+        success_criteria:
+          - Clear gap identified
+          - Both technical and market perspectives
+
+      - step: formulate_questions
+        agent: enhanced-analyst
+        command: "*formulate-questions"
+        description: "Generate research questions from findings"
+        outputs:
+          - Research questions documented
+        success_criteria:
+          - Primary research question clear
+          - Testable and falsifiable
+
+      - step: create_proposal
+        agent: enhanced-analyst
+        command: "*create-research-proposal"
+        description: "Create comprehensive research proposal"
+        outputs:
+          - docs/research/proposals/proposal-{id}.md
+        success_criteria:
+          - Hypothesis clearly stated
+          - Methodology outlined
+          - Expected outcomes defined
+          - Timeline estimated
+
+      - step: create_milestone
+        agent: pm
+        command: "*create-research-milestone"
+        description: "Create GitHub milestone for experiment"
+        inputs:
+          - docs/research/proposals/proposal-{id}.md
+        outputs:
+          - GitHub Milestone created
+        success_criteria:
+          - Milestone linked to proposal
+          - Timeline set
+          - Description complete
+
+  # ============================================================================
+  # PHASE 2: Experiment Design (2-5 days)
+  # ============================================================================
+  - name: experiment_design
+    description: "Design detailed experimental methodology"
+    duration: "2-5 days"
+    agents:
+      - dev
+      - pm
+
+    steps:
+      - step: create_experiment_spec
+        agent: dev
+        description: "Create detailed experiment specification"
+        script: ".bmad-research-dev/scripts/create-experiment-spec.sh {exp-id} {title} {hypothesis}"
+        outputs:
+          - docs/research/experiments/experiment-{exp-id}.md
+        success_criteria:
+          - Methodology detailed
+          - Baselines identified
+          - Metrics defined
+          - Implementation plan clear
+
+      - step: create_experiment_issue
+        agent: pm
+        command: "*create-experiment-issue"
+        description: "Create GitHub issue for experiment"
+        inputs:
+          - docs/research/experiments/experiment-{exp-id}.md
+        outputs:
+          - GitHub Issue created
+        labels:
+          - type:experiment
+          - research:experiment
+        success_criteria:
+          - Issue linked to spec
+          - Milestone assigned
+          - Labels applied
+
+  # ============================================================================
+  # PHASE 3: Implementation (1-2 weeks)
+  # ============================================================================
+  - name: implementation
+    description: "Implement baselines and novel method"
+    duration: "1-2 weeks"
+    agents:
+      - dev
+      - qa
+
+    steps:
+      - step: implement_experiment
+        agent: dev
+        command: "*implement-experiment {exp-id}"
+        description: "Implement experiment code"
+        inputs:
+          - docs/research/experiments/experiment-{exp-id}.md
+        outputs:
+          - experiments/{exp-id}/README.md
+          - experiments/{exp-id}/baseline.py
+          - experiments/{exp-id}/novel_method.py
+          - experiments/{exp-id}/run.sh
+          - experiments/{exp-id}/config.yaml
+        success_criteria:
+          - Baselines implemented
+          - Novel method implemented
+          - Run script works
+          - README complete
+
+      - step: run_experiment
+        agent: dev
+        command: "*run-experiment {exp-id}"
+        description: "Execute experiment and log metrics"
+        outputs:
+          - results/experiments/{exp-id}/metrics.json
+          - results/experiments/{exp-id}/logs.txt
+        success_criteria:
+          - Experiment runs successfully
+          - Metrics logged
+          - No errors
+
+      - step: validate_experiment
+        agent: qa
+        command: "*validate-experiment {exp-id}"
+        description: "Validate reproducibility and methodology"
+        inputs:
+          - experiments/{exp-id}/
+          - docs/research/experiments/experiment-{exp-id}.md
+        success_criteria:
+          - Can reproduce results
+          - Methodology matches spec
+          - Random seeds set
+          - Dependencies documented
+
+  # ============================================================================
+  # PHASE 4: Analysis (3-7 days)
+  # ============================================================================
+  - name: analysis
+    description: "Analyze results and create visualizations"
+    duration: "3-7 days"
+    agents:
+      - data-analyst
+      - qa
+
+    steps:
+      - step: analyze_experiment
+        agent: data-analyst
+        command: "*analyze-experiment {exp-id}"
+        description: "Perform statistical analysis"
+        inputs:
+          - results/experiments/{exp-id}/metrics.json
+        outputs:
+          - results/analysis/analysis-{exp-id}.ipynb
+          - docs/research/analysis/analysis-{exp-id}.md
+        success_criteria:
+          - Statistical tests performed
+          - Significance reported
+          - Findings documented
+
+      - step: create_figures
+        agent: data-analyst
+        command: "*create-figures {exp-id}"
+        description: "Generate publication-quality figures"
+        outputs:
+          - results/figures/fig-{exp-id}-*.png
+          - results/figures/fig-{exp-id}-*.pdf
+        success_criteria:
+          - Figures publication-ready
+          - 300 DPI minimum
+          - Clear labels and legends
+
+      - step: create_tables
+        agent: data-analyst
+        command: "*create-tables"
+        description: "Format results into tables"
+        outputs:
+          - results/tables/table-{exp-id}.csv
+        success_criteria:
+          - LaTeX-ready format
+          - All metrics included
+
+      - step: generate_report
+        agent: data-analyst
+        command: "*generate-html-report"
+        description: "Generate HTML dashboard"
+        script: ".bmad-research-dev/scripts/generate-html-report.sh"
+        outputs:
+          - results/reports/experiment-report.html
+        success_criteria:
+          - All experiments visible
+          - Interactive dashboard
+
+      - step: verify_results
+        agent: qa
+        command: "*verify-results {exp-id}"
+        description: "Verify results validity"
+        success_criteria:
+          - Results match expectations
+          - No obvious errors
+          - Statistical tests appropriate
+
+  # ============================================================================
+  # PHASE 5: Documentation (1-3 days, can be parallel)
+  # ============================================================================
+  - name: documentation
+    description: "Document findings for team or publication"
+    duration: "1-3 days"
+    agents:
+      - doc-writer
+      - paper-writer
+    optional: true # Not always needed
+
+    steps:
+      - step: update_api_docs
+        agent: doc-writer
+        command: "*create-api-docs {module}"
+        description: "Document any new code (if experiment becomes feature)"
+        condition: "if productionizing"
+        outputs:
+          - docs/api/{module}.md
+
+      - step: draft_paper_section
+        agent: paper-writer
+        command: "*draft-results"
+        description: "Incorporate results into paper (if publishing)"
+        condition: "if publishing"
+        inputs:
+          - results/figures/
+          - results/tables/
+          - docs/research/analysis/
+        outputs:
+          - research-paper/sections/results.tex
+
+      - step: close_issue
+        agent: pm
+        description: "Update GitHub issue with completion"
+        actions:
+          - Comment with results summary
+          - Link to figures and analysis
+          - Update status to Done
+          - Close issue
+
+# ============================================================================
+# Workflow Outputs
+# ============================================================================
+outputs:
+  required:
+    - Experiment spec: docs/research/experiments/experiment-{exp-id}.md
+    - Experiment code: experiments/{exp-id}/
+    - Results: results/experiments/{exp-id}/
+    - Analysis: results/analysis/
+    - Figures: results/figures/
+    - GitHub issue: Updated and closed
+
+  optional:
+    - Paper section: research-paper/sections/
+    - API documentation: docs/api/
+    - HTML report: results/reports/experiment-report.html
+
+# ============================================================================
+# Success Criteria
+# ============================================================================
+success_criteria:
+  minimum:
+    - Experiment runs successfully
+    - Results logged
+    - Reproducible
+    - Basic analysis complete
+
+  target:
+    - Statistical significance established
+    - Publication-quality figures
+    - Comprehensive documentation
+    - GitHub issue closed
+
+  stretch:
+    - Results exceed hypothesis
+    - Paper section drafted
+    - Code ready for production
+
+# ============================================================================
+# Common Failure Modes & Recovery
+# ============================================================================
+failure_recovery:
+  experiment_fails:
+    - Document negative results (still valuable!)
+    - Analyze why it failed
+    - Iterate on methodology
+    - Create new experiment spec
+
+  cant_reproduce:
+    - Fix reproducibility issues
+    - Document environment better
+    - Set random seeds
+    - Version dependencies
+
+  results_dont_match_hypothesis:
+    - This is OK! Document findings
+    - Analyze unexpected results
+    - May lead to new hypotheses
+    - Publish negative results
+
+  implementation_blocked:
+    - Escalate to user
+    - Consider alternative approaches
+    - Update experiment spec
+    - May need to pivot
+
+# ============================================================================
+# Iteration
+# ============================================================================
+iteration:
+  description: "Experiments are inherently iterative"
+  typical_iterations: "3-10 per research question"
+  when_to_iterate:
+    - Results don't match hypothesis
+    - Methodology needs refinement
+    - Baselines need improvement
+    - Ablation studies needed
+
+  iteration_process:
+    - Review Phase 4 results
+    - Identify what to change
+    - Create new experiment spec (exp-{id}-v2)
+    - Return to Phase 2
+    - Keep all iterations for comparison
+
+# ============================================================================
+# Handoffs
+# ============================================================================
+handoffs:
+  after_completion:
+    - If successful → research-to-feature workflow
+    - If publishing → paper-writing workflow
+    - If iterating → create new experiment spec
+    - If failed → document lessons learned
+
+# ============================================================================
+# Usage
+# ============================================================================
+usage:
+  how_to_run:
+    - This workflow is manual (agents coordinate)
+    - Can be automated in future with orchestrator
+    - Each phase is a conversation with relevant agents
+
+  example_session: |
+    User: "I want to test a novel optimization algorithm"
+
+    # Phase 1
+    @enhanced-analyst
+    *literature-search "optimization algorithms"
+    *identify-gaps
+    *create-research-proposal
+
+    @pm
+    *create-research-milestone
+
+    # Phase 2
+    @dev
+    # Script creates experiment spec
+    [run script: create-experiment-spec.sh]
+
+    @pm
+    *create-experiment-issue
+
+    # Phase 3
+    @dev
+    *implement-experiment exp-001
+    *run-experiment exp-001
+
+    @qa
+    *validate-experiment exp-001
+
+    # Phase 4
+    @data-analyst
+    *analyze-experiment exp-001
+    *create-figures exp-001
+    *generate-html-report
+
+    @qa
+    *verify-results exp-001
+
+    # Phase 5 (optional)
+    @paper-writer
+    *draft-results

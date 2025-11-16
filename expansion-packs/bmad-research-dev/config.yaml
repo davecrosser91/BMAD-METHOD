@@ -1,0 +1,413 @@
+name: bmad-research-dev
+version: 1.0.0
+short-title: Research + Dev Pack
+description: >-
+  Hybrid expansion pack combining software development workflows with
+  research capabilities. GitHub-based, local-first, single-repo architecture.
+  No Archon or wandb MCP dependencies required.
+author: BMAD Community
+slashPrefix: BMadRD
+
+# Repository Configuration (Single Repo Architecture)
+repository:
+  structure: single-repo
+  description: >-
+    All code, documentation, experiments, and research outputs in one repository.
+    Optional: research-paper/ folder can be synced to separate repo for publication.
+
+  folders:
+    # Production code
+    src: src/
+
+    # Research code
+    experiments: experiments/
+
+    # Documentation
+    docs: docs/
+    prd: docs/prd/
+    architecture: docs/architecture/
+    specs: docs/specs/
+    api: docs/api/
+    guides: docs/guides/
+    notes: docs/notes/
+
+    # Research documentation
+    research_proposals: docs/research/proposals/
+    literature_reviews: docs/research/literature-reviews/
+    experiment_specs: docs/research/experiments/
+    analysis_reports: docs/research/analysis/
+
+    # Research outputs (gitignored or Git LFS)
+    results: results/
+    experiment_results: results/experiments/
+    figures: results/figures/
+    tables: results/tables/
+    analysis_code: results/analysis/
+
+    # Paper writing (optional separate repo sync)
+    paper: research-paper/
+
+# GitHub Integration
+github:
+  # Task management
+  tasks:
+    use_milestones_for_epics: true
+    use_issues_for_tasks: true
+
+    # Label system (combined dev + research)
+    labels:
+      # Status labels
+      status:
+        - name: status:backlog
+          color: d4c5f9
+          description: Not yet started
+        - name: status:todo
+          color: 0e8a16
+          description: Ready to start
+        - name: status:doing
+          color: fbca04
+          description: In progress
+        - name: status:review
+          color: ff9800
+          description: In review
+        - name: status:done
+          color: 5319e7
+          description: Completed
+
+      # Type labels
+      types:
+        - name: type:feature
+          color: 0052cc
+          description: Software feature
+        - name: type:bug
+          color: d73a4a
+          description: Bug fix
+        - name: type:experiment
+          color: 7057ff
+          description: Research experiment
+        - name: type:analysis
+          color: 8b5cf6
+          description: Data analysis
+        - name: type:documentation
+          color: 0075ca
+          description: Documentation/paper writing
+        - name: type:architecture
+          color: 5319e7
+          description: System design
+
+      # Research-specific labels
+      research:
+        - name: research:literature
+          color: c5def5
+          description: Literature review task
+        - name: research:experiment
+          color: 7057ff
+          description: Experiment task
+        - name: research:analysis
+          color: 8b5cf6
+          description: Analysis task
+        - name: research:paper
+          color: 1d76db
+          description: Paper writing task
+
+      # Priority labels
+      priority:
+        - name: priority:p0
+          color: b60205
+          description: Critical
+        - name: priority:p1
+          color: d93f0b
+          description: High
+        - name: priority:p2
+          color: fbca04
+          description: Medium
+        - name: priority:p3
+          color: 0e8a16
+          description: Low
+
+      # Size labels
+      size:
+        - name: size:xs
+          color: c2e0c6
+          description: < 1 hour
+        - name: size:s
+          color: bfdadc
+          description: 1-4 hours
+        - name: size:m
+          color: fef2c0
+          description: 4-8 hours
+        - name: size:l
+          color: f9d0c4
+          description: 8-16 hours
+        - name: size:xl
+          color: ee9898
+          description: ">16 hours"
+
+    # Automation
+    auto_link_pr_to_issue: true
+    auto_close_on_merge: true
+    validate_dependencies: true
+
+  # Pull requests
+  pull_requests:
+    branch_prefix: "feature/"
+    require_issue_reference: true
+    auto_update_issue_status: true
+
+# Document Storage (Local Files with Frontmatter)
+documents:
+  storage: local-files
+  use_frontmatter: true
+  use_archon: false # Explicitly disabled
+
+  # Frontmatter standard for all markdown documents
+  frontmatter_schema:
+    required_fields:
+      - type
+      - title
+      - status
+      - created
+
+    optional_fields:
+      - id
+      - updated
+      - github_issue
+      - tags
+      - authors
+      - related_docs
+      - hypothesis # For experiments
+      - methodology # For experiments
+
+    # Valid values for status field
+    status_values:
+      - draft
+      - active
+      - completed
+      - archived
+
+    # Valid document types
+    document_types:
+      - research-proposal
+      - literature-review
+      - experiment-spec
+      - analysis-report
+      - prd
+      - architecture
+      - api-docs
+      - paper
+
+# Agents Configuration
+agents:
+  # Development team (from bmad-core-github-research)
+  development:
+    analyst:
+      enabled: true
+      enhanced: true # Enhanced with research capabilities
+      capabilities:
+        - business_requirements
+        - user_research
+        - literature_search # NEW: Multi-source research
+        - competitive_analysis # NEW: Technical deep-dives
+        - gap_identification # NEW: Market + technical gaps
+        - research_questions # NEW: Research question formulation
+
+    pm:
+      enabled: true
+      capabilities:
+        - prd_creation
+        - epic_management
+        - story_creation
+        - research_experiment_linking # NEW: Link experiments to stories
+
+    architect:
+      enabled: true
+      capabilities:
+        - system_architecture
+        - experiment_architecture # NEW: Experiment code design
+        - research_code_organization # NEW
+
+    dev:
+      enabled: true
+      capabilities:
+        - feature_implementation
+        - experiment_implementation # NEW: Implements research experiments
+        - pr_creation
+        - testing
+
+    qa:
+      enabled: true
+      capabilities:
+        - code_review
+        - experiment_validation # NEW: Reproducibility checks
+        - results_verification # NEW
+
+    sm:
+      enabled: true
+      capabilities:
+        - sprint_planning
+        - research_milestone_planning # NEW
+        - hybrid_sprint_support # NEW: Dev + research tasks
+
+    dev-team-lead:
+      enabled: true
+      capabilities:
+        - parallel_execution
+        - wave_orchestration
+
+    ux-expert:
+      enabled: false # Optional
+
+  # Research team (adapted from bmad-ai-research)
+  research:
+    data-analyst:
+      enabled: true
+      capabilities:
+        - statistical_analysis
+        - data_visualization
+        - figure_creation
+        - comparative_analysis
+        - local_results_processing # NO wandb MCP
+      output:
+        - results/analysis/
+        - results/figures/
+        - results/tables/
+
+    doc-writer:
+      enabled: true
+      capabilities:
+        - api_documentation
+        - architecture_documentation
+        - developer_guides
+        - readme_files
+        - blog_posts
+      output:
+        - docs/api/
+        - docs/architecture/
+        - docs/guides/
+
+    paper-writer:
+      enabled: true
+      capabilities:
+        - latex_papers
+        - conference_formatting
+        - journal_formatting
+        - literature_reviews
+        - experiment_writeups
+      output:
+        - research-paper/
+      supported_venues:
+        - neurips
+        - icml
+        - iclr
+        - cvpr
+        - arxiv
+
+# Experiment Tracking (Local, No wandb)
+experiments:
+  tracking:
+    use_wandb: false
+    use_local: true
+
+  local_tracking:
+    metrics_format: json
+    logs_format: txt
+    results_path: results/experiments/
+
+    # What to track
+    track:
+      - metrics # Performance metrics
+      - hyperparameters # Experiment config
+      - logs # Training logs
+      - artifacts # Model checkpoints, etc.
+
+    # Output formats
+    reporting:
+      html_reports: true # Generate HTML reports from JSON
+      comparison_tool: true # CLI tool to compare experiments
+
+# Workflows
+workflows:
+  # Software development workflows
+  software:
+    - feature-development
+    - bug-fixing
+    - refactoring
+    - code-review
+
+  # Research workflows
+  research:
+    - literature-review
+    - experiment-design
+    - experiment-execution
+    - results-analysis
+    - paper-writing
+
+  # Hybrid workflows (KEY INNOVATION)
+  hybrid:
+    - research-to-feature # Convert experiment to production feature
+    - experiment-driven-development # Build product based on research
+    - paper-and-product # Publish research while building product
+
+# QA Configuration
+qa:
+  automated_review:
+    enabled: true
+    trigger_on:
+      - pr_opened
+      - pr_updated
+    auto_merge_on_pass: false
+
+    # Different QA for different types
+    review_types:
+      feature:
+        model: claude-sonnet-4-20250514
+        checks:
+          - functionality
+          - tests
+          - documentation
+
+      experiment:
+        model: claude-sonnet-4-20250514
+        checks:
+          - reproducibility
+          - methodology
+          - results_validity
+          - code_quality
+
+# Dev Team Lead Configuration
+dev_team_lead:
+  default_mode: in-context
+  parallel:
+    max_developers: 5
+    max_qa_reviewers: 3
+    wave_batch_size: 10
+
+# Git Configuration
+git:
+  # Results folder management
+  results:
+    use_gitignore: true
+    use_lfs: true
+    lfs_patterns:
+      - "*.h5"
+      - "*.pkl"
+      - "*.pt"
+      - "*.pth"
+      - "*.ckpt"
+      - "*.safetensors"
+      - "*.bin"
+
+  # Paper sync (optional)
+  paper_sync:
+    enabled: false # Can be enabled if user wants separate paper repo
+    sync_folder: research-paper/
+    target_repo: "" # User sets this if enabling
+
+# Cost Management
+cost:
+  tracking: true
+  budget_alerts: true
+  expensive_operations:
+    - literature_search # Multiple web searches
+    - paper_writing # Long context
+    - data_analysis # Multiple figure generations

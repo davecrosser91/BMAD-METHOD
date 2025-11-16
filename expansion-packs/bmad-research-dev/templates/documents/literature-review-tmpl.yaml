@@ -1,0 +1,240 @@
+output: docs/research/literature-reviews/review-{topic-slug}.md
+frontmatter:
+  type: literature-review
+  title: "Literature Review: {topic}"
+  status: active
+  created: "{date}"
+  updated: "{date}"
+  tags: ["{tag1}", "{tag2}"]
+  sources_count: 0
+  related_docs: null
+sections:
+  - name: title
+    heading: "# Literature Review: {topic}"
+
+  - name: overview
+    heading: "## Overview"
+    content: |
+      **Topic:** {topic}
+
+      **Review Date:** {date}
+
+      **Search Strategy:**
+      - Web Search (industry blogs, documentation)
+      - Academic Search (arXiv, Google Scholar)
+      - Local Documentation (previous research)
+
+      **Total Sources:** [TO BE FILLED]
+
+      **Key Findings Summary:** (2-3 paragraphs)
+
+  - name: search_methodology
+    heading: "## Search Methodology"
+    content: |
+      ### Search Queries Used
+      1. Query 1: "{query1}"
+      2. Query 2: "{query2}"
+
+      ### Sources Searched
+      - ✅ Web: Google, tech blogs, documentation
+      - ✅ Academic: arXiv.org (via site:arxiv.org searches)
+      - ✅ Local: docs/research/
+
+      ### Inclusion Criteria
+      - Relevant to: {criteria}
+      - Published: {date_range}
+      - Quality: Peer-reviewed or reputable source
+
+      ### Exclusion Criteria
+      - Not relevant to core topic
+      - Outdated (> 5 years old for fast-moving fields)
+      - Low-quality sources
+
+  - name: key_papers
+    heading: "## Key Papers & Resources"
+    subsections:
+      - name: foundational
+        heading: "### Foundational Work"
+        content: |
+          Core papers that established the field.
+
+          #### [Paper 1 Title] (Year)
+          - **Authors:** Author list
+          - **Venue:** Conference/Journal
+          - **URL:** [Link]
+          - **Key Contribution:** What it introduced
+          - **Relevance:** Why it matters for our work
+          - **Strengths:** What it does well
+          - **Limitations:** What it doesn't address
+
+      - name: recent_advances
+        heading: "### Recent Advances"
+        content: |
+          State-of-the-art methods (last 2 years).
+
+          #### [Paper 2 Title] (Year)
+          - **Authors:** Author list
+          - **Venue:** Conference/Journal
+          - **URL:** [Link]
+          - **Key Contribution:** What's new
+          - **Results:** Key findings
+          - **Relevance:** How it relates to our work
+
+      - name: related_approaches
+        heading: "### Related Approaches"
+        content: |
+          Alternative methods and approaches.
+
+          #### [Approach 1]
+          - **Description:** What it is
+          - **Strengths:** Advantages
+          - **Weaknesses:** Limitations
+          - **Comparison:** How it compares to our approach
+
+  - name: industry_resources
+    heading: "## Industry Resources"
+    content: |
+      Practical implementations and documentation.
+
+      ### Blog Posts & Tutorials
+      - [Resource 1]: Description, key insights
+      - [Resource 2]: Description, key insights
+
+      ### Documentation & Guides
+      - [Doc 1]: Official documentation for framework/library
+      - [Doc 2]: Community guides
+
+      ### Code Repositories
+      - [Repo 1]: GitHub repo with implementation
+      - [Repo 2]: Benchmark code
+
+  - name: datasets_benchmarks
+    heading: "## Datasets & Benchmarks"
+    content: |
+      Standard datasets and evaluation benchmarks for this topic.
+
+      ### Datasets
+      1. **Dataset Name**
+         - Description:
+         - Size:
+         - URL:
+         - Used in: [Papers that use it]
+
+      ### Benchmarks
+      1. **Benchmark Name**
+         - Metrics:
+          - Leaderboard: [URL]
+         - SOTA: [Best result]
+
+  - name: technical_gaps
+    heading: "## Technical Gaps & Research Opportunities"
+    content: |
+      What's missing in current research?
+
+      ### Identified Gaps
+      1. **Gap 1:**
+         - Description:
+         - Why it matters:
+         - Potential approach:
+
+      2. **Gap 2:**
+         - Description:
+         - Why it matters:
+         - Potential approach:
+
+      ### Unanswered Questions
+      - Question 1:
+      - Question 2:
+
+  - name: market_insights
+    heading: "## Market & Industry Insights"
+    content: |
+      Business perspective on the topic.
+
+      ### Market Need
+      - Who needs this?
+      - What problems does it solve?
+      - Market size/opportunity?
+
+      ### Competitive Landscape
+      - Who's working on this?
+      - Commercial solutions available?
+      - Competitive advantages possible?
+
+      ### Industry Adoption
+      - Current adoption level:
+      - Barriers to adoption:
+      - Adoption trends:
+
+  - name: synthesis
+    heading: "## Synthesis & Recommendations"
+    content: |
+      Key takeaways from the literature review.
+
+      ### Main Findings
+      1. Finding 1:
+      2. Finding 2:
+      3. Finding 3:
+
+      ### Consensus Views
+      - What do most papers agree on?
+
+      ### Controversial Areas
+      - What's debated in the field?
+
+      ### Best Practices
+      - Recommended approaches:
+      - Common pitfalls to avoid:
+
+      ### Recommendations for Our Work
+      1. Recommendation 1: (Based on finding X)
+      2. Recommendation 2: (Based on finding Y)
+
+  - name: future_directions
+    heading: "## Future Research Directions"
+    content: |
+      Where is the field heading?
+
+      ### Emerging Trends
+      - Trend 1:
+      - Trend 2:
+
+      ### Promising Directions
+      - Direction 1:
+      - Direction 2:
+
+      ### Our Proposed Direction
+      - How our work fits into these trends:
+      - Novel contribution we can make:
+
+  - name: references
+    heading: "## References"
+    content: |
+      Complete list of sources (BibTeX format).
+
+      ```bibtex
+      @inproceedings{author2023paper,
+        title={Paper Title},
+        author={Author Name},
+        booktitle={Conference},
+        year={2023}
+      }
+      ```
+
+instructions: |
+  This template creates a comprehensive literature review combining academic and industry sources.
+
+  Required elicitation:
+  - topic: Topic being reviewed (e.g., "Transformer Optimization")
+  - topic-slug: URL-friendly slug (e.g., "transformer-optimization")
+  - date: Current date (YYYY-MM-DD)
+  - tag1, tag2: Topic tags
+
+  Agent should:
+  1. Use 3-mode literature search (Web, Academic, Local)
+  2. Gather sources systematically
+  3. Fill in all sections with specific findings
+  4. Include both research and business perspectives
+  5. Update frontmatter sources_count with actual count
+  6. Save to docs/research/literature-reviews/review-{topic-slug}.md
+  7. Suggest creating research proposal based on findings

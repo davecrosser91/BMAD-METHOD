@@ -1,0 +1,236 @@
+output: docs/research/proposals/proposal-{id}.md
+frontmatter:
+  type: research-proposal
+  title: "{title}"
+  status: draft
+  created: "{date}"
+  updated: "{date}"
+  tags: null
+  github_issue: null
+  related_docs: null
+sections:
+  - name: title
+    heading: "# {title}"
+
+  - name: executive_summary
+    heading: "## Executive Summary"
+    content: |
+      Brief 2-3 paragraph summary of the proposal:
+      - What problem are we solving?
+      - Why is it important (business + research perspective)?
+      - What is our proposed approach?
+      - What are the expected outcomes?
+
+  - name: motivation
+    heading: "## Motivation"
+    subsections:
+      - name: business_motivation
+        heading: "### Business Motivation"
+        content: |
+          Why does this matter commercially?
+          - Market need
+          - Competitive advantage
+          - User impact
+          - Revenue potential
+
+      - name: research_motivation
+        heading: "### Research Motivation"
+        content: |
+          Why is this academically novel?
+          - Current research gap
+          - Limitations of existing approaches
+          - Potential scientific contribution
+
+  - name: background
+    heading: "## Background & Related Work"
+    content: |
+      What's the current state of the field?
+
+      ### Existing Approaches
+      1. **Approach A**: Description, strengths, weaknesses
+      2. **Approach B**: Description, strengths, weaknesses
+
+      ### Gaps in Current Research
+      - Gap 1:
+      - Gap 2:
+
+      ### Key References
+      - [Citation 1] - Summary
+      - [Citation 2] - Summary
+
+  - name: research_questions
+    heading: "## Research Questions"
+    content: |
+      **Primary Research Question:**
+
+      What specific question are we trying to answer?
+
+      **Secondary Research Questions:**
+      1. Sub-question 1
+      2. Sub-question 2
+
+  - name: hypothesis
+    heading: "## Hypothesis"
+    content: |
+      **Central Hypothesis:**
+
+      Our hypothesis statement (testable, falsifiable).
+
+      **Supporting Hypotheses:**
+      1. Sub-hypothesis 1
+      2. Sub-hypothesis 2
+
+      **Expected Outcomes:**
+      - If hypothesis is correct: ...
+      - If hypothesis is incorrect: ...
+
+  - name: proposed_approach
+    heading: "## Proposed Approach"
+    subsections:
+      - name: methodology
+        heading: "### Methodology"
+        content: |
+          High-level description of approach:
+          - Method overview
+          - Key innovations
+          - Why this approach is suitable
+
+      - name: technical_approach
+        heading: "### Technical Approach"
+        content: |
+          More detailed technical description:
+          1. Step 1:
+          2. Step 2:
+          3. Step 3:
+
+      - name: experimental_design
+        heading: "### Experimental Design"
+        content: |
+          **Experiments to run:**
+          1. Experiment 1: Baseline comparison
+          2. Experiment 2: Ablation studies
+          3. Experiment 3: Scalability tests
+
+          **Datasets:**
+          - Dataset 1:
+          - Dataset 2:
+
+          **Metrics:**
+          - Primary metric:
+          - Secondary metrics:
+
+  - name: expected_contributions
+    heading: "## Expected Contributions"
+    subsections:
+      - name: research_contributions
+        heading: "### Research Contributions"
+        content: |
+          Scientific contributions:
+          1. Novel method/algorithm
+          2. New insights into problem
+          3. Benchmark/dataset contributions
+
+      - name: business_contributions
+        heading: "### Business Contributions"
+        content: |
+          Commercial value:
+          1. Product improvements
+          2. Competitive advantages
+          3. Market differentiation
+
+  - name: timeline
+    heading: "## Timeline & Milestones"
+    content: |
+      **Phase 1: Literature Review & Planning** (2-4 weeks)
+      - [ ] Complete literature search
+      - [ ] Finalize experimental design
+      - [ ] Setup infrastructure
+
+      **Phase 2: Implementation** (4-8 weeks)
+      - [ ] Implement baseline methods
+      - [ ] Implement proposed method
+      - [ ] Setup evaluation framework
+
+      **Phase 3: Experimentation** (4-8 weeks)
+      - [ ] Run baseline experiments
+      - [ ] Run novel method experiments
+      - [ ] Ablation studies
+
+      **Phase 4: Analysis & Writing** (2-4 weeks)
+      - [ ] Statistical analysis
+      - [ ] Create figures and tables
+      - [ ] Write paper/documentation
+
+      **Total Estimated Duration:** 12-24 weeks
+
+  - name: resources
+    heading: "## Resources Required"
+    content: |
+      **Compute Resources:**
+      - GPUs: (e.g., 4x A100 GPUs for 2 weeks)
+      - Storage: (e.g., 500GB)
+      - Cloud credits: (if applicable)
+
+      **Human Resources:**
+      - Developer time: (e.g., 1 full-time for 3 months)
+      - Research time: (e.g., 20% of researcher for 6 months)
+
+      **Budget:**
+      - Estimated costs:
+      - Funding sources:
+
+  - name: risks
+    heading: "## Risks & Mitigation"
+    content: |
+      **Risk 1:** [Description]
+      - Probability: High/Medium/Low
+      - Impact: High/Medium/Low
+      - Mitigation: [Strategy]
+
+      **Risk 2:** [Description]
+      - Probability: High/Medium/Low
+      - Impact: High/Medium/Low
+      - Mitigation: [Strategy]
+
+  - name: success_criteria
+    heading: "## Success Criteria"
+    content: |
+      **Minimum Success:**
+      - Criteria 1:
+      - Criteria 2:
+
+      **Target Success:**
+      - Criteria 1:
+      - Criteria 2:
+
+      **Stretch Success:**
+      - Criteria 1:
+      - Criteria 2:
+
+  - name: next_steps
+    heading: "## Next Steps"
+    content: |
+      **Immediate Actions:**
+      1. Create GitHub milestone and issues
+      2. Setup experiment infrastructure
+      3. Begin literature review
+
+      **Decision Points:**
+      - Go/No-Go decision after Phase 1
+      - Pivot criteria during Phase 2
+
+instructions: |
+  This template creates a comprehensive research proposal that bridges business and research perspectives.
+
+  Required elicitation:
+  - title: Proposal title
+  - id: Unique identifier (e.g., "prop-001")
+  - date: Current date (YYYY-MM-DD)
+
+  Agent should:
+  1. Gather proposal details through conversation
+  2. Fill in all sections with specific content
+  3. Include both business and research justifications
+  4. Create actionable timeline and milestones
+  5. Save to docs/research/proposals/proposal-{id}.md
+  6. Suggest creating GitHub milestone for tracking
