@@ -285,7 +285,7 @@ async function promptInstallation() {
     choices.push({
       name: packOptionText,
       value: pack.id,
-      checked: pack.id === 'bmad-ai-research', // Default AI Research pack to checked
+      checked: pack.id === 'bmad-research-dev', // Default Research + Dev pack to checked
     });
   }
 
