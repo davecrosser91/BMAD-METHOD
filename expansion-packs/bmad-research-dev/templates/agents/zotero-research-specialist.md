@@ -73,30 +73,39 @@ When you were installed, Python wrapper functions were created in `.claude/serve
 
 **File: `servers/zotero/search.py`**
 
-- `search(query, options)` → Search library, returns items array
-- `search_by_author(name, keywords)` → Filter by author
+- `search(query=None, collection_id=None, tag=None, item_type=None, limit=100)` → Search library with filters
+- `search_by_author(author_name, additional_keywords=None)` → Filter by author name
 - `search_by_tag(tag)` → Filter by single tag
-- `search_by_tags(tags[])` → Filter by multiple tags (AND)
-- `search_recent(days_back, keywords)` → Recent additions
-- `get_stats()` → Library statistics
+- `search_by_tags(tags)` → Filter by multiple tags (AND logic, list of strings)
+- `search_recent(days_back=30, keywords=None)` → Recent additions
+- `search_by_year(year, keywords=None)` → Filter by publication year
+- `search_by_year_range(start_year, end_year, keywords=None)` → Filter by year range
+- `find_by_topic(topic)` → Find by topic (exact tag matches + related)
+- `identify_gaps(research_area, expected_topics)` → Identify coverage gaps
+- `get_stats()` → Library statistics (total items, by type, by year, top tags)
 
 **File: `servers/zotero/get_item.py`**
 
-- `get_item(item_key, format?)` → Get item metadata (or BibTeX if format='bibtex')
-- `get_item_fulltext(item_key)` → Get full text content
-- `get_item_children(item_key)` → Get attachments, notes, annotations
-- `get_annotations(item_key)` → Get annotations only
-- `get_notes(item_key)` → Get notes only
+- `get_item(item_key, format='json')` → Get item metadata (format: 'json' or 'bibtex')
+- `get_items(item_keys, format='json')` → Get multiple items in parallel
+- `get_item_fulltext(item_key)` → Get full text content (if indexed)
+- `get_item_children(item_key)` → Get attachments, notes, annotations (returns dict)
+- `get_annotations(item_key)` → Get annotations only (list)
+- `get_notes(item_key)` → Get notes only (list)
 - `get_item_complete(item_key)` → Get everything (metadata + children + fulltext)
-- `export_bibtex(item_keys[])` → Export multiple items as BibTeX
+- `export_bibtex(item_keys)` → Export multiple items as BibTeX (list of keys)
+- `analyze_item_research_value(item_key)` → Analyze research readiness
 
 **File: `servers/zotero/get_collections.py`**
 
 - `get_collections()` → List all collections
-- `get_collection_items(collection_key, limit?)` → Items in collection
-- `find_collection_by_name(name)` → Find collection by name
-- `get_collection_hierarchy()` → Parent-child structure
-- `print_collection_hierarchy()` → Print tree view
+- `get_collection_items(collection_key, limit=100)` → Items in collection
+- `find_collection_by_name(name)` → Find collection by name (case-insensitive)
+- `get_collection_hierarchy()` → Parent-child structure (returns dict with 'topLevel' and 'byParent')
+- `print_collection_hierarchy()` → Print tree view to console
+- `get_total_item_count()` → Total items across all collections
+- `find_collections_by_keyword(keyword)` → Find collections by keyword
+- `get_largest_collections(limit=10)` → Get largest collections by item count
 
 ## Environment Requirements
 
@@ -105,64 +114,146 @@ When you were installed, Python wrapper functions were created in `.claude/serve
 - `ZOTERO_API_KEY` - Your Zotero API key
 - `ZOTERO_USER_ID` - Your Zotero user ID
 
-## Usage Pattern
+## Usage Pattern - CRITICAL SETUP
+
+**EVERY script MUST start with this setup:**
 
 ```python
-# Step 1: Import the function you need
+import sys
+sys.path.insert(0, '.claude')  # CRITICAL: Add .claude to path
+
+# Now import functions
 from servers.zotero.search import search
 
-# Step 2: Call it
+# Call them
 items = search('transformer architecture')
 
-# Step 3: Use the results
+# Use results
 print(f"Found {len(items)} papers")
 for item in items:
     print(f"- {item['data']['title']}")
 ```
 
-That's it! The function handles all the API calls internally.
+**Why `sys.path.insert(0, '.claude')` is required:**
+
+- Python modules are in `.claude/servers/zotero/`
+- Without this line, Python can't find the `servers` module
+- This MUST be the first import in every script
+
+**Complete Example with Error Handling:**
+
+```bash
+cat > /tmp/zotero_search.py << 'EOF'
+import sys
+sys.path.insert(0, '.claude')
+
+from servers.zotero.search import search
+
+try:
+    items = search('transformers', limit=10)
+    print(f"Found {len(items)} items")
+
+    for i, item in enumerate(items, 1):
+        data = item.get('data', {})
+        title = data.get('title', 'No title')
+        creators = data.get('creators', [])
+        authors = ', '.join([c.get('lastName', '') for c in creators[:2]])
+        year = data.get('date', '')[:4] if data.get('date') else 'N/A'
+
+        print(f"{i}. {title}")
+        print(f"   Authors: {authors}")
+        print(f"   Year: {year}")
+        print()
+except Exception as e:
+    print(f"Error: {e}")
+    import traceback
+    traceback.print_exc()
+EOF
+
+python /tmp/zotero_search.py
+```
 
 ## Common Research Tasks
+
+### Task: List all collections
+
+```python
+import sys
+sys.path.insert(0, '.claude')
+from servers.zotero.get_collections import get_collections, print_collection_hierarchy
+
+# Get all collections
+collections = get_collections()
+print(f"You have {len(collections)} collections")
+
+# Or print as tree
+print_collection_hierarchy()
+```
+
+### Task: Get papers from a collection
+
+```python
+import sys
+sys.path.insert(0, '.claude')
+from servers.zotero.get_collections import find_collection_by_name, get_collection_items
+
+# Find collection by name
+collection = find_collection_by_name('ReinforcementLearningVLM')
+if collection:
+    items = get_collection_items(collection['key'])
+    print(f"Found {len(items)} papers")
+```
+
+### Task: Get complete paper details
+
+```python
+import sys
+sys.path.insert(0, '.claude')
+from servers.zotero.get_item import get_item_complete
+
+item = get_item_complete('XU6IQYXD')
+# Returns: metadata, fulltext, attachments, notes, annotations
+print(item['metadata']['data']['title'])
+print(f"Has {len(item['notes'])} notes")
+```
 
 ### Task: Search for papers on a topic
 
 ```python
+import sys
+sys.path.insert(0, '.claude')
 from servers.zotero.search import search
-papers = search('attention mechanisms')
-```
 
-### Task: Get a specific item with your notes
-
-```python
-from servers.zotero.get_item import get_item_complete
-item = get_item_complete('ITEMKEY123')
-# item contains: metadata, fulltext, attachments, notes, annotations
-```
-
-### Task: Find papers by tag
-
-```python
-from servers.zotero.search import search_by_tag
-papers = search_by_tag('deep-learning')
+papers = search('attention mechanisms', limit=20)
+for p in papers:
+    print(p['data']['title'])
 ```
 
 ### Task: Get library statistics
 
 ```python
+import sys
+sys.path.insert(0, '.claude')
 from servers.zotero.search import get_stats
+
 stats = get_stats()
 print(f"Total items: {stats['totalItems']}")
+print(f"By type: {stats['byType']}")
+print(f"Top tags: {stats['topTags'][:5]}")
 ```
 
-### Task: Export citations
+### Task: Export citations as BibTeX
 
 ```python
+import sys
+sys.path.insert(0, '.claude')
 from servers.zotero.search import search
 from servers.zotero.get_item import export_bibtex
 
-papers = search('transformers')
+papers = search('transformers', limit=10)
 keys = [p['key'] for p in papers]
 bibtex = export_bibtex(keys)
+print(bibtex)
 ```
 
 ## Data Structures
