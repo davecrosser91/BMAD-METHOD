@@ -73,11 +73,10 @@ your-project/
 │           ├── update-issue.ts
 │           └── projects.ts
 │
-└── .bmad-research-dev/                 # Existing expansion pack
+└── expansion-packs/bmad-research-dev/  # Expansion pack
     ├── agents/                         # Coordinator agents
     │   └── research-lead.md
-    ├── scripts/
-    │   └── setup-code-execution-mcps.sh  # NEW installer
+    ├── setup-bmad-subagents.sh         # Auto-run installer (postinstall)
     └── templates/
         ├── agents/                     # Subagent templates
         └── servers/                    # Server wrapper templates
@@ -373,30 +372,52 @@ Total: 1 model invocation = 1 second
 
 ---
 
-## Installation Instructions
+## Installation & Setup
 
-### Automated Setup
+### Automatic Installation (Recommended)
+
+The setup runs **automatically** when you install the package:
 
 ```bash
-cd your-project
-
-# Run installer
-./.bmad-research-dev/scripts/setup-code-execution-mcps.sh
-
-# This will:
-# 1. Create .mcp.json with ArXiv + Zotero MCPs
-# 2. Copy server wrappers to .claude/servers/
-# 3. Copy subagent definitions to .claude/agents/
-# 4. Make everything executable
-# 5. Verify MCP availability
+npm install @dkreuzer/bmad-method-ai-research
 ```
 
-### Manual Setup
+The postinstall script (`tools/setup-subagents.js`) will:
+
+1. Detect expansion packs with `setup-bmad-subagents.sh`
+2. Run each setup script automatically
+3. Create `.claude/` directory structure
+4. Copy server wrappers to `.claude/servers/`
+5. Copy specialist subagents to `.claude/agents/`
+6. Create `.mcp.json` configuration
+7. Optionally install MCP servers
+
+### Manual Installation
+
+If you need to re-run the setup or customize it:
+
+```bash
+# From your project root
+bash expansion-packs/bmad-research-dev/setup-bmad-subagents.sh
+```
+
+**Options:**
+
+```bash
+# Auto-install MCP servers without prompting
+bash expansion-packs/bmad-research-dev/setup-bmad-subagents.sh --auto-install-mcps
+
+# Skip MCP installation (architecture only)
+bash expansion-packs/bmad-research-dev/setup-bmad-subagents.sh --skip-mcps
+```
+
+### Manual Setup (Advanced)
 
 1. **Create `.mcp.json`:**
 
    ```bash
-   cp .bmad-research-dev/templates/mcp.json.template .mcp.json
+   # This is created automatically by the setup script
+   # Manual creation only if you need custom configuration
    ```
 
 2. **Copy server wrappers:**

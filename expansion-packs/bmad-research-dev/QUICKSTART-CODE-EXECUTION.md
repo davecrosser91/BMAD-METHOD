@@ -21,21 +21,27 @@ sudo apt install gh  # Linux
 gh auth login
 ```
 
-### 2. Run Installer
+### 2. Install Package
+
+The setup runs **automatically** when you install:
 
 ```bash
-cd your-project
-
-# Run the code-execution MCP installer
-./.bmad-research-dev/scripts/setup-code-execution-mcps.sh
+npm install @dkreuzer/bmad-method-ai-research
 ```
 
-**This creates:**
+**This automatically creates:**
 
 - `.claude/servers/` - TypeScript server wrappers
 - `.claude/agents/` - 4 specialist subagents
 - `.mcp.json` - MCP configuration
 - Complete architecture documentation
+
+**Manual re-run (if needed):**
+
+```bash
+# From project root
+bash expansion-packs/bmad-research-dev/setup-bmad-subagents.sh
+```
 
 ### 3. Install MCP Servers
 
