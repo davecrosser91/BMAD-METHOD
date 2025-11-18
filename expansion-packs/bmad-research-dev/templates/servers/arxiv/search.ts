@@ -1,9 +1,8 @@
 /**
- * ArXiv Search Server Wrapper
- * Wraps mcp__arxiv__search_papers MCP tool
+ * ArXiv Search Server - Direct Web API
+ * Makes direct HTTP requests to export.arxiv.org (NO MCP)
  *
- * Based on: blazickjp/arxiv-mcp-server
- * API: https://github.com/blazickjp/arxiv-mcp-server
+ * API Docs: https://info.arxiv.org/help/api/user-manual.html
  *
  * Usage:
  *   import { search } from './servers/arxiv/search.ts'
@@ -27,7 +26,135 @@ interface Paper {
   categories: string[];
   pdf_url: string;
   entry_id: string; // Full arXiv URL
-  links: Array<{ href: string; rel: string; type: string }>;
+  links: Array<{ href: string; rel: string; type?: string }>;
+}
+
+/**
+ * Parse ArXiv Atom XML response
+ */
+function parseArxivXML(xmlText: string): Paper[] {
+  const papers: Paper[] = [];
+
+  // Simple regex-based XML parsing (sufficient for ArXiv Atom format)
+  const entryRegex = /<entry>([\s\S]*?)<\/entry>/g;
+  let match;
+
+  while ((match = entryRegex.exec(xmlText)) !== null) {
+    const entryXML = match[1];
+
+    // Extract fields using regex
+    const id = extractXMLContent(entryXML, 'id') || '';
+    const arxivId = id.match(/(\d{4}\.\d{4,5})/)?.[1] || id;
+
+    const title = extractXMLContent(entryXML, 'title')?.replace(/\s+/g, ' ').trim() || '';
+    const summary = extractXMLContent(entryXML, 'summary')?.replace(/\s+/g, ' ').trim() || '';
+    const published = extractXMLContent(entryXML, 'published') || '';
+    const updated = extractXMLContent(entryXML, 'updated') || '';
+
+    // Extract authors
+    const authors: Array<{ name: string }> = [];
+    const authorRegex = /<author>\s*<name>(.*?)<\/name>\s*<\/author>/g;
+    let authorMatch;
+    while ((authorMatch = authorRegex.exec(entryXML)) !== null) {
+      authors.push({ name: authorMatch[1].trim() });
+    }
+
+    // Extract categories
+    const categories: string[] = [];
+    let primaryCategory = '';
+    const categoryRegex = /<arxiv:primary_category[^>]*term="([^"]+)"/;
+    const primaryMatch = entryXML.match(categoryRegex);
+    if (primaryMatch) {
+      primaryCategory = primaryMatch[1];
+      categories.push(primaryCategory);
+    }
+
+    const allCategoryRegex = /<category[^>]*term="([^"]+)"/g;
+    let catMatch;
+    while ((catMatch = allCategoryRegex.exec(entryXML)) !== null) {
+      if (!categories.includes(catMatch[1])) {
+        categories.push(catMatch[1]);
+      }
+    }
+
+    // Extract links
+    const links: Array<{ href: string; rel: string; type?: string }> = [];
+    const linkRegex = /<link[^>]*href="([^"]*)"[^>]*(?:rel="([^"]*)")?[^>]*(?:type="([^"]*)")?[^>]*\/?>/g;
+    let linkMatch;
+    while ((linkMatch = linkRegex.exec(entryXML)) !== null) {
+      links.push({
+        href: linkMatch[1],
+        rel: linkMatch[2] || 'alternate',
+        type: linkMatch[3],
+      });
+    }
+
+    // PDF URL is typically the link with type="application/pdf"
+    const pdfLink = links.find((l) => l.type === 'application/pdf');
+    const pdf_url = pdfLink?.href || `http://arxiv.org/pdf/${arxivId}.pdf`;
+
+    papers.push({
+      id: arxivId,
+      title,
+      authors,
+      summary,
+      published,
+      updated,
+      primary_category: primaryCategory,
+      categories,
+      pdf_url,
+      entry_id: id,
+      links,
+    });
+  }
+
+  return papers;
+}
+
+/**
+ * Extract content from XML tag
+ */
+function extractXMLContent(xml: string, tagName: string): string | undefined {
+  const regex = new RegExp(`<${tagName}[^>]*>([\\s\\S]*?)<\/${tagName}>`, 'i');
+  const match = xml.match(regex);
+  return match ? match[1].trim() : undefined;
+}
+
+/**
+ * Make direct API request to ArXiv
+ */
+async function apiRequest(
+  searchQuery: string,
+  options: SearchOptions = {}
+): Promise<Paper[]> {
+  // Build URL with query parameters
+  const url = new URL('http://export.arxiv.org/api/query');
+  url.searchParams.append('search_query', searchQuery);
+  url.searchParams.append('start', '0');
+  url.searchParams.append(
+    'max_results',
+    (options.maxResults || 10).toString()
+  );
+
+  console.log(`[ArXiv API] GET ${url.toString()}`);
+
+  // Make HTTP request
+  const response = await fetch(url.toString());
+
+  if (!response.ok) {
+    throw new Error(
+      `ArXiv API error: ${response.status} ${response.statusText}`
+    );
+  }
+
+  const xmlText = await response.text();
+
+  // Parse XML response
+  const papers = parseArxivXML(xmlText);
+
+  console.log(`[ArXiv API] Received ${papers.length} papers`);
+
+  return papers;
 }
 
 /**
@@ -62,17 +189,26 @@ export async function search(
   query: string,
   options: SearchOptions = {}
 ): Promise<Paper[]> {
-  console.log(`[ArXiv] Searching for: "${query}"`)
+  console.log(`[ArXiv] Searching for: "${query}"`);
 
-  // Call the actual mcp__arxiv__search_papers tool
-  const results = await globalThis.mcp__arxiv__search_papers({
-    query,
-    max_results: options.maxResults || 10,
-    date_from: options.dateFrom,
-    categories: options.categories
-  });
+  // Build search query
+  let searchQuery = query;
 
-  console.log(`[ArXiv] Found ${results.length} papers`)
+  // Add category filters
+  if (options.categories && options.categories.length > 0) {
+    const catQuery = options.categories.map((cat) => `cat:${cat}`).join('+OR+');
+    searchQuery = `(${searchQuery})+AND+(${catQuery})`;
+  }
+
+  // Add date filter if specified
+  if (options.dateFrom) {
+    const dateFormatted = options.dateFrom.replace(/-/g, '');
+    searchQuery = `(${searchQuery})+AND+submittedDate:[${dateFormatted}0000+TO+20991231235]`;
+  }
+
+  const results = await apiRequest(searchQuery, options);
+
+  console.log(`[ArXiv] Found ${results.length} papers`);
 
   return results;
 }
@@ -92,7 +228,7 @@ export async function searchRecent(
 
   return search(topic, {
     dateFrom: startDate.toISOString().split('T')[0],
-    maxResults: 30
+    maxResults: 30,
   });
 }
 
@@ -107,11 +243,11 @@ export async function searchByAuthor(
   additionalKeywords?: string
 ): Promise<Paper[]> {
   const query = additionalKeywords
-    ? `au:${authorName} ${additionalKeywords}`
+    ? `au:${authorName}+AND+${additionalKeywords}`
     : `au:${authorName}`;
 
   return search(query, {
-    maxResults: 20
+    maxResults: 20,
   });
 }
 
@@ -128,7 +264,7 @@ export async function searchByCategory(
 ): Promise<Paper[]> {
   return search(keywords, {
     categories,
-    maxResults
+    maxResults,
   });
 }
 
@@ -145,13 +281,13 @@ export async function searchDateRange(
 ): Promise<Paper[]> {
   const papers = await search(topic, {
     dateFrom,
-    maxResults: 50
+    maxResults: 50,
   });
 
   // Client-side filtering for end date
   if (dateTo) {
     const endDate = new Date(dateTo);
-    return papers.filter(p => new Date(p.published) <= endDate);
+    return papers.filter((p) => new Date(p.published) <= endDate);
   }
 
   return papers;
@@ -163,14 +299,19 @@ export async function searchDateRange(
  * @example
  * const { early, recent } = await compareAcrossTime("efficient transformers")
  */
-export async function compareAcrossTime(
-  topic: string
-): Promise<{ early: Paper[], recent: Paper[] }> {
+export async function compareAcrossTime(topic: string): Promise<{
+  early: Paper[];
+  recent: Paper[];
+}> {
   const currentYear = new Date().getFullYear();
 
   const [early, recent] = await Promise.all([
-    searchDateRange(topic, `${currentYear - 5}-01-01`, `${currentYear - 3}-12-31`),
-    searchDateRange(topic, `${currentYear - 1}-01-01`)
+    searchDateRange(
+      topic,
+      `${currentYear - 5}-01-01`,
+      `${currentYear - 3}-12-31`
+    ),
+    searchDateRange(topic, `${currentYear - 1}-01-01`),
   ]);
 
   return { early, recent };
@@ -197,30 +338,30 @@ export async function surveyArea(
   // Get comprehensive results
   const allPapers = await search(topic, {
     categories,
-    maxResults: 100
+    maxResults: 100,
   });
 
   // Separate recent vs older
   const currentYear = new Date().getFullYear();
-  const recent = allPapers.filter(p =>
-    new Date(p.published).getFullYear() >= currentYear - 2
+  const recent = allPapers.filter(
+    (p) => new Date(p.published).getFullYear() >= currentYear - 2
   );
 
-  const older = allPapers.filter(p =>
-    new Date(p.published).getFullYear() < currentYear - 2
+  const older = allPapers.filter(
+    (p) => new Date(p.published).getFullYear() < currentYear - 2
   );
 
   // Count by year
   const byYear: Record<number, number> = {};
-  allPapers.forEach(p => {
+  allPapers.forEach((p) => {
     const year = new Date(p.published).getFullYear();
     byYear[year] = (byYear[year] || 0) + 1;
   });
 
   // Count by category
   const byCategory: Record<string, number> = {};
-  allPapers.forEach(p => {
-    p.categories.forEach(cat => {
+  allPapers.forEach((p) => {
+    p.categories.forEach((cat) => {
       byCategory[cat] = (byCategory[cat] || 0) + 1;
     });
   });
@@ -230,7 +371,7 @@ export async function surveyArea(
     recent,
     older,
     byYear,
-    byCategory
+    byCategory,
   };
 }
 
@@ -246,15 +387,14 @@ export async function findMostRelevant(
 ): Promise<Paper[]> {
   // ArXiv returns results sorted by relevance by default
   const papers = await search(topic, {
-    maxResults: count
+    maxResults: count,
   });
 
   return papers.slice(0, count);
 }
 
 /**
- * Get paper metadata without downloading
- * (Search for specific arXiv ID)
+ * Get paper metadata by arXiv ID
  *
  * @example
  * const paper = await getPaperMetadata("2401.12345")
@@ -263,8 +403,22 @@ export async function getPaperMetadata(arxivId: string): Promise<Paper | null> {
   // Normalize ID (remove arXiv: prefix if present)
   const normalizedId = arxivId.replace(/^arXiv:/i, '');
 
-  // Search by ID
-  const results = await search(normalizedId, { maxResults: 1 });
+  // Search by ID using id_list parameter
+  const url = new URL('http://export.arxiv.org/api/query');
+  url.searchParams.append('id_list', normalizedId);
+
+  console.log(`[ArXiv API] GET ${url.toString()}`);
+
+  const response = await fetch(url.toString());
+
+  if (!response.ok) {
+    throw new Error(
+      `ArXiv API error: ${response.status} ${response.statusText}`
+    );
+  }
+
+  const xmlText = await response.text();
+  const results = parseArxivXML(xmlText);
 
   return results.length > 0 ? results[0] : null;
 }
@@ -283,10 +437,10 @@ export async function batchSearch(
   topics: string[],
   options: SearchOptions = {}
 ): Promise<Record<string, Paper[]>> {
-  console.log(`[ArXiv] Batch searching ${topics.length} topics...`)
+  console.log(`[ArXiv] Batch searching ${topics.length} topics...`);
 
-  const searches = topics.map(topic =>
-    search(topic, options).then(results => ({ topic, results }))
+  const searches = topics.map((topic) =>
+    search(topic, options).then((results) => ({ topic, results }))
   );
 
   const allResults = await Promise.all(searches);
@@ -296,7 +450,7 @@ export async function batchSearch(
     resultsByTopic[topic] = results;
   });
 
-  console.log(`[ArXiv] Batch search complete`)
+  console.log(`[ArXiv] Batch search complete`);
 
   return resultsByTopic;
 }
@@ -323,7 +477,10 @@ export function extractArxivId(paperOrUrl: Paper | string): string {
  * Format paper for display
  */
 export function formatPaper(paper: Paper): string {
-  const authors = paper.authors.slice(0, 3).map(a => a.name).join(', ');
+  const authors = paper.authors
+    .slice(0, 3)
+    .map((a) => a.name)
+    .join(', ');
   const moreAuthors = paper.authors.length > 3 ? ' et al.' : '';
 
   return `

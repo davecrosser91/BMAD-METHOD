@@ -1,11 +1,17 @@
 /**
- * Zotero Search Server Wrapper
- * Wraps mcp__zotero__search MCP tool
+ * Zotero Search Server - Direct Web API
+ * Makes direct HTTPS requests to api.zotero.org (NO MCP)
+ *
+ * API Docs: https://www.zotero.org/support/dev/web_api/v3/basics
  *
  * Usage:
  *   import { search } from './servers/zotero/search.ts'
  *   const items = await search("attention mechanisms")
  */
+
+// Environment variables (set in .env file)
+declare const ZOTERO_API_KEY: string;
+declare const ZOTERO_USER_ID: string;
 
 interface SearchOptions {
   query?: string;
@@ -18,23 +24,86 @@ interface SearchOptions {
 interface ZoteroItem {
   key: string;
   version: number;
-  itemType: string;
-  title: string;
-  creators: Array<{
-    creatorType: string;
-    firstName?: string;
-    lastName: string;
-    name?: string;
-  }>;
-  abstractNote?: string;
-  publicationTitle?: string;
-  date?: string;
-  url?: string;
-  tags: Array<{ tag: string }>;
-  collections: string[];
-  relations: Record<string, any>;
-  dateAdded: string;
-  dateModified: string;
+  library: {
+    type: string;
+    id: number;
+    name: string;
+  };
+  data: {
+    key: string;
+    version: number;
+    itemType: string;
+    title: string;
+    creators: Array<{
+      creatorType: string;
+      firstName?: string;
+      lastName: string;
+      name?: string;
+    }>;
+    abstractNote?: string;
+    publicationTitle?: string;
+    date?: string;
+    url?: string;
+    tags: Array<{ tag: string; type?: number }>;
+    collections: string[];
+    relations: Record<string, any>;
+    dateAdded: string;
+    dateModified: string;
+  };
+}
+
+/**
+ * Get environment configuration
+ */
+function getConfig(): { apiKey: string; userId: string } {
+  const apiKey = typeof ZOTERO_API_KEY !== 'undefined' ? ZOTERO_API_KEY : '';
+  const userId = typeof ZOTERO_USER_ID !== 'undefined' ? ZOTERO_USER_ID : '';
+
+  if (!apiKey || !userId) {
+    throw new Error(
+      'Zotero credentials not found. Set ZOTERO_API_KEY and ZOTERO_USER_ID in .env file.'
+    );
+  }
+
+  return { apiKey, userId };
+}
+
+/**
+ * Make direct API request to Zotero
+ */
+async function apiRequest(
+  endpoint: string,
+  params: Record<string, string> = {}
+): Promise<ZoteroItem[]> {
+  const { apiKey, userId } = getConfig();
+
+  // Build URL with query parameters
+  const url = new URL(`https://api.zotero.org/users/${userId}${endpoint}`);
+  Object.entries(params).forEach(([key, value]) => {
+    if (value) url.searchParams.append(key, value);
+  });
+
+  console.log(`[Zotero API] GET ${url.pathname}${url.search}`);
+
+  // Make HTTPS request
+  const response = await fetch(url.toString(), {
+    method: 'GET',
+    headers: {
+      'Zotero-API-Key': apiKey,
+      'Zotero-API-Version': '3',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `Zotero API error: ${response.status} ${response.statusText}`
+    );
+  }
+
+  const items: ZoteroItem[] = await response.json();
+  console.log(`[Zotero API] Received ${items.length} items`);
+
+  return items;
 }
 
 /**
@@ -70,32 +139,41 @@ export async function search(
   query?: string,
   options: Omit<SearchOptions, 'query'> = {}
 ): Promise<ZoteroItem[]> {
-  console.log(`[Zotero] Searching library for: "${query || 'all items'}"`)
+  console.log(`[Zotero] Searching library for: "${query || 'all items'}"`);
 
-  // Call the actual mcp__zotero__search tool
-  const results = await globalThis.mcp__zotero__search({
-    query,
-    collection_id: options.collectionId,
-    tag: options.tag
-  });
+  // Build API parameters
+  const params: Record<string, string> = {};
 
-  console.log(`[Zotero] Found ${results.length} items in library`)
+  if (query) {
+    params.q = query;
+  }
 
-  // Filter by item type if specified
-  let filteredResults = results;
+  if (options.tag) {
+    params.tag = options.tag;
+  }
+
   if (options.itemType) {
-    filteredResults = results.filter(
-      (item: ZoteroItem) => item.itemType === options.itemType
-    );
-    console.log(`[Zotero] ${filteredResults.length} items after type filtering`)
+    params.itemType = options.itemType;
   }
 
-  // Limit results if specified
   if (options.limit) {
-    filteredResults = filteredResults.slice(0, options.limit);
+    params.limit = options.limit.toString();
+  } else {
+    params.limit = '100'; // Default limit
   }
 
-  return filteredResults;
+  // Determine endpoint
+  let endpoint = '/items';
+  if (options.collectionId) {
+    endpoint = `/collections/${options.collectionId}/items`;
+  }
+
+  // Make API request
+  const results = await apiRequest(endpoint, params);
+
+  console.log(`[Zotero] Found ${results.length} items in library`);
+
+  return results;
 }
 
 /**
@@ -105,12 +183,17 @@ export async function searchByAuthor(
   authorName: string,
   additionalKeywords?: string
 ): Promise<ZoteroItem[]> {
-  const items = await search(additionalKeywords);
+  const searchQuery = additionalKeywords
+    ? `${authorName} ${additionalKeywords}`
+    : authorName;
 
-  // Filter by author
-  return items.filter(item =>
-    item.creators.some(creator => {
-      const fullName = creator.name ||
+  const items = await search(searchQuery);
+
+  // Filter by author (client-side for precision)
+  return items.filter((item) =>
+    item.data.creators.some((creator) => {
+      const fullName =
+        creator.name ||
         `${creator.firstName || ''} ${creator.lastName}`.trim();
       return fullName.toLowerCase().includes(authorName.toLowerCase());
     })
@@ -128,12 +211,14 @@ export async function searchByTag(tag: string): Promise<ZoteroItem[]> {
  * Search by multiple tags (AND logic)
  */
 export async function searchByTags(tags: string[]): Promise<ZoteroItem[]> {
+  // Get all items (Zotero API doesn't support multiple tag AND)
   const allItems = await search();
 
-  return allItems.filter(item => {
-    const itemTags = item.tags.map(t => t.tag.toLowerCase());
-    return tags.every(tag =>
-      itemTags.some(itemTag => itemTag.includes(tag.toLowerCase()))
+  // Client-side filtering for multiple tags
+  return allItems.filter((item) => {
+    const itemTags = item.data.tags.map((t) => t.tag.toLowerCase());
+    return tags.every((tag) =>
+      itemTags.some((itemTag) => itemTag.includes(tag.toLowerCase()))
     );
   });
 }
@@ -151,9 +236,11 @@ export async function searchRecent(
   cutoffDate.setDate(cutoffDate.getDate() - daysBack);
 
   return items
-    .filter(item => new Date(item.dateAdded) >= cutoffDate)
-    .sort((a, b) =>
-      new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime()
+    .filter((item) => new Date(item.data.dateAdded) >= cutoffDate)
+    .sort(
+      (a, b) =>
+        new Date(b.data.dateAdded).getTime() -
+        new Date(a.data.dateAdded).getTime()
     );
 }
 
@@ -166,9 +253,9 @@ export async function searchByYear(
 ): Promise<ZoteroItem[]> {
   const items = await search(keywords);
 
-  return items.filter(item => {
-    if (!item.date) return false;
-    const itemYear = parseInt(item.date.match(/\d{4}/)?.[0] || '0');
+  return items.filter((item) => {
+    if (!item.data.date) return false;
+    const itemYear = parseInt(item.data.date.match(/\d{4}/)?.[0] || '0');
     return itemYear === year;
   });
 }
@@ -183,9 +270,9 @@ export async function searchByYearRange(
 ): Promise<ZoteroItem[]> {
   const items = await search(keywords);
 
-  return items.filter(item => {
-    if (!item.date) return false;
-    const itemYear = parseInt(item.date.match(/\d{4}/)?.[0] || '0');
+  return items.filter((item) => {
+    if (!item.data.date) return false;
+    const itemYear = parseInt(item.data.date.match(/\d{4}/)?.[0] || '0');
     return itemYear >= startYear && itemYear <= endYear;
   });
 }
@@ -202,7 +289,7 @@ export async function findByTopic(topic: string): Promise<{
   // Search for related items (title/abstract contains topic)
   const allMatches = await search(topic);
   const relatedMatches = allMatches.filter(
-    item => !exactMatches.some(exact => exact.key === item.key)
+    (item) => !exactMatches.some((exact) => exact.key === item.key)
   );
 
   return { exactMatches, relatedMatches };
@@ -225,12 +312,14 @@ export async function identifyGaps(
   const missing: string[] = [];
 
   for (const topic of expectedTopics) {
-    const hasContent = libraryItems.some(item => {
+    const hasContent = libraryItems.some((item) => {
       const searchText = [
-        item.title,
-        item.abstractNote || '',
-        ...item.tags.map(t => t.tag)
-      ].join(' ').toLowerCase();
+        item.data.title,
+        item.data.abstractNote || '',
+        ...item.data.tags.map((t) => t.tag),
+      ]
+        .join(' ')
+        .toLowerCase();
 
       return searchText.includes(topic.toLowerCase());
     });
@@ -245,7 +334,7 @@ export async function identifyGaps(
   return {
     covered,
     missing,
-    coverage: covered.length / expectedTopics.length
+    coverage: covered.length / expectedTopics.length,
   };
 }
 
@@ -259,27 +348,27 @@ export async function getStats(): Promise<{
   topTags: Array<{ tag: string; count: number }>;
   recentAdditions: number;
 }> {
-  const allItems = await search();
+  const allItems = await search(undefined, { limit: 10000 });
 
   // Count by type
   const byType: Record<string, number> = {};
-  allItems.forEach(item => {
-    byType[item.itemType] = (byType[item.itemType] || 0) + 1;
+  allItems.forEach((item) => {
+    byType[item.data.itemType] = (byType[item.data.itemType] || 0) + 1;
   });
 
   // Count by year
   const byYear: Record<string, number> = {};
-  allItems.forEach(item => {
-    if (item.date) {
-      const year = item.date.match(/\d{4}/)?.[0] || 'unknown';
+  allItems.forEach((item) => {
+    if (item.data.date) {
+      const year = item.data.date.match(/\d{4}/)?.[0] || 'unknown';
       byYear[year] = (byYear[year] || 0) + 1;
     }
   });
 
   // Top tags
   const tagCounts: Record<string, number> = {};
-  allItems.forEach(item => {
-    item.tags.forEach(t => {
+  allItems.forEach((item) => {
+    item.data.tags.forEach((t) => {
       tagCounts[t.tag] = (tagCounts[t.tag] || 0) + 1;
     });
   });
@@ -296,6 +385,6 @@ export async function getStats(): Promise<{
     byType,
     byYear,
     topTags,
-    recentAdditions: recent.length
+    recentAdditions: recent.length,
   };
 }

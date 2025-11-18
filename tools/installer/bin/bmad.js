@@ -100,7 +100,7 @@ program
 
 program
   .command('install-agents')
-  .description('Install Claude Code subagents for code-execution MCP architecture')
+  .description('Install Claude Code research specialist subagents (100% zero-MCP)')
   .option('--auto-install-mcps', 'Automatically install MCP servers without prompting')
   .option('--skip-mcps', 'Skip MCP server installation (architecture only)')
   .action(async (options) => {

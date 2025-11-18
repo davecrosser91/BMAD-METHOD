@@ -1,20 +1,31 @@
 /**
- * Zotero Collections Server Wrapper
- * Wraps mcp__zotero__get_collections and collection-related MCP tools
+ * Zotero Collections Server - Direct Web API
+ * Makes direct HTTPS requests to api.zotero.org (NO MCP)
+ *
+ * API Docs: https://www.zotero.org/support/dev/web_api/v3/basics
  *
  * Usage:
  *   import { getCollections } from './servers/zotero/get-collections.ts'
  *   const collections = await getCollections()
  */
 
+// Environment variables (set in .env file)
+declare const ZOTERO_API_KEY: string;
+declare const ZOTERO_USER_ID: string;
+
 interface Collection {
   key: string;
   version: number;
-  name: string;
-  parentCollection?: string; // Key of parent collection
-  data: {
+  library: {
+    type: string;
+    id: number;
     name: string;
-    parentCollection: boolean | string;
+  };
+  data: {
+    key: string;
+    version: number;
+    name: string;
+    parentCollection: boolean | string; // false or parent key
   };
   meta: {
     numCollections: number; // Number of subcollections
@@ -24,11 +35,64 @@ interface Collection {
 
 interface ZoteroItem {
   key: string;
-  itemType: string;
-  title: string;
-  creators: any[];
-  date?: string;
-  tags: any[];
+  data: {
+    itemType: string;
+    title: string;
+    creators: any[];
+    date?: string;
+    tags: any[];
+  };
+}
+
+/**
+ * Get environment configuration
+ */
+function getConfig(): { apiKey: string; userId: string } {
+  const apiKey = typeof ZOTERO_API_KEY !== 'undefined' ? ZOTERO_API_KEY : '';
+  const userId = typeof ZOTERO_USER_ID !== 'undefined' ? ZOTERO_USER_ID : '';
+
+  if (!apiKey || !userId) {
+    throw new Error(
+      'Zotero credentials not found. Set ZOTERO_API_KEY and ZOTERO_USER_ID in .env file.'
+    );
+  }
+
+  return { apiKey, userId };
+}
+
+/**
+ * Make direct API request to Zotero
+ */
+async function apiRequest<T>(
+  endpoint: string,
+  params: Record<string, string> = {}
+): Promise<T> {
+  const { apiKey, userId } = getConfig();
+
+  // Build URL with query parameters
+  const url = new URL(`https://api.zotero.org/users/${userId}${endpoint}`);
+  Object.entries(params).forEach(([key, value]) => {
+    if (value) url.searchParams.append(key, value);
+  });
+
+  console.log(`[Zotero API] GET ${url.pathname}${url.search}`);
+
+  // Make HTTPS request
+  const response = await fetch(url.toString(), {
+    method: 'GET',
+    headers: {
+      'Zotero-API-Key': apiKey,
+      'Zotero-API-Version': '3',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `Zotero API error: ${response.status} ${response.statusText}`
+    );
+  }
+
+  return (await response.json()) as T;
 }
 
 /**
@@ -39,16 +103,17 @@ interface ZoteroItem {
  * @example
  * const collections = await getCollections()
  * collections.forEach(c => {
- *   console.log(`${c.name}: ${c.meta.numItems} items`)
+ *   console.log(`${c.data.name}: ${c.meta.numItems} items`)
  * })
  */
 export async function getCollections(): Promise<Collection[]> {
-  console.log(`[Zotero] Getting all collections`)
+  console.log(`[Zotero] Getting all collections`);
 
-  // Call the actual mcp__zotero__get_collections tool
-  const collections = await globalThis.mcp__zotero__get_collections({});
+  const collections = await apiRequest<Collection[]>('/collections', {
+    limit: '100',
+  });
 
-  console.log(`[Zotero] Found ${collections.length} collections`)
+  console.log(`[Zotero] Found ${collections.length} collections`);
 
   return collections;
 }
@@ -60,16 +125,18 @@ export async function getCollectionItems(
   collectionKey: string,
   limit?: number
 ): Promise<ZoteroItem[]> {
-  console.log(`[Zotero] Getting items in collection: ${collectionKey}`)
+  console.log(`[Zotero] Getting items in collection: ${collectionKey}`);
 
-  const result = await globalThis.mcp__zotero__get_collection_items({
-    collection_key: collectionKey,
-    limit: limit || 100
-  });
+  const items = await apiRequest<ZoteroItem[]>(
+    `/collections/${collectionKey}/items`,
+    {
+      limit: (limit || 100).toString(),
+    }
+  );
 
-  console.log(`[Zotero] Found ${result.length} items in collection`)
+  console.log(`[Zotero] Found ${items.length} items in collection`);
 
-  return result;
+  return items;
 }
 
 /**
@@ -80,8 +147,8 @@ export async function findCollectionByName(
 ): Promise<Collection | undefined> {
   const collections = await getCollections();
 
-  return collections.find(c =>
-    c.name.toLowerCase().includes(name.toLowerCase())
+  return collections.find((c) =>
+    c.data.name.toLowerCase().includes(name.toLowerCase())
   );
 }
 
@@ -97,13 +164,17 @@ export async function getCollectionHierarchy(): Promise<{
   const topLevel: Collection[] = [];
   const byParent: Record<string, Collection[]> = {};
 
-  collections.forEach(collection => {
-    if (!collection.parentCollection || collection.parentCollection === false) {
-      // Top-level collection
+  collections.forEach((collection) => {
+    if (
+      collection.data.parentCollection === false ||
+      !collection.data.parentCollection
+    ) {
       topLevel.push(collection);
     } else {
-      // Child collection
-      const parentKey = String(collection.parentCollection);
+      const parentKey =
+        typeof collection.data.parentCollection === 'string'
+          ? collection.data.parentCollection
+          : '';
       if (!byParent[parentKey]) {
         byParent[parentKey] = [];
       }
@@ -111,277 +182,73 @@ export async function getCollectionHierarchy(): Promise<{
     }
   });
 
-  console.log(`[Zotero] ${topLevel.length} top-level collections, ${Object.keys(byParent).length} with children`)
-
   return { topLevel, byParent };
 }
 
 /**
- * Get full collection tree as nested structure
+ * Print collection hierarchy in tree format
  */
-export async function getCollectionTree(): Promise<Array<Collection & { children?: any[] }>> {
+export async function printCollectionHierarchy(): Promise<void> {
   const { topLevel, byParent } = await getCollectionHierarchy();
 
-  function buildTree(collection: Collection): Collection & { children?: any[] } {
-    const children = byParent[collection.key] || [];
+  console.log(`## Your Zotero Collections\n`);
 
-    return {
-      ...collection,
-      children: children.length > 0
-        ? children.map(buildTree)
-        : undefined
-    };
-  }
-
-  return topLevel.map(buildTree);
-}
-
-/**
- * Print collection hierarchy (for debugging/display)
- */
-export async function printCollectionHierarchy(): Promise<string> {
-  const tree = await getCollectionTree();
-
-  function formatTree(
-    collections: Array<Collection & { children?: any[] }>,
-    indent: string = ''
-  ): string[] {
-    const lines: string[] = [];
-
-    collections.forEach((collection, i) => {
-      const isLast = i === collections.length - 1;
-      const connector = isLast ? '└─' : '├─';
-
-      lines.push(`${indent}${connector} ${collection.name} (${collection.meta.numItems} items)`);
-
-      if (collection.children && collection.children.length > 0) {
-        const childIndent = indent + (isLast ? '   ' : '│  ');
-        lines.push(...formatTree(collection.children, childIndent));
-      }
-    });
-
-    return lines;
-  }
-
-  const output = [
-    '# Zotero Collection Hierarchy',
-    '',
-    ...formatTree(tree)
-  ].join('\n');
-
-  console.log(output);
-
-  return output;
-}
-
-/**
- * Find collections containing items with specific tag
- */
-export async function findCollectionsByTag(tag: string): Promise<Collection[]> {
-  const collections = await getCollections();
-
-  // Get items for each collection and check tags
-  const collectionsWithTag: Collection[] = [];
-
-  for (const collection of collections) {
-    const items = await getCollectionItems(collection.key, 10); // Sample first 10
-
-    const hasTag = items.some(item =>
-      item.tags.some(t => t.tag.toLowerCase().includes(tag.toLowerCase()))
+  function printCollection(collection: Collection, indent: number = 0) {
+    const prefix = '  '.repeat(indent);
+    console.log(
+      `${prefix}📁 ${collection.data.name} (${collection.meta.numItems} items)`
     );
 
-    if (hasTag) {
-      collectionsWithTag.push(collection);
-    }
+    // Print children
+    const children = byParent[collection.key] || [];
+    children.forEach((child) => printCollection(child, indent + 1));
   }
 
-  console.log(`[Zotero] Found ${collectionsWithTag.length} collections with tag "${tag}"`)
-
-  return collectionsWithTag;
+  topLevel.forEach((collection) => printCollection(collection));
 }
 
 /**
- * Get collection statistics
+ * Get total item count across all collections
  */
-export async function getCollectionStats(
-  collectionKey: string
-): Promise<{
-  name: string;
-  totalItems: number;
-  itemTypes: Record<string, number>;
-  recentItems: ZoteroItem[];
-  topTags: Array<{ tag: string; count: number }>;
+export async function getTotalItemCount(): Promise<{
+  total: number;
+  byCollection: Record<string, number>;
 }> {
-  console.log(`[Zotero] Getting statistics for collection: ${collectionKey}`)
-
-  // Get collection metadata
   const collections = await getCollections();
-  const collection = collections.find(c => c.key === collectionKey);
 
-  if (!collection) {
-    throw new Error(`Collection not found: ${collectionKey}`);
-  }
+  const byCollection: Record<string, number> = {};
+  let total = 0;
 
-  // Get all items
-  const items = await getCollectionItems(collectionKey, 1000);
-
-  // Count by item type
-  const itemTypes: Record<string, number> = {};
-  items.forEach(item => {
-    itemTypes[item.itemType] = (itemTypes[item.itemType] || 0) + 1;
+  collections.forEach((collection) => {
+    byCollection[collection.data.name] = collection.meta.numItems;
+    total += collection.meta.numItems;
   });
 
-  // Get recent items (by date added, assuming items are sorted)
-  const recentItems = items.slice(0, 5);
-
-  // Count tags
-  const tagCounts: Record<string, number> = {};
-  items.forEach(item => {
-    item.tags.forEach(t => {
-      const tag = t.tag;
-      tagCounts[tag] = (tagCounts[tag] || 0) + 1;
-    });
-  });
-
-  const topTags = Object.entries(tagCounts)
-    .map(([tag, count]) => ({ tag, count }))
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 10);
-
-  return {
-    name: collection.name,
-    totalItems: items.length,
-    itemTypes,
-    recentItems,
-    topTags
-  };
+  return { total, byCollection };
 }
 
 /**
- * Compare multiple collections
+ * Find collections by keyword
  */
-export async function compareCollections(
-  collectionKeys: string[]
-): Promise<{
-  collections: Array<{
-    key: string;
-    name: string;
-    itemCount: number;
-  }>;
-  overlap: {
-    sharedItems: number;
-    uniqueToEach: Record<string, number>;
-  };
-}> {
-  console.log(`[Zotero] Comparing ${collectionKeys.length} collections`)
-
-  const collections = await getCollections();
-  const collectionData = [];
-
-  // Get items for each collection
-  const itemsByCollection = new Map<string, Set<string>>();
-
-  for (const key of collectionKeys) {
-    const collection = collections.find(c => c.key === key);
-    if (!collection) continue;
-
-    const items = await getCollectionItems(key, 1000);
-    const itemKeys = new Set(items.map(i => i.key));
-
-    itemsByCollection.set(key, itemKeys);
-
-    collectionData.push({
-      key,
-      name: collection.name,
-      itemCount: items.length
-    });
-  }
-
-  // Calculate overlap
-  const allKeys = Array.from(itemsByCollection.values());
-  const firstSet = allKeys[0];
-  let sharedItems = firstSet.size;
-
-  // Find intersection
-  if (allKeys.length > 1) {
-    const intersection = new Set(firstSet);
-    allKeys.slice(1).forEach(set => {
-      Array.from(intersection).forEach(key => {
-        if (!set.has(key)) {
-          intersection.delete(key);
-        }
-      });
-    });
-    sharedItems = intersection.size;
-  }
-
-  // Calculate unique items per collection
-  const uniqueToEach: Record<string, number> = {};
-  collectionKeys.forEach(key => {
-    const thisSet = itemsByCollection.get(key);
-    if (!thisSet) return;
-
-    const otherKeys = collectionKeys.filter(k => k !== key);
-    const otherSets = otherKeys
-      .map(k => itemsByCollection.get(k))
-      .filter((s): s is Set<string> => s !== undefined);
-
-    let unique = thisSet.size;
-    Array.from(thisSet).forEach(itemKey => {
-      if (otherSets.some(set => set.has(itemKey))) {
-        unique--;
-      }
-    });
-
-    uniqueToEach[key] = unique;
-  });
-
-  return {
-    collections: collectionData,
-    overlap: {
-      sharedItems,
-      uniqueToEach
-    }
-  };
-}
-
-/**
- * Suggest collection based on item tags
- */
-export async function suggestCollectionForItem(
-  itemTags: string[]
+export async function findCollectionsByKeyword(
+  keyword: string
 ): Promise<Collection[]> {
-  console.log(`[Zotero] Suggesting collections for tags: ${itemTags.join(', ')}`)
-
   const collections = await getCollections();
-  const suggestions: Array<Collection & { relevance: number }> = [];
 
-  for (const collection of collections) {
-    const items = await getCollectionItems(collection.key, 50); // Sample
+  return collections.filter((c) =>
+    c.data.name.toLowerCase().includes(keyword.toLowerCase())
+  );
+}
 
-    // Count tag matches
-    let relevance = 0;
-    items.forEach(item => {
-      const itemTagStrings = item.tags.map(t => t.tag.toLowerCase());
-      itemTags.forEach(tag => {
-        if (itemTagStrings.some(t => t.includes(tag.toLowerCase()))) {
-          relevance++;
-        }
-      });
-    });
+/**
+ * Get largest collections
+ */
+export async function getLargestCollections(
+  limit: number = 10
+): Promise<Collection[]> {
+  const collections = await getCollections();
 
-    if (relevance > 0) {
-      suggestions.push({
-        ...collection,
-        relevance
-      });
-    }
-  }
-
-  // Sort by relevance
-  suggestions.sort((a, b) => b.relevance - a.relevance);
-
-  console.log(`[Zotero] Found ${suggestions.length} relevant collections`)
-
-  return suggestions.slice(0, 5); // Top 5
+  return collections
+    .sort((a, b) => b.meta.numItems - a.meta.numItems)
+    .slice(0, limit);
 }
