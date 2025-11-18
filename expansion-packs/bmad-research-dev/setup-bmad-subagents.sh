@@ -71,19 +71,33 @@ detect_os() {
 OS=$(detect_os)
 
 # Detect paths
-# This script can be run in two ways:
+# This script can be run in three ways:
 # 1. Manually from project root: ./expansion-packs/bmad-research-dev/setup-bmad-subagents.sh
 # 2. Automatically by npm postinstall (CWD = expansion pack directory)
+# 3. Automatically by installer (CWD = project root, script in .bmad-research-dev/)
 
-# Determine if we're being run from postinstall (CWD = expansion pack) or manually
-if [ -f "setup-bmad-subagents.sh" ] && [ -d "templates" ]; then
-    # Running from expansion pack directory (postinstall case)
-    PACK_ROOT=$(pwd)
-    PROJECT_ROOT=$(cd ../.. && pwd)
+# Get the actual location of this script
+SCRIPT_PATH="${BASH_SOURCE[0]}"
+SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_PATH")" && pwd)"
+
+# Determine project root and pack root based on script location
+if [[ "$SCRIPT_DIR" == *"/expansion-packs/bmad-research-dev"* ]]; then
+    # Script is in source tree: expansion-packs/bmad-research-dev/
+    PACK_ROOT="$SCRIPT_DIR"
+    PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+elif [[ "$SCRIPT_DIR" == *"/.bmad-research-dev"* ]]; then
+    # Script is in installed expansion pack: .bmad-research-dev/
+    PACK_ROOT="$SCRIPT_DIR"
+    PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 else
-    # Running from project root (manual case)
+    # Fallback: assume CWD is project root
     PROJECT_ROOT=$(pwd)
-    PACK_ROOT="$PROJECT_ROOT/expansion-packs/bmad-research-dev"
+    # Try installed location first, then source location
+    if [ -d "$PROJECT_ROOT/.bmad-research-dev" ]; then
+        PACK_ROOT="$PROJECT_ROOT/.bmad-research-dev"
+    else
+        PACK_ROOT="$PROJECT_ROOT/expansion-packs/bmad-research-dev"
+    fi
 fi
 
 if [ ! -d "$PACK_ROOT/templates" ]; then
