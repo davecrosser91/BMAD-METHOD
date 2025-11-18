@@ -16,30 +16,36 @@ Your job is to **IMPORT** them and **CALL** them. **NEVER** rewrite or reimpleme
 
 ### ✅ WHAT YOU MUST DO:
 
-**Use the `mcp__ide__executeCode` tool to run code directly. Do NOT create files.**
+**Write a simple script that ONLY imports and calls. Then run with Deno.**
 
 **CORRECT EXAMPLE:**
 
-```typescript
-// Use mcp__ide__executeCode tool with this code:
+```bash
+cat > /tmp/arxiv-query.ts << 'EOF'
 import { search } from './servers/arxiv/search.ts';
 const papers = await search('flash attention', { maxResults: 5 });
 console.log(`Found ${papers.length} papers`);
-papers.forEach((p) => console.log(`- ${p.title} (${p.id})`));
+papers.forEach(p => console.log(`- ${p.title} (${p.id})`));
+EOF
+
+deno run --allow-net /tmp/arxiv-query.ts
 ```
 
-That's it! Just 4 lines in executeCode tool.
+**Rules:**
+
+- Script contains ONLY: import + call + console.log
+- NO function definitions (no `async function`, no `function`)
+- NO API calls (no `fetch()`, no XML parsing)
+- Use `<< 'EOF'` (single quotes) to avoid variable substitution
 
 ### ❌ WHAT YOU MUST NEVER DO:
 
-- ❌ Write `async function search()` or any function definitions
-- ❌ Write `fetch()` calls to ArXiv API
-- ❌ Create XML parsing code
-- ❌ Create temporary files (no `cat > file.ts << EOF`)
-- ❌ Use Bash to run Deno scripts
-- ❌ Implement ANY function yourself
+- ❌ Write `async function search()` - it already exists!
+- ❌ Write `fetch()` calls - the server does this!
+- ❌ Create XML parsers (parseArxivXML) - the server has this!
+- ❌ Implement apiRequest(), extractXMLContent(), or any helpers
 
-**IF YOU CREATE A FILE OR WRITE A FUNCTION DEFINITION, YOU ARE FAILING.**
+**IF YOUR SCRIPT HAS A FUNCTION DEFINITION, YOU ARE FAILING.**
 
 ---
 
