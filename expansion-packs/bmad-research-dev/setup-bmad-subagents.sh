@@ -203,26 +203,33 @@ else
 fi
 
 # ============================================
-# Step 4: Create .mcp.json configuration
+# Step 4: Create .mcp.json configuration (DEPRECATED - SKIPPED)
 # ============================================
-print_header "Step 4: Configuring MCP Servers"
 
-MCP_CONFIG="$PROJECT_ROOT/.mcp.json"
-
-if [ -f "$MCP_CONFIG" ]; then
-    print_warning ".mcp.json already exists"
-    if ask_yes_no "Overwrite existing .mcp.json?"; then
-        create_mcp_config=true
-    else
-        print_info "Keeping existing .mcp.json"
-        create_mcp_config=false
-    fi
+if [ "$SKIP_MCPS" = true ]; then
+    print_header "Step 4: Skipping .mcp.json (Zero-MCP Architecture)"
+    print_info "✅ No MCP configuration needed - using direct Web APIs"
 else
-    create_mcp_config=true
-fi
+    # Legacy MCP support (deprecated)
+    print_header "Step 4: Configuring MCP Servers (Legacy)"
+    print_warning "MCP installation is deprecated - consider using direct APIs"
 
-if [ "$create_mcp_config" = true ]; then
-    cat > "$MCP_CONFIG" <<'EOF'
+    MCP_CONFIG="$PROJECT_ROOT/.mcp.json"
+
+    if [ -f "$MCP_CONFIG" ]; then
+        print_warning ".mcp.json already exists"
+        if ask_yes_no "Overwrite existing .mcp.json?"; then
+            create_mcp_config=true
+        else
+            print_info "Keeping existing .mcp.json"
+            create_mcp_config=false
+        fi
+    else
+        create_mcp_config=true
+    fi
+
+    if [ "$create_mcp_config" = true ]; then
+        cat > "$MCP_CONFIG" <<'EOF'
 {
   "$schema": "https://modelcontextprotocol.io/schema/mcp.schema.json",
   "mcpServers": {
@@ -256,9 +263,10 @@ if [ "$create_mcp_config" = true ]; then
   }
 }
 EOF
-    print_success "Created .mcp.json configuration"
-    print_info "MCPs configured: ArXiv, Zotero"
-fi
+        print_success "Created .mcp.json configuration"
+        print_info "MCPs configured: ArXiv, Zotero"
+    fi
+fi  # End of SKIP_MCPS check
 
 # ============================================
 # Step 5: Install MCP Servers (NEW!)
