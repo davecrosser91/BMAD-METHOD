@@ -21,7 +21,7 @@ This document defines how agents coordinate and delegate work to each other, wit
 
 ## Agent Roster & Responsibilities
 
-### Research Specialists (Code-Execution MCPs)
+### Research Specialists (Code-Execution Architecture)
 
 #### 1. Web Research Specialist (@web-research-specialist)
 
@@ -37,7 +37,7 @@ This document defines how agents coordinate and delegate work to each other, wit
 - **Name:** H. Zoppel
 - **Icon:** 📄
 - **Specialty:** Academic papers, theoretical foundations, peer-reviewed research
-- **Tools:** ArXiv MCP via code execution (download + read papers)
+- **Tools:** ArXiv API via code execution (download + read papers)
 - **When to use:** Need academic backing, novel methods, baselines, peer-reviewed research
 - **Output:** Paper summaries with methodology extraction, reproducibility assessment
 
@@ -46,7 +46,7 @@ This document defines how agents coordinate and delegate work to each other, wit
 - **Name:** Dr. Z. Reference
 - **Icon:** 📚
 - **Specialty:** Personal library, annotations, citations, previously curated papers
-- **Tools:** Zotero MCP via code execution (requires local Zotero)
+- **Tools:** Zotero API via code execution (requires API credentials)
 - **When to use:** Check existing research, leverage past work, access annotations
 - **Output:** Library search results with annotations and notes
 

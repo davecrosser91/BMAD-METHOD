@@ -289,10 +289,10 @@
    - Easier code sharing
    - Optional paper repo sync
 
-2. **Local-First (No MCPs)**
-   - No Archon MCP (markdown + frontmatter)
-   - No wandb MCP (local JSON tracking)
-   - No ArXiv MCP (WebSearch/WebFetch)
+2. **Zero-MCP Architecture**
+   - No Archon MCP (markdown + frontmatter instead)
+   - No wandb MCP (local JSON tracking instead)
+   - No MCP servers (ArXiv API, Zotero API, GitHub CLI via code execution)
 
 3. **4 Core Research Agents**
    - Enhanced Analyst (business + research)
@@ -314,10 +314,8 @@
 
 ### ⏳ Decisions Deferred
 
-1. Archon integration (optional add-on)
-2. wandb integration (optional add-on)
-3. Separate paper repo sync (optional feature)
-4. GitHub Actions automation (Phase 8)
+1. Separate paper repo sync (optional feature)
+2. GitHub Actions automation (Phase 8)
 
 ---
 

@@ -216,9 +216,9 @@ commands:
 
 dependencies:
   agents:
-    - research-assistant-web.md
-    - research-assistant-arxiv.md
-    - research-assistant-zotero.md
+    - web-research-specialist.md
+    - arxiv-research-specialist.md
+    - zotero-research-specialist.md
   data:
     - research-methods.md
     - brainstorming-techniques.md

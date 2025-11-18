@@ -30,9 +30,9 @@ Research Specialist Agent
   │
   ├─ executeCode (ONLY tool in context)
   │
-  └─ TypeScript wrappers (imported on-demand)
+  └─ Python modules (imported on-demand)
        │
-       ├─ Direct Web API calls (fetch)
+       ├─ Direct Web API calls (requests)
        ├─ Direct CLI calls (gh, etc.)
        └─ Data processing in code sandbox
 
@@ -75,16 +75,16 @@ Savings: 98.7% token reduction!
 
 ```
 templates/servers/arxiv/
-  ├── api-client.ts      # Direct API + XML parser
-  ├── search.ts          # Search, trends, surveys
-  └── get-paper.ts       # Paper details, BibTeX, analysis
+  ├── api_client.py      # Direct API + XML parser
+  ├── search.py          # Search, trends, surveys
+  └── get_paper.py       # Paper details, BibTeX, analysis
 ```
 
 **Example Usage:**
 
-```typescript
-import { search } from './servers/arxiv/search.ts';
-const papers = await search('transformer', { maxResults: 10 });
+```python
+from servers.arxiv.search import search
+papers = search('transformer', max_results=10)
 ```
 
 **Capabilities:**
@@ -115,23 +115,23 @@ Found 3 papers for "attention is all you need"
 
 ```
 templates/servers/zotero/
-  ├── env-loader.ts      # Credential management
-  ├── get-collections.ts # Collections API
-  ├── search.ts          # Search API
-  └── get-item.ts        # Item details, full text
+  ├── env_loader.py      # Credential management
+  ├── get_collections.py # Collections API
+  ├── search.py          # Search API
+  └── get_item.py        # Item details, full text
 ```
 
 **Setup (One-Time):**
 
 ```bash
-node .claude/scripts/zotero-login.js
+python .claude/scripts/zotero-login.py
 ```
 
 **Example Usage:**
 
-```typescript
-import { getCollections } from './servers/zotero/get-collections.ts';
-const collections = await getCollections();
+```python
+from servers.zotero.get_collections import get_collections
+collections = get_collections()
 ```
 
 **Capabilities:**
@@ -162,10 +162,10 @@ Found 4 collections with 67 items
 
 ```
 templates/servers/github/
-  ├── search-issues.ts   # Search, filter issues
-  ├── create-issue.ts    # Create bugs, features, experiments
-  ├── update-issue.ts    # Update status, labels
-  └── projects.ts        # GitHub Projects v2
+  ├── search_issues.py   # Search, filter issues
+  ├── create_issue.py    # Create bugs, features, experiments
+  ├── update_issue.py    # Update status, labels
+  └── projects.py        # GitHub Projects v2
 ```
 
 **Setup (One-Time):**
@@ -176,9 +176,9 @@ gh auth login
 
 **Example Usage:**
 
-```typescript
-import { getOpenIssues } from './servers/github/search-issues.ts';
-const issues = await getOpenIssues(10);
+```python
+from servers.github.search_issues import get_open_issues
+issues = get_open_issues(10)
 ```
 
 **Capabilities:**
@@ -228,7 +228,7 @@ gh version 2.82.0
 ### 2. Performance
 
 - Data processing in code sandbox (not through context)
-- Parallel operations via TypeScript
+- Parallel operations via Python
 - No MCP server latency
 
 ### 3. Simplicity
@@ -236,7 +236,7 @@ gh version 2.82.0
 - No MCP server installation
 - No `.mcp.json` configuration
 - No server process management
-- Standard TypeScript code
+- Standard Python code
 
 ### 4. Security
 
@@ -247,8 +247,8 @@ gh version 2.82.0
 
 ### 5. Maintainability
 
-- Easy to debug (standard TypeScript)
-- Full type safety
+- Easy to debug (standard Python)
+- Type hints support
 - IDE autocomplete
 - Version controlled in git
 
@@ -296,7 +296,7 @@ npm install @dkreuzer/bmad-method-ai-research@latest
 **1. Zotero (Optional - only if using Zotero)**
 
 ```bash
-node .claude/scripts/zotero-login.js
+python .claude/scripts/zotero-login.py
 # Enter API key from https://www.zotero.org/settings/keys/new
 ```
 
@@ -345,7 +345,7 @@ git add .mcp.json  # Add to gitignore
 
 ```bash
 # Zotero (one-time)
-node .claude/scripts/zotero-login.js
+python .claude/scripts/zotero-login.py
 
 # GitHub (one-time)
 gh auth login
@@ -363,18 +363,19 @@ All specialists now work via direct APIs with zero MCP infrastructure.
 
 ```bash
 cd /path/to/your/project
-node <<'EOF'
-import { search } from './.claude/servers/arxiv/search.ts';
-const papers = await search("attention mechanisms", { maxResults: 3 });
-console.log(`Found ${papers.length} papers`);
-papers.forEach(p => console.log(`- ${p.title}`));
+python <<'EOF'
+from .claude.servers.arxiv.search import search
+papers = search("attention mechanisms", max_results=3)
+print(f"Found {len(papers)} papers")
+for p in papers:
+    print(f"- {p['title']}")
 EOF
 ```
 
 ### Test Zotero
 
 ```bash
-node .claude/scripts/zotero-api.js collections
+python .claude/scripts/zotero-api.py collections
 ```
 
 ### Test GitHub
@@ -394,7 +395,7 @@ gh issue list --limit 5
 
 ### Zotero Issues
 
-- **No .env file:** Run `node .claude/scripts/zotero-login.js`
+- **No .env file:** Run `python .claude/scripts/zotero-login.py`
 - **403 Error:** API key invalid, regenerate at zotero.org
 - **No full text:** PDF not indexed or not in library
 
@@ -422,7 +423,7 @@ npm install @dkreuzer/bmad-method-ai-research
                  └─ Copies templates to .claude/
                       │
                       ├─ .claude/agents/ (4 specialists)
-                      ├─ .claude/servers/ (TypeScript wrappers)
+                      ├─ .claude/servers/ (Python modules)
                       └─ .claude/scripts/ (helper scripts)
 
 Result: Specialists auto-discovered by Claude Code
@@ -437,9 +438,9 @@ User: @arxiv-research-specialist find papers on transformers
        │
        └─ Agent uses executeCode
             │
-            └─ Imports ./servers/arxiv/search.ts
+            └─ Imports from servers.arxiv.search
                  │
-                 └─ Calls ArXiv API directly (fetch)
+                 └─ Calls ArXiv API directly (requests)
                       │
                       └─ Processes data in code sandbox
                            │
@@ -481,7 +482,7 @@ Result: Clean context, efficient processing
 2. **Simplicity wins** - Direct APIs easier than MCP servers
 3. **Performance matters** - Less context = faster responses
 4. **Code-execution is powerful** - Process data in sandbox
-5. **Type safety** - TypeScript wrappers provide structure
+5. **Type safety** - Python type hints provide structure
 
 **Result:** Best of both worlds - powerful integrations without context pollution!
 

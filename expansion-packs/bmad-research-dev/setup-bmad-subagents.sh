@@ -169,8 +169,8 @@ if [ -d "$TEMPLATES_DIR/servers" ]; then
     for server in web arxiv zotero github; do
         if [ -d "$TEMPLATES_DIR/servers/$server" ]; then
             cp -r "$TEMPLATES_DIR/servers/$server"/* "$SERVERS_DIR/$server/" 2>/dev/null || true
-            file_count=$(find "$SERVERS_DIR/$server" -name "*.ts" 2>/dev/null | wc -l | tr -d ' ')
-            print_success "Installed $server server wrappers ($file_count files)"
+            file_count=$(find "$SERVERS_DIR/$server" -name "*.py" 2>/dev/null | wc -l | tr -d ' ')
+            print_success "Installed $server server modules ($file_count files)"
         else
             print_warning "Server template not found: $server (skipping)"
         fi
@@ -480,7 +480,7 @@ This directory contains the code-execution MCP architecture for BMAD Research-De
 │   ├── zotero-research-specialist.md
 │   └── github-research-specialist.md
 │
-├── servers/         # MCP server wrappers (code APIs)
+├── servers/         # Python server modules (code APIs)
 │   ├── web/
 │   ├── arxiv/
 │   ├── zotero/
@@ -493,9 +493,9 @@ This directory contains the code-execution MCP architecture for BMAD Research-De
 
 Instead of loading all MCP tool definitions into every agent's context, specialists use **code execution** to import tools on-demand:
 
-```typescript
-import { search } from './servers/arxiv/search.ts'
-const papers = await search("topic")
+```python
+from servers.arxiv.search import search
+papers = search("topic")
 ```
 
 This achieves:
@@ -551,11 +551,11 @@ print_success "Created .claude/README.md"
 print_header "Step 7: Verification"
 
 # Count installed components
-server_count=$(find "$SERVERS_DIR" -name "*.ts" 2>/dev/null | wc -l | tr -d ' ')
+server_count=$(find "$SERVERS_DIR" -name "*.py" 2>/dev/null | wc -l | tr -d ' ')
 agent_count=$(ls -1 "$AGENTS_DIR"/*.md 2>/dev/null | wc -l | tr -d ' ')
 
 print_info "Installation Summary:"
-echo "  - Server wrappers: $server_count TypeScript files"
+echo "  - Server modules: $server_count Python files"
 echo "  - Subagents: $agent_count specialists"
 echo "  - MCP config: $([ -f "$MCP_CONFIG" ] && echo "✓" || echo "✗")"
 

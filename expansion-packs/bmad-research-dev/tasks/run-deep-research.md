@@ -7,14 +7,14 @@ agents:
   - research-lead
 dependencies:
   - type: agent
-    path: agents/research-assistant-web.md
+    path: templates/agents/web-research-specialist.md
   - type: agent
-    path: agents/research-assistant-arxiv.md
+    path: templates/agents/arxiv-research-specialist.md
   - type: agent
-    path: agents/research-assistant-zotero.md
+    path: templates/agents/zotero-research-specialist.md
 prerequisites:
   - Research question or topic defined
-  - MCP servers configured (optional but recommended)
+  - Zotero API credentials (optional, only if using Zotero library)
 ---
 
 # Execute Deep Research Workflow
@@ -102,22 +102,22 @@ Coordinate three specialists to work **simultaneously**:
 
 ```bash
 # Web Research Specialist
-@research-assistant-web
+@web-research-specialist
 *search "{query}"
 # → Blogs, docs, GitHub, industry trends
-# Tools: WebSearch, WebFetch (no MCP required)
+# Tools: WebSearch, WebFetch (built-in)
 
-# ArXiv Specialist (optional MCP)
-@research-assistant-arxiv
+# ArXiv Specialist
+@arxiv-research-specialist
 *search "{query}"
 # → Academic papers, pre-prints
-# Tools: ArXiv MCP (preferred) or WebSearch site:arxiv.org (fallback)
+# Tools: ArXiv API via code execution
 
-# Zotero Library Specialist (optional MCP)
-@research-assistant-zotero
+# Zotero Library Specialist (optional)
+@zotero-research-specialist
 *search "{query}"
 # → Personal curated library, saved papers
-# Tools: Zotero MCP (if configured) or skip if unavailable
+# Tools: Zotero API via code execution (requires API credentials)
 ```
 
 **Source Validation:**

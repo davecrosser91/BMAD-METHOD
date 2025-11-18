@@ -37,10 +37,10 @@ The postinstall script (`tools/setup-subagents.js`) runs `setup-bmad-subagents.s
    - `arxiv-research-specialist.md` (H. Zoppel) 📄
    - `zotero-research-specialist.md` (Dr. Z. Reference) 📚
    - `github-research-specialist.md` (G. Hubman) 🐙
-3. ✅ Copies TypeScript server wrappers to `.claude/servers/`:
-   - ArXiv wrappers (direct API)
-   - Zotero wrappers (direct API)
-   - GitHub wrappers (gh CLI)
+3. ✅ Copies Python server modules to `.claude/servers/`:
+   - ArXiv modules (direct API)
+   - Zotero modules (direct API)
+   - GitHub modules (gh CLI)
 4. ✅ Copies helper scripts to `.claude/scripts/`:
    - Zotero login script
    - GitHub helper scripts
@@ -127,16 +127,16 @@ ls -la .claude/agents/
 # - zotero-research-specialist.md
 ```
 
-### Check TypeScript Wrappers
+### Check Python Modules
 
 ```bash
-# List server wrappers
+# List server modules
 ls -la .claude/servers/
 
 # Expected directories:
-# - arxiv/    (api-client.ts, search.ts, get-paper.ts)
-# - zotero/   (env-loader.ts, get-collections.ts, search.ts, get-item.ts)
-# - github/   (search-issues.ts, create-issue.ts, update-issue.ts, projects.ts)
+# - arxiv/    (api_client.py, search.py, get_paper.py)
+# - zotero/   (env_loader.py, get_collections.py, search.py, get_item.py)
+# - github/   (search_issues.py, create_issue.py, update_issue.py, projects.py)
 ```
 
 ### Verify No MCP Configuration
@@ -254,7 +254,7 @@ Research Specialist Agent
   │
   ├─ executeCode (ONLY tool in context)
   │
-  └─ TypeScript wrappers (imported on-demand)
+  └─ Python modules (imported on-demand)
        │
        ├─ Direct Web API calls
        ├─ Direct CLI calls
@@ -269,7 +269,7 @@ Result: Zero MCP, 98.7% token savings
 - ✅ **No MCP servers** to install or manage
 - ✅ **No `.mcp.json`** configuration
 - ✅ **Faster responses** (less context to process)
-- ✅ **Simpler debugging** (standard TypeScript)
+- ✅ **Simpler debugging** (standard Python)
 - ✅ **Better security** (credentials in project `.env`)
 
 ---
