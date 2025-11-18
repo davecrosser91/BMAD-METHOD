@@ -98,6 +98,78 @@ program
     }
   });
 
+program
+  .command('install-agents')
+  .description('Install Claude Code subagents for code-execution MCP architecture')
+  .option('--auto-install-mcps', 'Automatically install MCP servers without prompting')
+  .option('--skip-mcps', 'Skip MCP server installation (architecture only)')
+  .action(async (options) => {
+    const { execSync } = require('node:child_process');
+    const path = require('node:path');
+    const fs = require('node:fs');
+
+    console.log(chalk.cyan('🎭 Installing BMAD Research-Dev Subagents...\n'));
+
+    // Find the setup script in the installed package
+    // Try multiple paths depending on execution context
+    const possibleRoots = [
+      path.join(__dirname, '../../..'), // From tools/installer/bin
+      path.join(__dirname, '../..'), // From tools/
+      __dirname, // Current directory
+    ];
+
+    let setupScript;
+    for (const root of possibleRoots) {
+      const candidate = path.join(
+        root,
+        'expansion-packs/bmad-research-dev/setup-bmad-subagents.sh',
+      );
+      if (fs.existsSync(candidate)) {
+        setupScript = candidate;
+        break;
+      }
+    }
+
+    if (!setupScript) {
+      console.error(chalk.red('❌ Setup script not found'));
+      console.error(
+        'Tried locations:',
+        possibleRoots.map((r) =>
+          path.join(r, 'expansion-packs/bmad-research-dev/setup-bmad-subagents.sh'),
+        ),
+      );
+      console.error('Make sure @dkreuzer/bmad-method-ai-research is installed.');
+      process.exit(1);
+    }
+
+    // Build command with options
+    let command = `bash "${setupScript}"`;
+    if (options.autoInstallMcps) {
+      command += ' --auto-install-mcps';
+    }
+    if (options.skipMcps) {
+      command += ' --skip-mcps';
+    }
+
+    try {
+      // Run from current directory (user's project)
+      execSync(command, {
+        cwd: process.cwd(),
+        stdio: 'inherit',
+      });
+
+      console.log(chalk.green('\n✅ Subagents installed successfully!'));
+      console.log(chalk.cyan('\nNext steps:'));
+      console.log('  1. Restart Claude Code');
+      console.log('  2. Run /agents to see available specialists');
+      console.log('  3. Use: @web-research-specialist, @arxiv-research-specialist, etc.\n');
+      process.exit(0);
+    } catch (error) {
+      console.error(chalk.red('❌ Installation failed:'), error.message);
+      process.exit(1);
+    }
+  });
+
 // Command to check if updates are available
 program
   .command('update-check')
