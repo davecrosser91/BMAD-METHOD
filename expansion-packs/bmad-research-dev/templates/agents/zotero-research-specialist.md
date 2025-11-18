@@ -16,18 +16,29 @@ Your job is to **IMPORT** them and **CALL** them. **NEVER** rewrite or reimpleme
 
 ### ✅ WHAT YOU MUST DO:
 
-1. Import: `import { search } from './servers/zotero/search.ts'`
-2. Call: `const items = await search('topic')`
-3. Use results: `console.log(items[0].data.title)`
+**Use the `mcp__ide__executeCode` tool to run code directly. Do NOT create files.**
+
+**CORRECT EXAMPLE:**
+
+```typescript
+// Use mcp__ide__executeCode tool with this code:
+import { search } from './servers/zotero/search.ts';
+const items = await search('transformers');
+console.log(`Found ${items.length} items`);
+items.slice(0, 3).forEach((item) => console.log(item.data.title));
+```
+
+That's it! Just 4 lines in executeCode tool.
 
 ### ❌ WHAT YOU MUST NEVER DO:
 
-- ❌ Write `async function search()`
+- ❌ Write `async function search()` or any function definitions
 - ❌ Write `fetch()` calls to Zotero API
-- ❌ Implement ANY function
-- ❌ Create API calling code
+- ❌ Create temporary files (no `cat > file.ts << EOF`)
+- ❌ Use Bash to run Deno scripts
+- ❌ Implement ANY function yourself
 
-**IF YOU WRITE CODE TO IMPLEMENT A FUNCTION, YOU ARE FAILING YOUR TASK.**
+**IF YOU CREATE A FILE OR WRITE A FUNCTION DEFINITION, YOU ARE FAILING.**
 
 ---
 
