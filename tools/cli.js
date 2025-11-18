@@ -149,4 +149,55 @@ program
     });
   });
 
+program
+  .command('install-agents')
+  .description('Install Claude Code subagents for code-execution MCP architecture')
+  .option('--auto-install-mcps', 'Automatically install MCP servers without prompting')
+  .option('--skip-mcps', 'Skip MCP server installation (architecture only)')
+  .action(async (options) => {
+    const { execSync } = require('node:child_process');
+    const fs = require('node:fs');
+
+    console.log('🎭 Installing BMAD Research-Dev Subagents...\n');
+
+    // Find the setup script in the installed package
+    const packageRoot = path.join(__dirname, '..');
+    const setupScript = path.join(
+      packageRoot,
+      'expansion-packs/bmad-research-dev/setup-bmad-subagents.sh',
+    );
+
+    if (!fs.existsSync(setupScript)) {
+      console.error('❌ Setup script not found at:', setupScript);
+      console.error('Make sure @dkreuzer/bmad-method-ai-research is installed.');
+      process.exit(1);
+    }
+
+    // Build command with options
+    let command = `bash "${setupScript}"`;
+    if (options.autoInstallMcps) {
+      command += ' --auto-install-mcps';
+    }
+    if (options.skipMcps) {
+      command += ' --skip-mcps';
+    }
+
+    try {
+      // Run from current directory (user's project)
+      execSync(command, {
+        cwd: process.cwd(),
+        stdio: 'inherit',
+      });
+
+      console.log('\n✅ Subagents installed successfully!');
+      console.log('\nNext steps:');
+      console.log('  1. Restart Claude Code');
+      console.log('  2. Run /agents to see available specialists');
+      console.log('  3. Use: @web-research-specialist, @arxiv-research-specialist, etc.\n');
+    } catch (error) {
+      console.error('❌ Installation failed:', error.message);
+      process.exit(1);
+    }
+  });
+
 program.parse();

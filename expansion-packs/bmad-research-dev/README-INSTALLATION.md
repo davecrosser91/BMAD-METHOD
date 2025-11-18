@@ -1,11 +1,32 @@
-# BMAD Research-Dev: Automatic Subagent Installation
+# BMAD Research-Dev: Subagent Installation
 
-## 🎉 Subagents Install Automatically!
+## Installation Methods
 
-When you install the package, Claude Code subagents are automatically configured:
+### Method 1: Automatic (npm install)
+
+When you install the package locally, subagents are automatically configured:
 
 ```bash
 npm install @dkreuzer/bmad-method-ai-research
+# ✅ Subagents installed automatically via postinstall hook
+```
+
+### Method 2: Manual (npx command)
+
+If using `npx` or if automatic installation didn't run:
+
+```bash
+npx @dkreuzer/bmad-method-ai-research install-agents
+```
+
+**Options:**
+
+```bash
+# Auto-install MCP servers without prompting
+npx @dkreuzer/bmad-method-ai-research install-agents --auto-install-mcps
+
+# Skip MCP installation (architecture only)
+npx @dkreuzer/bmad-method-ai-research install-agents --skip-mcps
 ```
 
 ## What Happens Automatically

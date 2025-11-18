@@ -21,26 +21,40 @@ sudo apt install gh  # Linux
 gh auth login
 ```
 
-### 2. Install Package
+### 2. Install Package & Subagents
 
-The setup runs **automatically** when you install:
+**Option A: Local install (automatic)**
 
 ```bash
 npm install @dkreuzer/bmad-method-ai-research
+# ✅ Subagents installed automatically
 ```
 
-**This automatically creates:**
+**Option B: Using npx (manual step required)**
+
+```bash
+# Install subagents in your project
+npx @dkreuzer/bmad-method-ai-research install-agents
+```
+
+**This creates:**
 
 - `.claude/servers/` - TypeScript server wrappers
 - `.claude/agents/` - 4 specialist subagents
 - `.mcp.json` - MCP configuration
 - Complete architecture documentation
 
-**Manual re-run (if needed):**
+**Advanced options:**
 
 ```bash
-# From project root
-bash expansion-packs/bmad-research-dev/setup-bmad-subagents.sh
+# Auto-install MCPs without prompting
+npx @dkreuzer/bmad-method-ai-research install-agents --auto-install-mcps
+
+# Skip MCP installation
+npx @dkreuzer/bmad-method-ai-research install-agents --skip-mcps
+
+# Or run setup script directly (if package is installed)
+bash node_modules/@dkreuzer/bmad-method-ai-research/expansion-packs/bmad-research-dev/setup-bmad-subagents.sh
 ```
 
 ### 3. Install MCP Servers
