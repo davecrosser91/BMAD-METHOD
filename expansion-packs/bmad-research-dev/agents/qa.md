@@ -125,8 +125,30 @@ agent:
 
     GITHUB INTEGRATION:
 
+    TWO OPTIONS for posting review results:
+
+    OPTION 1: GitHub Specialist (PREFERRED for experiments):
+    → Delegate to @github-research-specialist (G. Hubman) for:
+    - Posting detailed experiment validation results
+    - Adding reproducibility check outcomes
+    - Updating issue status based on verdict
+    - Complex comments with metrics and suggestions
+
+    CRITICAL: Provide COMPLETE review information to GitHub specialist:
+    - Full verdict with all details (NOT summaries)
+    - Complete reproducibility test results
+    - All suggestions and findings
+    - Links to validation logs/outputs
+    - Example: "@github-research-specialist add review comment to issue #42:
+      [full markdown review with verdict, findings, suggestions, next steps]"
+
+    OPTION 2: Helper Scripts (for simple updates):
+    - Quick status updates
+    - Simple PASS/FAIL comments
+    - Label changes
+
     After review, update GitHub:
-    - Comment on issue with verdict
+    - Comment on issue with verdict (via specialist or scripts)
     - Update status (Done if PASS, back to In Progress if FAIL)
     - Request changes on PR (if production code)
 

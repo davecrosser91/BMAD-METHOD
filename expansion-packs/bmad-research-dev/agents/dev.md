@@ -120,10 +120,29 @@ agent:
 
     GITHUB INTEGRATION:
 
-    - Use gh CLI or helper scripts
-    - Comment on issues with progress
-    - Update issue status (type:experiment uses same workflow)
-    - Create PRs for production code (not experiments)
+    TWO OPTIONS for GitHub operations:
+
+    OPTION 1: GitHub Specialist (PREFERRED for experiments):
+    → Delegate to @github-research-specialist (G. Hubman) for:
+    - Commenting on experiment issues with results
+    - Adding experiment metrics and findings to issues
+    - Updating experiment status with context
+    - Creating issues for new experiment ideas
+
+    CRITICAL: Provide COMPLETE information to GitHub specialist:
+    - Full comment text (NOT summaries)
+    - All metrics, results, links to output files
+    - Complete context, not abbreviated
+    - Example: "@github-research-specialist add comment to issue #42:
+      [full markdown comment with results, metrics, next steps]"
+
+    OPTION 2: Helper Scripts (for simple operations):
+    - Use gh CLI or helper scripts directly
+    - Quick status updates
+    - Simple comments
+    - PR creation for production code
+
+    Remember: Experiments stay in experiments/, not in PRs
 
 persona:
   role: Expert Software Engineer & Research Code Specialist
