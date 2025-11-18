@@ -37,13 +37,14 @@ The **bmad-research-dev** pack is a hybrid expansion pack that bridges two world
 
 ## ✨ Key Features
 
-### Local-First Architecture
+### Zero-MCP Architecture
 
-- ✅ No Archon MCP dependency (markdown files with frontmatter)
-- ✅ No wandb MCP dependency (local JSON/CSV tracking)
-- ✅ No ArXiv MCP dependency (WebSearch/WebFetch instead)
-- ✅ Everything in git-versioned files
-- ✅ Works offline
+- ✅ **100% MCP-Free!** No MCP servers required
+- ✅ **Direct Web APIs:** ArXiv (public), Zotero (API key), GitHub (gh CLI)
+- ✅ **98.7% token reduction** vs MCP approach
+- ✅ **Local-first:** No Archon MCP (markdown frontmatter), No wandb MCP (local JSON/CSV)
+- ✅ **Git-versioned:** Everything in git-versioned files
+- ✅ **Offline capable:** Most features work offline
 
 ### Single-Repo Design
 

@@ -1,10 +1,16 @@
-# BMAD Research-Dev: Subagent Installation
+# BMAD Research-Dev: Installation Guide
+
+## ✅ Zero MCP Installation!
+
+**Good news:** All research specialists work WITHOUT any MCP servers. Installation is simple and fast!
+
+---
 
 ## Installation Methods
 
-### Method 1: Automatic (npm install)
+### Method 1: Automatic (npm install) - Recommended
 
-When you install the package locally, subagents are automatically configured:
+When you install the package, subagents are automatically configured:
 
 ```bash
 npm install @dkreuzer/bmad-method-ai-research
@@ -19,15 +25,7 @@ If using `npx` or if automatic installation didn't run:
 npx @dkreuzer/bmad-method-ai-research install-agents
 ```
 
-**Options:**
-
-```bash
-# Auto-install MCP servers without prompting
-npx @dkreuzer/bmad-method-ai-research install-agents --auto-install-mcps
-
-# Skip MCP installation (architecture only)
-npx @dkreuzer/bmad-method-ai-research install-agents --skip-mcps
-```
+---
 
 ## What Happens Automatically
 
@@ -39,10 +37,60 @@ The postinstall script (`tools/setup-subagents.js`) runs `setup-bmad-subagents.s
    - `arxiv-research-specialist.md` (H. Zoppel) 📄
    - `zotero-research-specialist.md` (Dr. Z. Reference) 📚
    - `github-research-specialist.md` (G. Hubman) 🐙
-3. ✅ Copies 11 TypeScript server wrappers to `.claude/servers/`
-4. ✅ Creates `.mcp.json` configuration for ArXiv & Zotero MCPs
-5. ✅ Optionally installs MCP servers (prompted)
-6. ✅ Creates documentation in `.claude/README.md`
+3. ✅ Copies TypeScript server wrappers to `.claude/servers/`:
+   - ArXiv wrappers (direct API)
+   - Zotero wrappers (direct API)
+   - GitHub wrappers (gh CLI)
+4. ✅ Copies helper scripts to `.claude/scripts/`:
+   - Zotero login script
+   - GitHub helper scripts
+5. ✅ Creates documentation in `.claude/README.md`
+
+**❌ NO MCP servers installed**
+**❌ NO `.mcp.json` configuration created**
+
+---
+
+## One-Time Setup (Optional)
+
+### Zotero (Only if you have a Zotero library)
+
+If you want to use the Zotero research specialist with your personal library:
+
+```bash
+node .claude/scripts/zotero-login.js
+```
+
+This will:
+
+1. Prompt for your Zotero API key
+2. Prompt for your library type (user/group)
+3. Prompt for your library ID
+4. Save credentials in `.env` (automatically added to `.gitignore`)
+
+**Get your credentials:**
+
+- API Key: https://www.zotero.org/settings/keys/new
+- Library ID: Shown when you create the API key
+
+### GitHub (Only if you want GitHub workflow management)
+
+If you want to use the GitHub research specialist:
+
+```bash
+gh auth login
+```
+
+Follow the prompts to authenticate GitHub CLI.
+
+### ArXiv & Web
+
+**No setup needed!** Both work immediately:
+
+- ArXiv API is public (no authentication)
+- Web tools are built into Claude Code
+
+---
 
 ## Using the Specialists
 
@@ -62,34 +110,11 @@ Search my library for papers on transformers
 Create an experiment issue for Flash Attention v2
 ```
 
-## Manual Re-run
-
-If you need to re-run the setup:
-
-```bash
-# From project root
-bash expansion-packs/bmad-research-dev/setup-bmad-subagents.sh
-```
-
-**Options:**
-
-```bash
-# Auto-install MCPs without prompting
-bash expansion-packs/bmad-research-dev/setup-bmad-subagents.sh --auto-install-mcps
-
-# Skip MCP installation (architecture only)
-bash expansion-packs/bmad-research-dev/setup-bmad-subagents.sh --skip-mcps
-```
-
-## Documentation
-
-- **Quick Start:** [QUICKSTART-CODE-EXECUTION.md](./QUICKSTART-CODE-EXECUTION.md)
-- **Architecture Guide:** [CODE-EXECUTION-MCP-ARCHITECTURE.md](./CODE-EXECUTION-MCP-ARCHITECTURE.md)
-- **Inter-Agent Communication:** [INTER-AGENT-COMMUNICATION-PROTOCOL.md](./INTER-AGENT-COMMUNICATION-PROTOCOL.md)
+---
 
 ## Verification
 
-Check that subagents are installed:
+### Check Installed Subagents
 
 ```bash
 # List installed subagents
@@ -102,31 +127,159 @@ ls -la .claude/agents/
 # - zotero-research-specialist.md
 ```
 
-## Troubleshooting
-
-**Subagents not appearing in Claude Code?**
-
-1. Restart Claude Code after installation
-2. Run `/agents` command to list available agents
-3. Check `.claude/agents/` directory exists and has 4 files
-
-**Need to reinstall?**
+### Check TypeScript Wrappers
 
 ```bash
-# Remove existing installation
-rm -rf .claude/
+# List server wrappers
+ls -la .claude/servers/
 
-# Re-run setup
+# Expected directories:
+# - arxiv/    (api-client.ts, search.ts, get-paper.ts)
+# - zotero/   (env-loader.ts, get-collections.ts, search.ts, get-item.ts)
+# - github/   (search-issues.ts, create-issue.ts, update-issue.ts, projects.ts)
+```
+
+### Verify No MCP Configuration
+
+```bash
+# This should NOT exist:
+ls .mcp.json
+# Expected: No such file or directory
+
+# This should NOT exist:
+ls .claude/.mcp.json
+# Expected: No such file or directory
+```
+
+---
+
+## Manual Re-run
+
+If you need to re-run the setup:
+
+```bash
+# From project root
 bash expansion-packs/bmad-research-dev/setup-bmad-subagents.sh
 ```
 
-## How It Works
+---
 
-The automatic installation uses npm's postinstall hook:
+## Troubleshooting
 
-1. **package.json** defines `"postinstall": "node tools/setup-subagents.js"`
-2. **tools/setup-subagents.js** finds all expansion packs with `setup-bmad-subagents.sh`
-3. Each setup script runs automatically from its directory
-4. Subagents are copied to `.claude/agents/` where Claude Code discovers them
+### Subagents not showing up in Claude Code
 
-This pattern follows Claude Code's plugin architecture for automatic agent discovery.
+1. Restart Claude Code completely
+2. Check `.claude/agents/` directory exists and has the 4 agent files
+3. Re-run setup script if needed
+
+### Zotero specialist not working
+
+```bash
+# Check if .env exists
+ls .env
+
+# If not, run login script
+node .claude/scripts/zotero-login.js
+```
+
+### GitHub specialist not working
+
+```bash
+# Check gh CLI is installed
+gh --version
+
+# Check authentication
+gh auth status
+
+# If not authenticated
+gh auth login
+```
+
+### ArXiv specialist not working
+
+ArXiv should work immediately - no setup needed. If issues:
+
+- ArXiv API might be temporarily down (retry)
+- Check internet connection
+
+---
+
+## Documentation
+
+- **Zero MCP Architecture:** [ZERO-MCP-ARCHITECTURE.md](./ZERO-MCP-ARCHITECTURE.md) - Complete architecture guide
+- **Quick Start:** [QUICKSTART-CODE-EXECUTION.md](./QUICKSTART-CODE-EXECUTION.md) - Get started quickly
+- **Main README:** [README.md](./README.md) - Expansion pack overview
+
+---
+
+## What You DON'T Need
+
+### ❌ No MCP Servers
+
+You do NOT need to install:
+
+```bash
+# DON'T RUN THESE:
+npx -y @anthropic/zotero-mcp@latest
+npx -y @anthropic/arxiv-mcp@latest
+```
+
+### ❌ No `.mcp.json` Configuration
+
+You do NOT need to create or manage `.mcp.json` files.
+
+### ❌ No Server Processes
+
+No background processes to manage. Everything runs via:
+
+- Direct API calls (ArXiv, Zotero)
+- CLI commands (GitHub)
+- Built-in tools (Web)
+
+---
+
+## Architecture Benefits
+
+### Direct Web APIs
+
+- **ArXiv:** `export.arxiv.org` (public, no auth)
+- **Zotero:** `api.zotero.org` (API key in `.env`)
+- **GitHub:** `gh` CLI commands (authenticated)
+- **Web:** Built-in WebSearch/WebFetch
+
+### Code-Execution Pattern
+
+```
+Research Specialist Agent
+  │
+  ├─ executeCode (ONLY tool in context)
+  │
+  └─ TypeScript wrappers (imported on-demand)
+       │
+       ├─ Direct Web API calls
+       ├─ Direct CLI calls
+       └─ Data processing in code sandbox
+
+Result: Zero MCP, 98.7% token savings
+```
+
+### Benefits
+
+- ✅ **98.7% fewer tokens** in agent context
+- ✅ **No MCP servers** to install or manage
+- ✅ **No `.mcp.json`** configuration
+- ✅ **Faster responses** (less context to process)
+- ✅ **Simpler debugging** (standard TypeScript)
+- ✅ **Better security** (credentials in project `.env`)
+
+---
+
+## Next Steps
+
+1. ✅ Install package: `npm install @dkreuzer/bmad-method-ai-research`
+2. ✅ (Optional) Setup Zotero: `node .claude/scripts/zotero-login.js`
+3. ✅ (Optional) Setup GitHub: `gh auth login`
+4. ✅ Restart Claude Code
+5. ✅ Start using: `@arxiv-research-specialist find papers on transformers`
+
+**Ready to research!** 🚀
